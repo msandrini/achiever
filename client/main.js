@@ -21,6 +21,7 @@ export default class Main extends React.Component {
         };
         this.onDateChange = this.onDateChange.bind(this);
         this.onTimeSet = this.onTimeSet.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentWillMount() {
@@ -44,8 +45,14 @@ export default class Main extends React.Component {
         };
     }
 
+    onSubmit() {
+        const { controlDate, storedTimes } = this.state;
+        // TODO send everything to server
+        console.log({ controlDate, storedTimes });
+    }
+
     _checkPreEnteredValues() {
-        // check server for pre-entered values
+        // TODO check server for pre-entered values
         // populate labouredHoursOnDay and remainingHoursOnWeek
         this.setState({
             storedTimes: [{}, {}, {}, {}]
@@ -77,7 +84,7 @@ export default class Main extends React.Component {
         } = this.state;
 
         return (
-            <form>
+            <form onSubmit={this.onSubmit}>
                 <h1>{strings.appName}</h1>
                 <div className="column">
                     <DatePicker inline
