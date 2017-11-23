@@ -34729,6 +34729,7 @@ var Main = function (_React$Component) {
         };
         _this.onDateChange = _this.onDateChange.bind(_this);
         _this.onTimeSet = _this.onTimeSet.bind(_this);
+        _this.onSubmit = _this.onSubmit.bind(_this);
         return _this;
     }
 
@@ -34759,9 +34760,19 @@ var Main = function (_React$Component) {
             };
         }
     }, {
+        key: 'onSubmit',
+        value: function onSubmit() {
+            var _state = this.state,
+                controlDate = _state.controlDate,
+                storedTimes = _state.storedTimes;
+            // TODO send everything to server
+
+            console.log({ controlDate: controlDate, storedTimes: storedTimes });
+        }
+    }, {
         key: '_checkPreEnteredValues',
         value: function _checkPreEnteredValues() {
-            // check server for pre-entered values
+            // TODO check server for pre-entered values
             // populate labouredHoursOnDay and remainingHoursOnWeek
             this.setState({
                 storedTimes: [{}, {}, {}, {}]
@@ -34787,16 +34798,16 @@ var Main = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _state = this.state,
-                controlDate = _state.controlDate,
-                labouredHoursOnDay = _state.labouredHoursOnDay,
-                remainingHoursOnWeek = _state.remainingHoursOnWeek,
-                storedTimes = _state.storedTimes;
+            var _state2 = this.state,
+                controlDate = _state2.controlDate,
+                labouredHoursOnDay = _state2.labouredHoursOnDay,
+                remainingHoursOnWeek = _state2.remainingHoursOnWeek,
+                storedTimes = _state2.storedTimes;
 
 
             return _react2.default.createElement(
                 'form',
-                null,
+                { onSubmit: this.onSubmit },
                 _react2.default.createElement(
                     'h1',
                     null,
