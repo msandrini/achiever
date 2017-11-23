@@ -1,0 +1,30 @@
+ul.suggestion-box {
+    position: absolute;
+    background: white;
+    list-style: none;
+    border: 1px solid #777;
+    box-shadow: 2px 2px 8px rgba(0,0,0,.4);
+    margin: 45px 0 0 70px;
+    padding: 0;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+}
+ul.suggestion-box.minutes {
+    margin-left: 215px;
+}
+.suggestion-box li {
+    display: inline-block;
+    margin: 0;
+}
+.suggestion-box li a {
+    padding: 5px 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+}
+.suggestion-box li a:hover {
+    background-color: #777;
+    color: white;
+}
