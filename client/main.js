@@ -2,7 +2,8 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import TimeGroup from './components/TimeGroup.js';
+import TimeGroup from './components/TimeGroup';
+import { timeIsValid } from './utils';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles/main.css';
 
@@ -45,10 +46,18 @@ export default class Main extends React.Component {
         };
     }
 
-    onSubmit() {
+    onSubmit(event) {
+        event.preventDefault();
         const { controlDate, storedTimes } = this.state;
+
+        const dateToSend = ({
+            day: controlDate.date(),
+            month: controlDate.month() + 1,
+            year: controlDate.year()
+        });
+        const timeToSend = storedTimes;
         // TODO send everything to server
-        console.log({ controlDate, storedTimes });
+        console.log({ dateToSend, timeToSend });
     }
 
     _checkPreEnteredValues() {
@@ -62,11 +71,10 @@ export default class Main extends React.Component {
     _shouldSendBeAvailable() {
         let comparisonTerm = 0;
         const isSequentialTime = time => {
-            if (time && time.hours && time.minutes) {
+            if (time && timeIsValid(time)) {
                 const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
                 const isLaterThanComparison = date > comparisonTerm;
                 comparisonTerm = Number(date);
-                console.log(comparisonTerm, date, isLaterThanComparison)
                 return isLaterThanComparison;
             }
             return false;

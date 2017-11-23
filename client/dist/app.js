@@ -34695,6 +34695,8 @@ var _TimeGroup = __webpack_require__(165);
 
 var _TimeGroup2 = _interopRequireDefault(_TimeGroup);
 
+var _utils = __webpack_require__(177);
+
 __webpack_require__(172);
 
 __webpack_require__(174);
@@ -34761,13 +34763,21 @@ var Main = function (_React$Component) {
         }
     }, {
         key: 'onSubmit',
-        value: function onSubmit() {
+        value: function onSubmit(event) {
+            event.preventDefault();
             var _state = this.state,
                 controlDate = _state.controlDate,
                 storedTimes = _state.storedTimes;
-            // TODO send everything to server
 
-            console.log({ controlDate: controlDate, storedTimes: storedTimes });
+
+            var dateToSend = {
+                day: controlDate.date(),
+                month: controlDate.month() + 1,
+                year: controlDate.year()
+            };
+            var timeToSend = storedTimes;
+            // TODO send everything to server
+            console.log({ dateToSend: dateToSend, timeToSend: timeToSend });
         }
     }, {
         key: '_checkPreEnteredValues',
@@ -34783,11 +34793,10 @@ var Main = function (_React$Component) {
         value: function _shouldSendBeAvailable() {
             var comparisonTerm = 0;
             var isSequentialTime = function isSequentialTime(time) {
-                if (time && time.hours && time.minutes) {
+                if (time && (0, _utils.timeIsValid)(time)) {
                     var date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
                     var isLaterThanComparison = date > comparisonTerm;
                     comparisonTerm = Number(date);
-                    console.log(comparisonTerm, date, isLaterThanComparison);
                     return isLaterThanComparison;
                 }
                 return false;
@@ -41729,6 +41738,8 @@ var _TimeField = __webpack_require__(166);
 
 var _TimeField2 = _interopRequireDefault(_TimeField);
 
+var _utils = __webpack_require__(177);
+
 __webpack_require__(138);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -41783,7 +41794,11 @@ var TimeGroup = function (_React$Component) {
                         hours = _state.hours,
                         minutes = _state.minutes;
 
-                    if (hours.value && minutes.value) {
+                    var timeToCheck = {
+                        hours: hours.value,
+                        minutes: minutes.value
+                    };
+                    if ((0, _utils.timeIsValid)(timeToCheck)) {
                         _this2.props.onSet(hours.value, minutes.value);
                     }
                 };
@@ -41853,6 +41868,8 @@ var _SuggestionBox = __webpack_require__(167);
 
 var _SuggestionBox2 = _interopRequireDefault(_SuggestionBox);
 
+var _utils = __webpack_require__(177);
+
 __webpack_require__(138);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -41892,11 +41909,8 @@ var TimeField = function (_React$Component) {
     }, {
         key: '_isInputValid',
         value: function _isInputValid(value) {
-            if (this._isHoursInput()) {
-                return value > 0 && value < 24;
-            } else {
-                return value > 0 && value < 60;
-            }
+            var modeString = this._isHoursInput() ? 'hours' : 'minutes';
+            return _utils.checkValidity[modeString](value);
         }
     }, {
         key: '_changeTime',
@@ -42324,6 +42338,33 @@ var strings = {
 };
 
 exports.default = strings;
+
+/***/ }),
+/* 177 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var checkValidity = exports.checkValidity = {
+    minutes: function minutes(mins) {
+        return isNumber(mins) && mins < 60 && mins >= 0;
+    },
+    hours: function hours(hs) {
+        return isNumber(hs) && hs < 24 && hs >= 0;
+    }
+};
+
+var timeIsValid = exports.timeIsValid = function timeIsValid(time) {
+    return checkValidity.minutes(time.minutes) && checkValidity.hours(time.hours);
+};
+
+var isNumber = function isNumber(value) {
+    return !isNaN(parseInt(value, 10));
+};
 
 /***/ })
 /******/ ]);
