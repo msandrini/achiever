@@ -58,4 +58,4 @@ typings/
 .env
 
 # build directory
-dist/
+client/dist/

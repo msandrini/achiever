@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
+
 import SuggestionBox from './SuggestionBox';
+import { checkValidity } from '../utils';
 
 import '../styles/time.css';
 
@@ -25,11 +27,8 @@ export default class TimeField extends React.Component {
     }
     
     _isInputValid(value) {
-        if (this._isHoursInput()) {
-            return value > 0 && value < 24;
-        } else {
-            return value > 0 && value < 60;
-        }
+        const modeString = this._isHoursInput() ? 'hours' : 'minutes';
+        return checkValidity[modeString](value);
     }
 
     _changeTime(value) {

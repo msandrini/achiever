@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
+
 import TimeField from './TimeField';
+import { timeIsValid } from '../utils';
 
 import '../styles/time.css';
 
@@ -36,7 +38,11 @@ export default class TimeGroup extends React.Component {
             };
             const callbackAfterSet = () => {
                 const { hours, minutes } = this.state;
-                if (hours.value && minutes.value) {
+                const timeToCheck = {
+                    hours: hours.value,
+                    minutes: minutes.value
+                };
+                if (timeIsValid(timeToCheck)) {
                     this.props.onSet(hours.value, minutes.value);
                 }
             };
