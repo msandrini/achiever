@@ -1,0 +1,38 @@
+.time-group {
+    min-height: 70px;
+    clear: both;
+}
+label {
+    width: 60px;
+    margin-right: 10px;
+    font-size: 11px;
+    float: left;
+    text-align: right;
+}
+    .emphasis label {
+        font-size: 13px;
+    }
+.separator {
+    display: block;
+    float: left;
+    font-size: 24px;
+    width: 5px;
+    margin: 10px;
+}
+.minutes, .hours {
+    display: block;
+    float: left;
+    font-size: 30px;
+    padding: 5px 8px;
+    width: 100px;
+}
+.send {
+    font-size: 24px;
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 0 70px;
+    width: 265px;
+}
+.time-group input::placeholder {
+    color: #ddd;
+}
