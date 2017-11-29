@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
 import TimeGroup from './components/TimeGroup';
-import { timeIsValid } from './utils';
+import { timeIsValid } from '../shared/utils';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles/main.css';
 

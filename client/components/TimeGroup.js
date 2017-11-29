@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import TimeField from './TimeField';
-import { timeIsValid } from '../utils';
+import { timeIsValid } from '../../shared/utils';
 
 import '../styles/time.css';
 

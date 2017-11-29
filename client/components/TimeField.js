@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import SuggestionBox from './SuggestionBox';
-import { checkValidity } from '../utils';
+import { checkValidity } from '../../shared/utils';
 
 import '../styles/time.css';
 
