@@ -1,9 +1,9 @@
 # achiever
 A tool built to achieve
 
-Run: `npm build && npm serve`
+Run: `npm run build && npm run serve`
 
-_Alternatively: `npm watch` in a terminal window, `npm serve` in another_
+_Alternatively: `npm run watch` in a terminal window, `npm run serve` in another_
 
 ### todo
 - Integrate backend call to send date/time
