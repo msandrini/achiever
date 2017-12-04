@@ -18,13 +18,15 @@ ul.suggestion-box.minutes {
     display: inline-block;
     margin: 0;
 }
-.suggestion-box li a {
+.suggestion-box li button {
     padding: 5px 5px;
     cursor: pointer;
     display: inline-block;
     font-size: 14px;
+    border: 0;
+    background: transparent;
 }
-.suggestion-box li a:hover {
+.suggestion-box li button:hover {
     background-color: #777;
     color: white;
 }
