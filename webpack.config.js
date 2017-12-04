@@ -1,10 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
 
 const appPath = dir => path.resolve(__dirname, dir);
 
 module.exports = {
-	entry: appPath('client/index.js'),
+	entry: appPath('client/index.jsx'),
 	output: {
 		path: appPath('client/dist'),
 		filename: 'app.js'
@@ -22,18 +21,21 @@ module.exports = {
 			{
 				test: /\.css$/,
 				use: [
-					{ loader: "style-loader" },
-					{ loader: "css-loader" }
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader' }
 				]
 			},
 			{
 				test: /\.styl$/,
 				use: [
-					{ loader: "style-loader" },
-					{ loader: "css-loader" },
-					{ loader: "stylus-loader" }
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader' },
+					{ loader: 'stylus-loader' }
 				]
 			}
 		]
+	},
+	resolve: {
+		extensions: ['.js', '.jsx']
 	}
 };
