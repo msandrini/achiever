@@ -60,3 +60,6 @@ typings/
 # build directory
 client/dist/
 server/tempStorage
+
+# Visual Studio Code
+.vscode
