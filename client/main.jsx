@@ -59,7 +59,7 @@ export default class Main extends React.Component {
 		});
 		const timesToSend = storedTimes;
 		// TODO send everything to server
-		console.log({ date: dateToSend, times: timesToSend });
+		console.log({ date: dateToSend, times: timesToSend }); // eslint-disable-line no-console
 	}
 
 	_checkPreEnteredValues() {
