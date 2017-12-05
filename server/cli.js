@@ -3,6 +3,7 @@
 const Storage = require('node-storage');
 const path = require('path');
 const chalk = require('chalk');
+const logger = require('./logger');
 
 const tempFilePath = path.resolve(__dirname, './tempStorage');
 const { apiCalls } = require('../shared/utils');
@@ -28,16 +29,16 @@ const getDisplayTime = (dateObj) => {
 };
 
 const onCallError = (e) => {
-	console.log(chalk.red(strings.errorOnSendCall), e);
+	logger.error(chalk.red(strings.errorOnSendCall), e);
 };
 
 const onCallSuccess = (timesObj, timesNumber) => {
-	console.log(chalk`{bgGreen.white \n${strings.successOnSendCall}\n}`);
+	logger.info(chalk`{bgGreen.white \n${strings.successOnSendCall}\n}`);
 
 	strings.times.forEach((label, index) => {
 		const displayMinutes = minutesWithZero(timesObj[index].minutes);
 		const displayTime = `${timesObj[index].hours}:${displayMinutes}`;
-		console.log(`${label}: ${displayTime}`);
+		logger.info(`${label}: ${displayTime}`);
 	});
 	const labouredRaw = [
 		timesNumber[1] - timesNumber[0],
@@ -47,7 +48,7 @@ const onCallSuccess = (timesObj, timesNumber) => {
 	const labouredHours = labouredRaw.map(time =>
 		Math.floor((((time / 1000) / 60) / 60) * 100) / 100);
 
-	console.log(chalk`\n${strings.hoursLaboured}
+	logger.info(chalk`\n${strings.hoursLaboured}
         ${strings.morningPeriod}: {bold ${labouredHours[0]}}
         ${strings.afternoonPeriod}: {bold ${labouredHours[1]}}
         {yellow ${strings.total}: {bold ${labouredHours[0] + labouredHours[1]}}}`);
@@ -87,11 +88,11 @@ if (storedTimes && storedTimes.length) {
 	const timeString = getDisplayTime(valuesPlusNow[lastIndex]);
 	const message = `${strings.times[lastIndex]} ${strings.storedSuccessfully}`;
 	const messagePlusTime = chalk`${message} {bold (${timeString})}`;
-	console.log(messagePlusTime);
+	logger.info(messagePlusTime);
 } else {
 	// if the user doesn't have times, we should record the arrival
 	store.put(STORAGE_KEY, [Number(now)]);
 	const message = `${strings.times[0]} ${strings.storedSuccessfully}`;
 	const messagePlusTime = chalk`${message} {bold (${getDisplayTime(now)})}`;
-	console.log(messagePlusTime);
+	logger.info(messagePlusTime);
 }

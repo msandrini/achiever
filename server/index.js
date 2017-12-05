@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const logger = require('./logger');
 
 const app = express();
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
@@ -15,7 +16,7 @@ app.get('/times', (req, res) => {
 	res.json(values);
 });
 app.post('/times', (req, res) => {
-	console.log('sent to post', req.body);
+	logger.info('sent to post', req.body);
 	res.json({ success: true });
 });
 
@@ -29,4 +30,4 @@ app.get('/app.js', (req, res) => {
 });
 
 app.listen(3000, () =>
-	console.log('listening on 3000!'));
+	logger.info('listening on 3000!'));
