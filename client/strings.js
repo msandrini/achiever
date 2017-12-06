@@ -5,7 +5,8 @@ const strings = {
 	labelTime2: 'saída para almoço',
 	labelTime3: 'entrada do almoço',
 	labelTime4: 'saída',
-	send: 'Enviar'
+	send: 'Enviar',
+	imReligious: 'Sou religioso com meus horários'
 };
 
 export default strings;
