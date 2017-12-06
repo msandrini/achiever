@@ -26,6 +26,12 @@ export default class TimeField extends React.Component {
 		this.setState({ value: this.props.value || '' });
 	}
 
+	componentWillReceiveProps({ value }) {
+		if (this.state.value !== value) {
+			this._changeTime(value);
+		}
+	}
+
 	onFocus() {
 		return () => {
 			this.setState({

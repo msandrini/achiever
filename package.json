@@ -47,6 +47,7 @@
     "react-datepicker": "^0.60.2",
     "react-dom": "^16.1.0",
     "stylus": "^0.54.5",
+    "whatwg-fetch": "^2.0.3",
     "winston": "^3.0.0-rc1"
   }
 }
