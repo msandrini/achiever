@@ -39,6 +39,7 @@
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "moment": "^2.19.2",
     "node-storage": "0.0.7",
