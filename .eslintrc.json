@@ -3,12 +3,13 @@
     "extends": "airbnb",
     "rules": {
         "indent": ["error", "tab"],
-        "react/jsx-indent": ["error", "tab"],
-        "react/jsx-indent-props": ["error", "tab"],
-        "react/forbid-prop-types": "off",
+        "padded-blocks": "off",
         "no-tabs": "off",
         "no-underscore-dangle": "off",
         "comma-dangle": ["error", "never"],
-        "jsx-a11y/label-has-for": "off"
+        "jsx-a11y/label-has-for": "off",
+        "react/jsx-indent": ["error", "tab"],
+        "react/jsx-indent-props": ["error", "tab"],
+        "react/forbid-prop-types": "off"
     }
 }
