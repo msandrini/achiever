@@ -1,13 +1,13 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import 'whatwg-fetch';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
+import apiCalls from './apiCalls';
 import TimeGroup from './components/TimeGroup';
 import { timeIsValid } from '../shared/utils';
-import strings from './strings';
+import strings from '../shared/strings';
 
 import './styles/main.css';
 
@@ -65,7 +65,7 @@ export default class Main extends React.Component {
 
 		const data = JSON.stringify({ date: dateToSend, times: storedTimes });
 
-		fetch('/times', { method: 'post', body: data, headers: { 'Content-Type': 'application/json' } })
+		apiCalls.send(data)
 			.then(response => response.json())
 			.then(json => console.info(JSON.stringify(json)))
 			.catch(err => console.error(err));
@@ -119,14 +119,14 @@ export default class Main extends React.Component {
 						onChange={this.onDateChange}
 					/>
 					<p className="remaining">
-						{strings.remaining}
+						{strings.remainingHoursOnWeek}
 						{' '}
 						<strong>{remainingHoursOnWeek}</strong>
 					</p>
 					{ labouredHoursOnDay ?
 						(
 							<p className="projection">
-								{strings.projection}
+								{strings.hoursLabouredOnThisDay}
 								{' '}
 								<strong>{labouredHoursOnDay}</strong>
 							</p>
@@ -136,26 +136,26 @@ export default class Main extends React.Component {
 				<div className="column">
 					<h2>{controlDate.format('L')}</h2>
 					<TimeGroup
-						label={strings.labelTime1}
+						label={strings.times[0].label}
 						emphasis
 						referenceHour={9}
 						time={storedTimes[0]}
 						onSet={this.onTimeSet(0)}
 					/>
 					<TimeGroup
-						label={strings.labelTime2}
+						label={strings.times[1].label}
 						referenceHour={12}
 						time={storedTimes[1]}
 						onSet={this.onTimeSet(1)}
 					/>
 					<TimeGroup
-						label={strings.labelTime3}
+						label={strings.times[2].label}
 						referenceHour={13}
 						time={storedTimes[2]}
 						onSet={this.onTimeSet(2)}
 					/>
 					<TimeGroup
-						label={strings.labelTime4}
+						label={strings.times[3].label}
 						emphasis
 						referenceHour={17}
 						time={storedTimes[3]}

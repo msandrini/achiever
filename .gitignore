@@ -59,7 +59,7 @@ typings/
 
 # build directory
 client/dist/
-server/tempStorage
+server/temp
 
 # Visual Studio Code
 .vscode

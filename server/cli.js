@@ -1,98 +1,59 @@
 #!/usr/bin/env node
-
-const Storage = require('node-storage');
-const path = require('path');
 const chalk = require('chalk');
+const utils = require('./cli/utils.js');
+const sharedUtils = require('../shared/utils.js');
+const strings = require('../shared/strings');
 const logger = require('./logger');
 
-const tempFilePath = path.resolve(__dirname, './tempStorage');
-const { apiCalls } = require('../shared/utils');
-const strings = require('./strings');
+const {
+	addTime,
+	updateTime,
+	clearTimes,
+	locateKeywordsOnArguments,
+	listTimesOnArguments
+} = utils;
 
-const STORAGE_KEY = 'storedTimes';
-const store = new Storage(tempFilePath);
+const { buildDateFromTimeString } = sharedUtils;
 
-const getDateObj = value => (typeof value !== 'object' ?
-	new Date(value) : value);
+// clear temporary times
+if (locateKeywordsOnArguments(strings.clearCliKeywords)) {
+	clearTimes();
+	logger.info(strings.timesFlushed);
+	process.exit();
+}
 
-const getSuccintTime = dateObj => ({
-	minutes: getDateObj(dateObj).getMinutes(),
-	hours: getDateObj(dateObj).getHours()
+// set specific time
+strings.times.forEach((stringObj, index) => {
+	if (locateKeywordsOnArguments(stringObj.cliKeywords)) {
+		const times = listTimesOnArguments();
+		if (times[0]) {
+			clearTimes();
+			const timeToInsert = buildDateFromTimeString(times[0]);
+			updateTime(index, timeToInsert, stringObj.label);
+		} else {
+			logger.error(chalk.red(strings.noTimesProvided));
+		}
+		if (times.length > 1) {
+			logger.warn(strings.otherTimesIgnored);
+		}
+		process.exit();
+	}
 });
 
-const minutesWithZero = minutes => (minutes < 10 ? `0${minutes}` : minutes);
-
-const getDisplayTime = (dateObj) => {
-	const hours = getDateObj(dateObj).getHours();
-	const minutes = getDateObj(dateObj).getMinutes();
-	return `${hours}:${minutesWithZero(minutes)}`;
-};
-
-const onCallError = (e) => {
-	logger.error(chalk.red(strings.errorOnSendCall), e);
-};
-
-const onCallSuccess = (timesObj, timesNumber) => {
-	logger.info(chalk`{bgGreen.white \n${strings.successOnSendCall}\n}`);
-
-	strings.times.forEach((label, index) => {
-		const displayMinutes = minutesWithZero(timesObj[index].minutes);
-		const displayTime = `${timesObj[index].hours}:${displayMinutes}`;
-		logger.info(`${label}: ${displayTime}`);
-	});
-	const labouredRaw = [
-		timesNumber[1] - timesNumber[0],
-		timesNumber[3] - timesNumber[2]
-	];
-
-	const labouredHours = labouredRaw.map(time =>
-		Math.floor((((time / 1000) / 60) / 60) * 100) / 100);
-
-	logger.info(chalk`\n${strings.hoursLaboured}
-        ${strings.morningPeriod}: {bold ${labouredHours[0]}}
-        ${strings.afternoonPeriod}: {bold ${labouredHours[1]}}
-        {yellow ${strings.total}: {bold ${labouredHours[0] + labouredHours[1]}}}`);
-};
-
-const now = new Date();
-
-// we should first see if the user has stored times
-const storedTimes = store.get(STORAGE_KEY);
-
-if (storedTimes && storedTimes.length) {
-	const valuesPlusNow = [...storedTimes, Number(now)];
-
-	store.put(STORAGE_KEY, valuesPlusNow);
-
-	// if the user has them, we should assess how many
-	if (valuesPlusNow.length === 4) {
-		const valuesToSend = {
-			times: valuesPlusNow.map(getSuccintTime),
-			date: {
-				day: now.getDate(),
-				month: now.getMonth(),
-				year: now.getFullYear()
-			}
-		};
-
-		// and send them to the backend when they are 4
-		apiCalls.sendTimes(valuesToSend).then(() =>
-			onCallSuccess(valuesToSend.times, valuesPlusNow)).catch(onCallError);
-
-		// and clear the store
-		store.remove(STORAGE_KEY);
+// set multiple times
+if (locateKeywordsOnArguments(strings.multipleCliKeywords)) {
+	const times = listTimesOnArguments();
+	if (times.length) {
+		clearTimes();
+		times.forEach((time, index) => {
+			const timeToInsert = buildDateFromTimeString(time);
+			updateTime(index, timeToInsert, strings.times[index].label);
+		});
+	} else {
+		logger.error(chalk.red(strings.noTimesProvided));
 	}
-
-	// in any case, we should display the recorded time
-	const lastIndex = storedTimes.length;
-	const timeString = getDisplayTime(valuesPlusNow[lastIndex]);
-	const message = `${strings.times[lastIndex]} ${strings.storedSuccessfully}`;
-	const messagePlusTime = chalk`${message} {bold (${timeString})}`;
-	logger.info(messagePlusTime);
-} else {
-	// if the user doesn't have times, we should record the arrival
-	store.put(STORAGE_KEY, [Number(now)]);
-	const message = `${strings.times[0]} ${strings.storedSuccessfully}`;
-	const messagePlusTime = chalk`${message} {bold (${getDisplayTime(now)})}`;
-	logger.info(messagePlusTime);
+	process.exit();
 }
+
+// default (set next time)
+addTime();

@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 const _isNumber = value => !Number.isNaN(parseInt(value, 10));
 
 const checkValidity = {
@@ -8,19 +6,27 @@ const checkValidity = {
 };
 
 const timeIsValid = time => checkValidity.minutes(time.minutes) &&
-    checkValidity.hours(time.hours);
+	checkValidity.hours(time.hours);
 
-const api = axios.create({
-	baseURL: 'https://localhost:3000'
-});
+const getTimeFromDate = (rawDate) => {
+	const date = (typeof rawDate === 'number') ? new Date(rawDate) : rawDate;
+	return {
+		hours: date.getHours(),
+		minutes: date.getMinutes()
+	};
+};
 
-const apiCalls = {
-	sendTimes: () => Promise.resolve(true),
-	getTimes: () => api.get('/times')
+const buildDateFromTimeString = (timeString) => {
+	const [hours, minutes] = timeString.split(':');
+	const year = new Date().getFullYear();
+	const month = new Date().getMonth();
+	const day = new Date().getDate();
+	return new Date(year, month, day, hours, minutes);
 };
 
 module.exports = {
 	checkValidity,
 	timeIsValid,
-	apiCalls
+	getTimeFromDate,
+	buildDateFromTimeString
 };
