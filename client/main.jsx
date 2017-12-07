@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import 'whatwg-fetch';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -25,6 +26,7 @@ export default class Main extends React.Component {
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.imReligious = this.imReligious.bind(this);
 	}
 
 	componentWillMount() {
@@ -40,11 +42,14 @@ export default class Main extends React.Component {
 
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
-			const newStoredTimes = this.state.storedTimes;
-			newStoredTimes[groupIndex] = { hours, minutes };
-			this.setState({
-				storedTimes: newStoredTimes
-			});
+			this.setState(prevState => ({
+				...prevState,
+				storedTimes: [
+					...prevState.storedTimes.slice(0, groupIndex),
+					{ hours, minutes },
+					...prevState.storedTimes.slice(groupIndex + 1)
+				]
+			}));
 		};
 	}
 
@@ -57,9 +62,20 @@ export default class Main extends React.Component {
 			month: controlDate.month() + 1,
 			year: controlDate.year()
 		});
-		const timesToSend = storedTimes;
-		// TODO send everything to server
-		console.log({ date: dateToSend, times: timesToSend }); // eslint-disable-line no-console
+
+		const data = JSON.stringify({ date: dateToSend, times: storedTimes });
+
+		fetch('/times', { method: 'post', body: data, headers: { 'Content-Type': 'application/json' } })
+			.then(response => response.json())
+			.then(json => console.info(JSON.stringify(json)))
+			.catch(err => console.error(err));
+	}
+
+	imReligious() {
+		this.onTimeSet(0)(8, 15);
+		this.onTimeSet(1)(12, 15);
+		this.onTimeSet(2)(13, 15);
+		this.onTimeSet(3)(17, 15);
 	}
 
 	_checkPreEnteredValues() {
@@ -145,11 +161,12 @@ export default class Main extends React.Component {
 						time={storedTimes[3]}
 						onSet={this.onTimeSet(3)}
 					/>
-					{this._shouldSendBeAvailable() ?
-						<button type="submit" className="send">
-							{strings.send}
-						</button> : null
-					}
+					<button type="button" onClick={this.imReligious} className="send">
+						{strings.imReligious}
+					</button>
+					<button type="submit" className="send" disabled={!this._shouldSendBeAvailable()}>
+						{strings.send}
+					</button>
 				</div>
 			</form>
 

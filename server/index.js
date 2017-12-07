@@ -16,7 +16,8 @@ app.get('/times', (req, res) => {
 	res.json(values);
 });
 app.post('/times', (req, res) => {
-	logger.info('sent to post', req.body);
+	logger.info('server received:');
+	logger.info(JSON.stringify(req.body));
 	res.json({ success: true });
 });
 
