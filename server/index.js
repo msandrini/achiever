@@ -1,13 +1,16 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const logger = require('./logger');
+const dummyServer = require('./dummyServer');
 
 const app = express();
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // dynamic
 
@@ -20,6 +23,9 @@ app.post('/times', (req, res) => {
 	logger.info(JSON.stringify(req.body));
 	res.json({ success: true });
 });
+
+// Mock of target server
+dummyServer(app);
 
 // static
 
