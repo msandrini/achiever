@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import TimeField from './TimeField';
-import { timeIsValid } from '../../shared/utils';
 
 import '../styles/time.css';
 
@@ -19,7 +18,7 @@ export default class TimeGroup extends React.Component {
 
 	onChangeTime(mode) {
 		return (dummy, suggestion) => {
-			const newtime = {...this.props.time};
+			const newtime = { ...this.props.time };
 			newtime[mode] = suggestion;
 			this.props.onSet(newtime.hours, newtime.minutes);
 		};
