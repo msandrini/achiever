@@ -1,12 +1,18 @@
 const _isNumber = value => !Number.isNaN(parseInt(value, 10));
 
-const checkValidity = {
-	minutes: mins => _isNumber(mins) && mins < 60 && mins >= 0,
-	hours: hs => _isNumber(hs) && hs < 24 && hs >= 0
+const checkValidity = (mode, value) => {
+	if (value === null) {
+		return true;	// 1st change on TimeGroup, onde will be null
+	}
+	if (_isNumber(value)) {
+		const max = mode === 'hours' ? 24 : 60;
+		return max > value && value >= 0;
+	}
+	return false;
 };
 
-const timeIsValid = time => checkValidity.minutes(time.minutes) &&
-	checkValidity.hours(time.hours);
+const timeIsValid = time => checkValidity('minutes', time.minutes) &&
+	checkValidity('hours', time.hours);
 
 const getTimeFromDate = (rawDate) => {
 	const date = (typeof rawDate === 'number') ? new Date(rawDate) : rawDate;

@@ -37,3 +37,6 @@ h2 {
 	float: right;
 	margin-bottom: 20px;
 }
+.send[disabled] {
+	opacity: 0.5;
+}

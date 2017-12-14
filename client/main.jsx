@@ -14,6 +14,12 @@ import './styles/main.css';
 
 moment.locale('pt-br');
 
+const replacingValueInsideArray = (array, index, newValue) => [
+	...array.slice(0, index),
+	newValue,
+	...array.slice(index + 1)
+];
+
 export default class Main extends React.Component {
 	constructor(props) {
 		super(props);
@@ -44,11 +50,11 @@ export default class Main extends React.Component {
 		return (hours, minutes) => {
 			this.setState(prevState => ({
 				...prevState,
-				storedTimes: [
-					...prevState.storedTimes.slice(0, groupIndex),
-					{ hours, minutes },
-					...prevState.storedTimes.slice(groupIndex + 1)
-				]
+				storedTimes: replacingValueInsideArray(
+					prevState.storedTimes,
+					groupIndex,
+					{ hours, minutes }
+				)
 			}));
 		};
 	}
@@ -81,9 +87,7 @@ export default class Main extends React.Component {
 	_checkPreEnteredValues() {
 		// TODO check server for pre-entered values
 		// populate labouredHoursOnDay and remainingHoursOnWeek
-		this.setState({
-			storedTimes: [{}, {}, {}, {}]
-		});
+		this.setState();
 	}
 
 	_shouldSendBeAvailable() {
