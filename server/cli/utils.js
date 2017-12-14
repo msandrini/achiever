@@ -76,7 +76,7 @@ const sendTimesAndClearStore = (times) => {
 
 const updateTime = (index, timeToInsert = new Date(), timeIdString = strings.thisTime) => {
 	const storedTimes = storage.getItemSync(STORAGE_KEY) || [];
-	console.log(storage.values())
+	console.log(storage.values());
 	const indexToInsert = index || storedTimes.length;
 	storedTimes[indexToInsert] = Number(timeToInsert);
 	storage.setItemSync(STORAGE_KEY, storedTimes);
