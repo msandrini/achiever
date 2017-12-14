@@ -50,7 +50,11 @@ export default class Main extends React.Component {
 		return (hours, minutes) => {
 			this.setState(prevState => ({
 				...prevState,
-				storedTimes: replacingValueInsideArray(prevState.storedTimes, groupIndex, { hours, minutes })
+				storedTimes: replacingValueInsideArray(
+					prevState.storedTimes,
+					groupIndex,
+					{ hours, minutes }
+				)
 			}));
 		};
 	}
@@ -83,6 +87,7 @@ export default class Main extends React.Component {
 	_checkPreEnteredValues() {
 		// TODO check server for pre-entered values
 		// populate labouredHoursOnDay and remainingHoursOnWeek
+		this.setState();
 	}
 
 	_shouldSendBeAvailable() {
