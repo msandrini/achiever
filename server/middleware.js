@@ -14,6 +14,7 @@ const PROJECT_PHASE = 329;
 const CODE_DEVELOPING_ACTIVITY = 7;
 const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([a-zA-Z0-9 '\\/]+)'\);/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
+const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
 
 const extractError = (responseHtml) => {
 	const errorMessages = responseHtml.match(errorMessageRegex);
@@ -41,6 +42,23 @@ const extractId = (responseHtml) => {
 	return null;
 };
 
+const extractBreakTime = (response) => {
+	if (!response) {
+		return {};
+	}
+
+	const times = response.match(timeBreakRegex);
+
+	if (times && times.length > 2) {
+		return {
+			startBreakTime: times[1],
+			endBreakTime: times[2]
+		};
+	}
+
+	return {};
+};
+
 const mapTableIntoArray = ($, selector) => (
 	$(selector)
 		.filter((index, item) =>
@@ -57,6 +75,13 @@ const getOptions = (method, uri, cookieJar) => ({
 	jar: cookieJar,
 	rejectUnauthorized: false
 });
+
+const stringfyTime = (hours, minutes) => {
+	const stringifiedHour = hours < 10 ? `0${hours}` : `${hours}`;
+	const stringifiedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+
+	return `${stringifiedHour}:${stringifiedMinutes}`;
+};
 
 const getUserDetails = (cookieJar, userDetailsHtml) => {
 	const $ = cheerio.load(userDetailsHtml);
@@ -154,7 +179,7 @@ const activityToPayload = (activity) => {
 	};
 };
 
-const listDailyActivities = (userDetails, date) => co(function* coroutine() {
+const dailyActivity = (userDetails, date) => co(function* coroutine() {
 	const { cookieJar } = userDetails;
 	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_list.php`, cookieJar);
 	options.qs = { datei: date };
@@ -177,34 +202,19 @@ const listDailyActivities = (userDetails, date) => co(function* coroutine() {
 	const breakTimeResponse = $('table tr.yellow a').prop('onclick');
 	const breakTimeId = extractId(breakTimeResponse);
 	const breakTime = !breakTimeId ?
-		null :
+		[''] :
 		mapTableIntoArray($, 'table tr.yellow td');
+
+	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime[0]);
 
 	return {
 		id: { workTimeId, breakTimeId },
+		date,
 		startTime: !workTime ? null : startTime.join(':'),
 		endTime: !workTime ? null : endTime.join(':'),
-		total: !workTime ? null : workTime[4],
-		breakTime
-	};
-}).catch(err => logger.error('Request failed %s', err));
-
-const dailyActivity = (userDetails, date) => co(function* coroutine() {
-	const {
-		id,
-		startTime,
-		endTime,
-		total
-	} = yield listDailyActivities(userDetails, date);
-
-	return {
-		id,
-		date,
-		startTime,
-		startBreakTime: '',
-		endBreakTime: '',
-		endTime,
-		total
+		startBreakTime: startBreakTime || '',
+		endBreakTime: endBreakTime || '',
+		total: !workTime ? null : workTime[4]
 	};
 }).catch(err => logger.error('Request failed %s', err));
 
@@ -212,43 +222,34 @@ const weeklyActivities = (userDetails, date) => co(function* coroutine() {
 	const refDate = moment(date);
 	refDate.day(1);
 
+	const totalWorkedTime = moment().startOf('year');
+
 	const activities = [];
 	for (let i = 0; i < 7; i += 1) {
 		const currentDate = refDate.format('YYYY-MM-DD');
 		const activity = yield dailyActivity(userDetails, currentDate);
+		if (activity && activity.total) {
+			const dailyTotal = moment(activity.total, 'hh:mm');
+
+			totalWorkedTime.add(dailyTotal.hour(), 'hours');
+			totalWorkedTime.add(dailyTotal.minute(), 'minutes');
+		}
 
 		activities.push(activity);
 
 		refDate.add(1, 'days');
 	}
 
-	return activities;
+	const totalHours = totalWorkedTime.diff(moment().startOf('year'), 'hours');
+	const totalMinutes = totalWorkedTime.diff(moment().startOf('year'), 'minutes') - (totalHours * 60);
+
+	return {
+		activities,
+		total: stringfyTime(totalHours, totalMinutes)
+	};
 }).catch(err => logger.error('Request failed %s', err));
 
-const listWeekActivities = (userDetails, date) => co(function* coroutine() {
-	const { cookieJar } = userDetails;
-	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_list_wview.php`, cookieJar);
-	options.qs = { datei: date };
-
-	const responseHtml = yield rp(options);
-	const $ = cheerio.load(responseHtml);
-
-	const headers = mapTableIntoArray($, 'table tr.grayH th');
-	const values = mapTableIntoArray($, 'table tr.yellow td');
-	const completeValues = [
-		...values.slice(0, values.length - 1),
-		...Array(headers.length - values.length).fill(''),
-		values[values.length - 1]];
-
-	const response = {};
-	headers.forEach((header, index) => {
-		response[header] = completeValues[index];
-	});
-
-	return response;
-}).catch(err => logger.error('Request failed %s', err));
-
-const timekeep = (userDetails, activity) => {
+const addActivity = (userDetails, activity) => {
 	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, userDetails.cookieJar);
 	const payload = {
 		...commonPayload(userDetails, 'timereg_insert'),
@@ -280,7 +281,7 @@ const timekeep = (userDetails, activity) => {
 	}).catch(err => logger.error('Request failed %s', err));
 };
 
-const deleteTimekeep = (userDetails, id) => co(function* coroutine() {
+const delActivity = (userDetails, id) => co(function* coroutine() {
 	const { cookieJar } = userDetails;
 	let options = getOptions('GET', `${url}/dlabs/timereg/newhours_delete.php`, cookieJar);
 	const deleteFormHtml = yield rp({
@@ -318,9 +319,8 @@ const deleteTimekeep = (userDetails, id) => co(function* coroutine() {
 module.exports = {
 	login,
 	logout,
-	timekeep,
-	deleteTimekeep,
+	addActivity,
+	delActivity,
 	dailyActivity,
-	weeklyActivities,
-	listWeekActivities
+	weeklyActivities
 };
