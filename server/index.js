@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('./logger');
 const dummyServer = require('./dummyServer');
+const api = require('./api');
 
 const app = express();
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
@@ -11,6 +12,7 @@ const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use('/graphql', api);
 
 // dynamic
 
