@@ -11,43 +11,17 @@ const getClassName = props =>
 	`time-group ${props.emphasis ? 'emphasis' : ''}`;
 
 export default class TimeGroup extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.onChangeTime = this.onChangeTime.bind(this);
-
-		this.state = {
-			hours: {
-				isFocused: false,
-				value: null
-			},
-			minutes: {
-				isFocused: false,
-				value: null
-			}
-		};
 	}
 
 	onChangeTime(mode) {
 		return (dummy, suggestion) => {
-			const valueToSet = {
-				[mode]: {
-					...this.state[mode],
-					value: suggestion
-				}
-			};
-			const callbackAfterSet = () => {
-				const { hours, minutes } = this.state;
-				const timeToCheck = {
-					hours: hours.value,
-					minutes: minutes.value
-				};
-				if (timeIsValid(timeToCheck)) {
-					this.props.onSet(hours.value, minutes.value);
-				}
-			};
-
-			this.setState(valueToSet, callbackAfterSet);
+			const newtime = {...this.props.time};
+			newtime[mode] = suggestion;
+			this.props.onSet(newtime.hours, newtime.minutes);
 		};
 	}
 
