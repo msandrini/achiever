@@ -15,21 +15,10 @@ export default class TimeField extends React.Component {
 		this.onChooseSuggestion = this.onChooseSuggestion.bind(this);
 
 		this.state = {
-			isFocused: false,
-			value: null
+			isFocused: false
 		};
 
 		this.randomId = `${props.mode}_${String(Math.random())}`;
-	}
-
-	componentWillMount() {
-		this.setState({ value: this.props.value || '' });
-	}
-
-	componentWillReceiveProps({ value }) {
-		if (this.state.value !== value) {
-			this._changeTime(value);
-		}
 	}
 
 	onFocus() {
@@ -62,13 +51,12 @@ export default class TimeField extends React.Component {
 
 	_isInputValid(value) {
 		const modeString = this._isHoursInput() ? 'hours' : 'minutes';
-		return checkValidity[modeString](value);
+		return checkValidity(modeString, value);
 	}
 
 	_changeTime(valueRaw) {
 		const value = !this._isInputValid(parseInt(valueRaw, 10)) ? 0 : valueRaw;
 		this.props.onChange(this.props.mode, value);
-		this.setState({ value });
 	}
 
 	_getPlaceholder() {
@@ -84,8 +72,8 @@ export default class TimeField extends React.Component {
 	}
 
 	render() {
-		const { mode, referenceHour } = this.props;
-		const { isFocused, value } = this.state;
+		const { mode, referenceHour, value } = this.props;
+		const { isFocused } = this.state;
 		return (
 			<div className="field">
 				<input
@@ -124,5 +112,5 @@ TimeField.propTypes = {
 TimeField.defaultProps = {
 	referenceHour: 9,
 	onChange: () => {},
-	value: 0
+	value: ''
 };
