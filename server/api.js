@@ -5,8 +5,8 @@ const co = require('co');
 const {
 	login,
 	logout,
-	timekeep,
-	deleteTimekeep,
+	addActivity,
+	delActivity,
 	dailyActivity,
 	weeklyActivities
 } = require('./middleware');
@@ -28,21 +28,26 @@ const schema = buildSchema(`
 	type Activity {
 		id: ActivityId,
 		date: String!,
-		startTime: String!,
-		endTime: String!,
+		startTime: String,
+		endTime: String,
 		startBreakTime: String,
 		endBreakTime: String,
 		total: String
 	}
 
+	type WeekActivities {
+		activities: [Activity]
+		total: String
+	}
+
 	type Query {
 		dailyActivity(date: String!): Activity
-		weeklyActivities(date: String!): [Activity]
+		weeklyActivities(date: String!): WeekActivities
 	}
 
 	type Mutation {
-		setActivity(activity: ActivityInput!): Activity
-		deleteActivity(date: String!): Boolean
+		addActivity(activity: ActivityInput!): Activity
+		delActivity(date: String!): Boolean
 	}
 `);
 
@@ -65,16 +70,16 @@ const root = {
 
 		return result;
 	}).catch(err => logger.error('Request failed %o', err)),
-	setActivity: ({ activity }) => co(function* coroutine() {
+	addActivity: ({ activity }) => co(function* coroutine() {
 		const userDetails = yield login();
 
-		const result = yield timekeep(userDetails, activity);
+		const result = yield addActivity(userDetails, activity);
 
 		yield logout();
 
 		return result;
 	}).catch(err => logger.error('Request failed %o', err)),
-	deleteActivity: ({ date }) => co(function* coroutine() {
+	delActivity: ({ date }) => co(function* coroutine() {
 		const userDetails = yield login();
 
 		const activity = yield dailyActivity(userDetails, date);
@@ -88,11 +93,11 @@ const root = {
 		const { workTimeId, breakTimeId } = activity.id;
 
 		if (workTimeId) {
-			yield deleteTimekeep(userDetails, workTimeId);
+			yield delActivity(userDetails, workTimeId);
 		}
 
 		if (breakTimeId) {
-			yield deleteTimekeep(userDetails, breakTimeId);
+			yield delActivity(userDetails, breakTimeId);
 		}
 
 		yield logout();

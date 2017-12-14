@@ -3,7 +3,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('./logger');
-const dummyServer = require('./dummyServer');
 const api = require('./api');
 
 const app = express();
@@ -25,9 +24,6 @@ app.post('/times', (req, res) => {
 	logger.info(JSON.stringify(req.body));
 	res.json({ success: true });
 });
-
-// Mock of target server
-dummyServer(app);
 
 // static
 
