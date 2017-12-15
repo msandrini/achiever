@@ -11,6 +11,7 @@ import strings from '../shared/strings';
 
 import './styles/main.css';
 
+const referenceHours = [9, 12, 13, 17];
 
 moment.locale('pt-br');
 
@@ -27,12 +28,16 @@ export default class Main extends React.Component {
 			controlDate: moment(),
 			labouredHoursOnDay: null,
 			remainingHoursOnWeek: null,
-			storedTimes: [{}, {}, {}, {}]
+			storedTimes: [{}, {}, {}, {}],
+			focusedField: null,
+			shouldHaveFocus: null
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.imReligious = this.imReligious.bind(this);
+
+		this.submitButton = null;
 	}
 
 	componentWillMount() {
@@ -48,14 +53,36 @@ export default class Main extends React.Component {
 
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
+			const composedTime = { hours, minutes };
 			this.setState(prevState => ({
 				...prevState,
 				storedTimes: replacingValueInsideArray(
 					prevState.storedTimes,
 					groupIndex,
-					{ hours, minutes }
+					composedTime
 				)
 			}));
+			if (this.state.focusedField) {
+				const modeBeingChanged = this.state.focusedField.fieldMode;
+				const valueBeingChanged = composedTime[modeBeingChanged];
+
+				if (String(valueBeingChanged).length === 2) {
+					const nextField = this._getNextField();
+					this.setState({
+						shouldHaveFocus: nextField
+					});
+				} else {
+					this.setState({
+						shouldHaveFocus: false
+					});
+				}
+			}
+		};
+	}
+
+	onFieldFocus(index) {
+		return (fieldMode) => {
+			this.setState({ focusedField: { index, fieldMode } });
 		};
 	}
 
@@ -88,6 +115,32 @@ export default class Main extends React.Component {
 		// TODO check server for pre-entered values
 		// populate labouredHoursOnDay and remainingHoursOnWeek
 		this.setState();
+	}
+
+	_getNextField() {
+		const { focusedField } = this.state;
+		if (focusedField.fieldMode === 'hours') {
+			return {
+				index: focusedField.index,
+				fieldMode: 'minutes'
+			};
+		}
+		if (focusedField.fieldMode === 'minutes' && focusedField.index === 3) {
+			this.submitButton.focus();
+			return false;
+		}
+		return {
+			index: focusedField.index + 1,
+			fieldMode: 'hours'
+		};
+	}
+
+	_shouldHaveFocus(index) {
+		const { shouldHaveFocus } = this.state;
+		if (shouldHaveFocus && shouldHaveFocus.index === index) {
+			return shouldHaveFocus.fieldMode;
+		}
+		return false;
 	}
 
 	_shouldSendBeAvailable() {
@@ -139,36 +192,32 @@ export default class Main extends React.Component {
 				</div>
 				<div className="column">
 					<h2>{controlDate.format('L')}</h2>
-					<TimeGroup
-						label={strings.times[0].label}
-						emphasis
-						referenceHour={9}
-						time={storedTimes[0]}
-						onSet={this.onTimeSet(0)}
-					/>
-					<TimeGroup
-						label={strings.times[1].label}
-						referenceHour={12}
-						time={storedTimes[1]}
-						onSet={this.onTimeSet(1)}
-					/>
-					<TimeGroup
-						label={strings.times[2].label}
-						referenceHour={13}
-						time={storedTimes[2]}
-						onSet={this.onTimeSet(2)}
-					/>
-					<TimeGroup
-						label={strings.times[3].label}
-						emphasis
-						referenceHour={17}
-						time={storedTimes[3]}
-						onSet={this.onTimeSet(3)}
-					/>
-					<button type="button" onClick={this.imReligious} className="send">
-						{strings.imReligious}
+					{referenceHours.map((refHour, index) => (
+						<TimeGroup
+							key={refHour}
+							label={strings.times[index].label}
+							emphasis={index === 0 || index === 3}
+							referenceHour={refHour}
+							time={storedTimes[index]}
+							shouldHaveFocus={this._shouldHaveFocus(index)}
+							onSet={this.onTimeSet(index)}
+							onFocus={this.onFieldFocus(index)}
+						/>
+					))}
+					<button
+						type="button"
+						onClick={this.imReligious}
+						className="test"
+						style={{ fontSize: '11px' }}
+					>
+						Test
 					</button>
-					<button type="submit" className="send" disabled={!this._shouldSendBeAvailable()}>
+					<button
+						type="submit"
+						className="send"
+						ref={(button) => { this.submitButton = button; }}
+						disabled={!this._shouldSendBeAvailable()}
+					>
 						{strings.send}
 					</button>
 				</div>

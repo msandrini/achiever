@@ -10,7 +10,8 @@ const {
 	updateTime,
 	clearTimes,
 	locateKeywordsOnArguments,
-	listTimesOnArguments
+	listTimesOnArguments,
+	debug
 } = utils;
 
 const { buildDateFromTimeString } = sharedUtils;
@@ -22,12 +23,16 @@ if (locateKeywordsOnArguments(strings.clearCliKeywords)) {
 	process.exit();
 }
 
+if (locateKeywordsOnArguments(['debug'])) {
+	console.log(debug());
+	process.exit();
+}
+
 // set specific time
 strings.times.forEach((stringObj, index) => {
 	if (locateKeywordsOnArguments(stringObj.cliKeywords)) {
 		const times = listTimesOnArguments();
 		if (times[0]) {
-			clearTimes();
 			const timeToInsert = buildDateFromTimeString(times[0]);
 			updateTime(index, timeToInsert, stringObj.label);
 		} else {
