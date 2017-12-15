@@ -33,13 +33,17 @@ export default class TimeGroup extends React.Component {
 					mode="hours"
 					value={time.hours}
 					referenceHour={referenceHour}
+					shouldHaveFocus={this.props.shouldHaveFocus === 'hours'}
 					onChange={this.onChangeTime('hours')}
+					onFocus={this.props.onFocus}
 				/>
 				<span className="separator">:</span>
 				<TimeField
 					mode="minutes"
 					value={time.minutes}
+					shouldHaveFocus={this.props.shouldHaveFocus === 'minutes'}
 					onChange={this.onChangeTime('minutes')}
+					onFocus={this.props.onFocus}
 				/>
 			</div>
 		);
@@ -50,11 +54,17 @@ TimeGroup.propTypes = {
 	onSet: PropTypes.func,
 	referenceHour: PropTypes.number,
 	time: PropTypes.object.isRequired,
-	label: PropTypes.string
+	label: PropTypes.string,
+	shouldHaveFocus: PropTypes.oneOfType([
+		PropTypes.oneOf(['hours', 'minutes']),
+		PropTypes.bool
+	]),
+	onFocus: PropTypes.func.isRequired
 };
 
 TimeGroup.defaultProps = {
 	onSet: () => {},
 	referenceHour: 9,
-	label: ''
+	label: '',
+	shouldHaveFocus: false
 };
