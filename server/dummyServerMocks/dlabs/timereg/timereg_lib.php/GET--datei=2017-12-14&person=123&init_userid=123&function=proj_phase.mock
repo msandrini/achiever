@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<label class="title">Project/Phase </label>
+<br/>
+<input type="hidden" id="proj_phase" name="proj_phase" value="456" />
+<span style="width: 260px;font-weight: bold;line-height: 23px;">Project Phase Name</span>
+<br/>
