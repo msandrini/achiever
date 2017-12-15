@@ -204,8 +204,13 @@ export default class Main extends React.Component {
 							onFocus={this.onFieldFocus(index)}
 						/>
 					))}
-					<button type="button" onClick={this.imReligious} className="send">
-						{strings.imReligious}
+					<button
+						type="button"
+						onClick={this.imReligious}
+						className="test"
+						style={{ fontSize: '11px' }}
+					>
+						Test
 					</button>
 					<button
 						type="submit"
