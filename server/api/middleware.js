@@ -1,99 +1,34 @@
 require('dotenv').config();
 const rp = require('request-promise');
-const logger = require('./logger');
 const cheerio = require('cheerio');
 const co = require('co');
 const moment = require('moment');
+const logger = require('../logger');
+const {
+	extractError,
+	parseTimeToArray,
+	extractId,
+	extractBreakTime,
+	mapTableIntoArray,
+	getOptions,
+	stringfyTime,
+	getUserDetails,
+	activityToPayload,
+	extractSelectOptions
+} = require('./utils');
 
 const url = process.env.SERVICE_URL;
 const user = process.env.AUTH_USER;
 const password = process.env.PASSWORD;
 
 const authenticationSucceed = 'Your browser doesnt support frames, but this is required';
-const PROJECT_PHASE = 329;
-const CODE_DEVELOPING_ACTIVITY = 7;
-const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([a-zA-Z0-9 '\\/]+)'\);/, 'i');
-const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
-const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
 
-const extractError = (responseHtml) => {
-	const errorMessages = responseHtml.match(errorMessageRegex);
-
-	if (errorMessages && errorMessages.length > 1) {
-		return errorMessages[1];
-	}
-
-	return false;
-};
-
-const parseTimeToArray = timeAsString => timeAsString.split(':').map(time => parseInt(time, 10));
-
-const extractId = (responseHtml) => {
-	if (!responseHtml) {
-		return null;
-	}
-
-	const id = responseHtml.match(idRegex);
-
-	if (id && id.length > 1) {
-		return id[1];
-	}
-
-	return null;
-};
-
-const extractBreakTime = (response) => {
-	if (!response) {
-		return {};
-	}
-
-	const times = response.match(timeBreakRegex);
-
-	if (times && times.length > 2) {
-		return {
-			startBreakTime: times[1],
-			endBreakTime: times[2]
-		};
-	}
-
-	return {};
-};
-
-const mapTableIntoArray = ($, selector) => (
-	$(selector)
-		.filter((index, item) =>
-			$(item).text().trim() &&
-			$(item).text().trim() !== '...' &&
-			$(item).text().trim() !== '-')
-		.map((index, item) => $(item).text().trim())
-		.get()
-);
-
-const getOptions = (method, uri, cookieJar) => ({
-	method,
-	uri,
-	jar: cookieJar,
-	rejectUnauthorized: false
+const commonPayload = (userDetails, functionName) => ({
+	form_key: userDetails.formKey,
+	person: userDetails.personId,
+	init_userid: userDetails.personId,
+	function: functionName
 });
-
-const stringfyTime = (hours, minutes) => {
-	const stringifiedHour = hours < 10 ? `0${hours}` : `${hours}`;
-	const stringifiedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-
-	return `${stringifiedHour}:${stringifiedMinutes}`;
-};
-
-const getUserDetails = (cookieJar, userDetailsHtml) => {
-	const $ = cheerio.load(userDetailsHtml);
-	const formKey = $('input[type="hidden"][name="form_key"]').val();
-	const personId = $('input[type="hidden"][name="person"]').val();
-
-	return {
-		cookieJar,
-		formKey,
-		personId
-	};
-};
 
 const login = () => co(function* coroutine() {
 	const cookieJar = rp.jar();
@@ -135,49 +70,36 @@ const logout = (cookieJar) => {
 		.catch(() => logger.error('Logout failed...'));
 };
 
-const commonPayload = (userDetails, functionName) => ({
-	form_key: userDetails.formKey,
-	person: userDetails.personId,
-	init_userid: userDetails.personId,
-	function: functionName
-});
-
-const activityToPayload = (activity) => {
-	const date = moment(activity.date);
-	const startTime = moment(activity.startTime, 'hh:mm');
-	const endTime = moment(activity.endTime, 'hh:mm');
-	const startBreakTime = moment(activity.startBreakTime || '12:00', 'hh:mm');
-	const endBreakTime = moment(activity.endBreakTime || '13:00', 'hh:mm');
-
-	const totalBreakTime = moment().startOf('hour');
-	totalBreakTime.add(endBreakTime.hour(), 'hours');
-	totalBreakTime.add(endBreakTime.minute(), 'minutes');
-	totalBreakTime.subtract(startBreakTime.hour(), 'hours');
-	totalBreakTime.subtract(startBreakTime.minute(), 'minutes');
-
-	const totalWorkedTime = moment().startOf('hour');
-	totalWorkedTime.add(endTime.hour(), 'hours');
-	totalWorkedTime.add(endTime.minute(), 'minutes');
-	totalWorkedTime.subtract(startTime.hour(), 'hours');
-	totalWorkedTime.subtract(startTime.minute(), 'minutes');
-	totalWorkedTime.subtract(totalBreakTime.hour(), 'hours');
-	totalWorkedTime.subtract(totalBreakTime.minute(), 'minutes');
-
-	return {
-		proj_phase: PROJECT_PHASE,
-		proj_activity: CODE_DEVELOPING_ACTIVITY,
-		remark: '',
-		diai: date.date(),
-		mesi: date.month() + 1,
-		anoi: date.year(),
-		timehH: startTime.hour(),
-		timemH: startTime.minute(),
-		startBreak6: activity.startBreakTime || '12:00',
-		endBreak6: activity.endBreakTime || '13:00',
-		timeh: totalWorkedTime.hour(),
-		timem: totalWorkedTime.minute()
+const phaseTypes = (userDetails, date) => co(function* coroutine() {
+	const { cookieJar } = userDetails;
+	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
+	options.qs = {
+		datei: date,
+		person: userDetails.personId,
+		init_userid: userDetails.personId,
+		function: 'proj_phase'
 	};
-};
+
+	const responseHtml = yield rp(options);
+
+	return extractSelectOptions('proj_phase', responseHtml);
+}).catch(err => logger.error('Request failed %s', err));
+
+const activityTypes = (userDetails, date, phase) => co(function* coroutine() {
+	const { cookieJar } = userDetails;
+	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
+	options.qs = {
+		datei: date,
+		person: userDetails.personId,
+		init_userid: userDetails.personId,
+		phase,
+		function: 'proj_activity'
+	};
+
+	const responseHtml = yield rp(options);
+
+	return extractSelectOptions('proj_activity', responseHtml);
+}).catch(err => logger.error('Request failed %s', err));
 
 const dailyActivity = (userDetails, date) => co(function* coroutine() {
 	const { cookieJar } = userDetails;
@@ -322,5 +244,7 @@ module.exports = {
 	addActivity,
 	delActivity,
 	dailyActivity,
-	weeklyActivities
+	weeklyActivities,
+	activityTypes,
+	phaseTypes
 };

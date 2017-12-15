@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: achievo=1e373a93f8901ae9c3971948c80b5fe7
+
+<script>     $('errmsg').hide(); </script>
+<!--    HTML    -->

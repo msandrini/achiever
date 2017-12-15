@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<label class="title">Activity </label>
+<br/>
+<select id="proj_activity" name="proj_activity" style="width: 260px;" >
+    <option value="65"> Absence / Compensation</option>
+    <option value="6">BugFix</option>
+    <option value="7" SELECTED >Code/ Document Reviews</option>
+    <option value="9">Coding</option>
+</select>
