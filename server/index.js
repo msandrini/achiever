@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { graphiqlExpress } = require('apollo-server-express');
 const logger = require('./logger');
 const api = require('./api');
+require('./dummyServer');
 
 const app = express();
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
@@ -11,7 +13,8 @@ const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/graphql', api);
+app.use('/api', bodyParser.json(), api);
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/api' }));
 
 // dynamic
 
