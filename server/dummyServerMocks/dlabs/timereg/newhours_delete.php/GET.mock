@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<form id="timereg_delete" method="post">
+	<input type="hidden" value="8055c698c8a1e1f00a71b35ccfd46427" name="form_key" />
+</form>

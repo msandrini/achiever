@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { graphiqlExpress } = require('apollo-server-express');
 const logger = require('./logger');
 const api = require('./api');
+require('./dummyServer');
 
 const app = express();
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
