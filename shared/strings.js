@@ -49,13 +49,13 @@ const strings = {
 		'multi', 'multiplos', 'varios'
 	],
 	sendCallFeedbacks: {
-		error: 'Erro ao executar api call para inserir horas: ',
+		error: 'Erro ao executar api call para inserir horas:',
 		success: 'Api call para inserir horas executada com sucesso!'
 	},
 	noTimesProvided: 'nenhuma hora foi fornecida',
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
-	imReligious: 'Sou religioso com meus horários'
+	cannotInsertDisconnectedTime: ' não pode ser inserida sem o(s) horário(s) anterior(es)'
 };
 
 module.exports = strings;
