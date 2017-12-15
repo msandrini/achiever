@@ -2,8 +2,10 @@ const storage = require('node-persist');
 const chalk = require('chalk');
 const logger = require('../logger');
 
-const { apiCalls } = require('../../shared/utils');
 const strings = require('../../shared/strings');
+
+// stub
+const apiSend = () => Promise.resolve();
 
 const STORAGE_KEY = 'storedTimes';
 storage.initSync({ dir: 'server/temp' });
@@ -67,8 +69,12 @@ const sendTimesAndClearStore = (times) => {
 	};
 
 	// send stored values to the backend when they are 4
-	apiCalls.sendTimes(valuesToSend).then(() =>
-		_onCallSuccess(valuesToSend.times, times)).catch(_onCallError);
+	console.log('+++++++++++++++++++++++++++++');
+	console.log('Sent to backend', valuesToSend);
+	console.log('+++++++++++++++++++++++++++++');
+	apiSend(valuesToSend)
+		.then(_onCallSuccess(valuesToSend.times, times))
+		.catch(_onCallError);
 
 	// and clear the store
 	clearTimes();
