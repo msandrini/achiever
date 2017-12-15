@@ -1,5 +1,7 @@
 HTTP/1.1 200 OK
 Content-Type: text/html
 
-<script>     $('errmsg').hide(); </script>
+<script>     $('errmsg').show();
+                        $('errmsg').update('BREAK\'S END TIME SHOULD GREATER THAN START TIME. 
+<br/> IF YOUR BREAK EXCEED THE LIMIT OF THE DAY (23:59), CONTINUE RECORDING THE NEXT DAY'); </script>
 <!--    HTML    -->

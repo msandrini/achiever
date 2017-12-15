@@ -19,13 +19,23 @@ export default class TimeField extends React.Component {
 		};
 
 		this.randomId = `${props.mode}_${String(Math.random())}`;
+		this.input = null;
+	}
+
+	componentDidUpdate(prevProps) {
+		const { shouldHaveFocus } = this.props;
+		if (shouldHaveFocus && !prevProps.shouldHaveFocus) {
+			this.input.focus();
+		}
 	}
 
 	onFocus() {
 		return () => {
+			this.props.onFocus(this.props.mode);
 			this.setState({
 				isFocused: true
 			});
+			this.input.select();
 		};
 	}
 
@@ -87,6 +97,7 @@ export default class TimeField extends React.Component {
 					onChange={this.onChangeValue()}
 					onFocus={this.onFocus()}
 					onBlur={this.onBlur()}
+					ref={(input) => { this.input = input; }}
 				/>
 				<SuggestionBox
 					mode={mode}
@@ -105,12 +116,15 @@ TimeField.propTypes = {
 		PropTypes.number,
 		PropTypes.string
 	]),
+	shouldHaveFocus: PropTypes.bool,
 	onChange: PropTypes.func,
-	referenceHour: PropTypes.number
+	referenceHour: PropTypes.number,
+	onFocus: PropTypes.func.isRequired
 };
 
 TimeField.defaultProps = {
 	referenceHour: 9,
 	onChange: () => {},
-	value: ''
+	value: '',
+	shouldHaveFocus: false
 };

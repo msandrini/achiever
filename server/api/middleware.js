@@ -57,7 +57,7 @@ const login = () => co(function* coroutine() {
 	}
 
 	return getUserDetails(cookieJar, userDetailsHtml);
-}).catch(err => logger.error('Request failed %s', err));
+}).catch((err) => { throw new Error(err); });
 
 const logout = (cookieJar) => {
 	const options = getOptions('GET', `${url}/index.php`, cookieJar);
@@ -83,7 +83,7 @@ const phaseTypes = (userDetails, date) => co(function* coroutine() {
 	const responseHtml = yield rp(options);
 
 	return extractSelectOptions('proj_phase', responseHtml);
-}).catch(err => logger.error('Request failed %s', err));
+}).catch((err) => { throw new Error(err); });
 
 const activityTypes = (userDetails, date, phase) => co(function* coroutine() {
 	const { cookieJar } = userDetails;
@@ -99,7 +99,7 @@ const activityTypes = (userDetails, date, phase) => co(function* coroutine() {
 	const responseHtml = yield rp(options);
 
 	return extractSelectOptions('proj_activity', responseHtml);
-}).catch(err => logger.error('Request failed %s', err));
+}).catch((err) => { throw new Error(err); });
 
 const dailyActivity = (userDetails, date) => co(function* coroutine() {
 	const { cookieJar } = userDetails;
@@ -138,7 +138,7 @@ const dailyActivity = (userDetails, date) => co(function* coroutine() {
 		endBreakTime: endBreakTime || '',
 		total: !workTime ? null : workTime[4]
 	};
-}).catch(err => logger.error('Request failed %s', err));
+}).catch((err) => { throw new Error(err); });
 
 const weeklyActivities = (userDetails, date) => co(function* coroutine() {
 	const refDate = moment(date);
@@ -169,7 +169,7 @@ const weeklyActivities = (userDetails, date) => co(function* coroutine() {
 		activities,
 		total: stringfyTime(totalHours, totalMinutes)
 	};
-}).catch(err => logger.error('Request failed %s', err));
+}).catch((err) => { throw new Error(err); });
 
 const addActivity = (userDetails, activity) => {
 	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, userDetails.cookieJar);
@@ -200,7 +200,7 @@ const addActivity = (userDetails, activity) => {
 		logger.info('Time break registered!!!');
 
 		return yield dailyActivity(userDetails, activity.date);
-	}).catch(err => logger.error('Request failed %s', err));
+	});
 };
 
 const delActivity = (userDetails, id) => co(function* coroutine() {
@@ -236,7 +236,7 @@ const delActivity = (userDetails, id) => co(function* coroutine() {
 	}
 
 	logger.info('Time deleted!!!');
-}).catch(err => logger.error(`Delete worktime failed ${err}`));
+}).catch((err) => { throw new Error(err); });
 
 module.exports = {
 	login,
