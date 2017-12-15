@@ -8,8 +8,10 @@ const {
 	addActivity,
 	delActivity,
 	dailyActivity,
-	weeklyActivities
-} = require('./middleware');
+	weeklyActivities,
+	activityTypes,
+	phaseTypes
+} = require('./api/middleware');
 
 const schema = buildSchema(`
 	input ActivityInput {
@@ -40,9 +42,21 @@ const schema = buildSchema(`
 		total: String
 	}
 
+	type Type {
+		id: Int,
+		name: String
+	}
+
+	type TypeList {
+		default: Int,
+		types: [Type]
+	}
+
 	type Query {
 		dailyActivity(date: String!): Activity
 		weeklyActivities(date: String!): WeekActivities
+		phaseTypes(date: String!): TypeList
+		activityTypes(date: String!, phaseId: Int!): TypeList
 	}
 
 	type Mutation {
@@ -65,6 +79,24 @@ const root = {
 		const userDetails = yield login();
 
 		const result = yield weeklyActivities(userDetails, date);
+
+		yield logout();
+
+		return result;
+	}).catch(err => logger.error('Request failed %o', err)),
+	phaseTypes: ({ date }) => co(function* coroutine() {
+		const userDetails = yield login();
+
+		const result = yield phaseTypes(userDetails, date);
+
+		yield logout();
+
+		return result;
+	}).catch(err => logger.error('Request failed %o', err)),
+	activityTypes: ({ date, phase }) => co(function* coroutine() {
+		const userDetails = yield login();
+
+		const result = yield activityTypes(userDetails, date, phase);
 
 		yield logout();
 
