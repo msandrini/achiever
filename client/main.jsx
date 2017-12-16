@@ -172,63 +172,63 @@ export default class Main extends React.Component {
 				<Header />
 				<div className="time-management-container">
 					<form onSubmit={this.onSubmit}>
-					<h1 className="current-date">{controlDate.format('L')}</h1>
-					<div className="column">
-						<div className="time-management-content">
-							<DatePicker
-								inline
-								selected={this.state.controlDate}
-								onChange={this.onDateChange}
-							/>
-							<p className="remaining">
-								{strings.remainingHoursOnWeek}
-								{' '}
-								<strong>{remainingHoursOnWeek}</strong>
-							</p>
-							{ labouredHoursOnDay ?
-								(
-									<p className="projection">
-										{strings.hoursLabouredOnThisDay}
-										{' '}
-										<strong>{labouredHoursOnDay}</strong>
-									</p>
-								) : null
-							}
-						</div>
-					</div>
-					<div className="column">
-						<div className="time-management-content">
-							{referenceHours.map((refHour, index) => (
-								<TimeGroup
-									key={refHour}
-									label={strings.times[index].label}
-									emphasis={index === 0 || index === 3}
-									referenceHour={refHour}
-									time={storedTimes[index]}
-									shouldHaveFocus={this._shouldHaveFocus(index)}
-									onSet={this.onTimeSet(index)}
-									onFocus={this.onFieldFocus(index)}
+						<h1 className="current-date">{controlDate.format('L')}</h1>
+						<div className="column">
+							<div className="time-management-content">
+								<DatePicker
+									inline
+									selected={this.state.controlDate}
+									onChange={this.onDateChange}
 								/>
-							))}
-							<button
-								type="button"
-								onClick={this.imReligious}
-								className="test"
-								style={{ fontSize: '11px' }}
-							>
-								Test
-							</button>
-							<button
-								type="submit"
-								className="send"
-								ref={(button) => { this.submitButton = button; }}
-								disabled={!this._shouldSendBeAvailable()}
-							>
-								{strings.send}
-							</button>
+								<p className="remaining">
+									{strings.remainingHoursOnWeek}
+									{' '}
+									<strong>{remainingHoursOnWeek}</strong>
+								</p>
+								{ labouredHoursOnDay ?
+									(
+										<p className="projection">
+											{strings.hoursLabouredOnThisDay}
+											{' '}
+											<strong>{labouredHoursOnDay}</strong>
+										</p>
+									) : null
+								}
+							</div>
 						</div>
-					</div>
-				</form>
+						<div className="column">
+							<div className="time-management-content">
+								{referenceHours.map((refHour, index) => (
+									<TimeGroup
+										key={refHour}
+										label={strings.times[index].label}
+										emphasis={index === 0 || index === 3}
+										referenceHour={refHour}
+										time={storedTimes[index]}
+										shouldHaveFocus={this._shouldHaveFocus(index)}
+										onSet={this.onTimeSet(index)}
+										onFocus={this.onFieldFocus(index)}
+									/>
+								))}
+								<button
+									type="button"
+									onClick={this.imReligious}
+									className="test"
+									style={{ fontSize: '11px' }}
+								>
+								Test
+								</button>
+								<button
+									type="submit"
+									className="send"
+									ref={(button) => { this.submitButton = button; }}
+									disabled={!this._shouldSendBeAvailable()}
+								>
+									{strings.send}
+								</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		);
