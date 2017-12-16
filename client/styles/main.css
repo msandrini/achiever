@@ -1,9 +1,13 @@
 * {
 	font-family: 'Arial', sans-serif;
-    color: #777;
+  color: #777;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline
 }
 body {
-	padding: 50px;
+	background-color: #fafafa;
 }
 h1 {
 	font-size: 20px;
@@ -25,6 +29,17 @@ h2 {
 	clear: both;
 	text-align: right;
 	margin: 0 0 4px;
+}
+.time-management-container {
+	padding: 40px;
+}
+.time-management-content:first-of-type {
+	padding-right: 80px;
+}
+.current-date {
+	text-align: center;
+	color: #254356;
+	margin-bottom: 40px;
 }
 .projection {
 	color: #AAA;

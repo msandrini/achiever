@@ -29,6 +29,7 @@ app.post('/times', (req, res) => {
 });
 
 // static
+app.use('/assets', express.static(getFromRoot('client/assets')));
 
 app.get('/', (req, res) => {
 	res.sendFile(getFromRoot('client/index.htm'));
