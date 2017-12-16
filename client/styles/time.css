@@ -32,6 +32,9 @@ label {
     font-weight: bold;
     margin: 10px 0 0 70px;
     width: 265px;
+    height: 60px;
+    background-color: #254356;
+    color: #fff;
 }
 .time-group input::placeholder {
     color: #ddd;
