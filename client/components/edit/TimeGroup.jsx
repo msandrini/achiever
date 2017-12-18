@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TimeField from './TimeField';
 
-import '../styles/time.css';
+import '../../styles/time.css';
 
 const randomId = String(Math.random());
 const getClassName = props =>
