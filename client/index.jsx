@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Main from './main';
+import Main from './components/Main';
 
 /* eslint-env browser */
 

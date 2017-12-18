@@ -24,7 +24,7 @@ if (locateKeywordsOnArguments(strings.clearCliKeywords)) {
 }
 
 if (locateKeywordsOnArguments(['debug'])) {
-	console.log(debug());
+	logger.info(debug());
 	process.exit();
 }
 
