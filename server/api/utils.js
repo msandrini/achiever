@@ -1,15 +1,17 @@
 const cheerio = require('cheerio');
 const moment = require('moment');
 
-const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('(.+)'\);/, 'i');
+const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([^\0]+)'\);/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
 const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
+const normaliseStringRegex = RegExp(/<[a-z ]+\/>|\\|\s\r?\n/, 'gi');
 
 const extractError = (responseHtml) => {
 	const errorMessages = responseHtml.match(errorMessageRegex);
 
 	if (errorMessages && errorMessages.length > 1) {
-		return errorMessages[1];
+		const message = errorMessages[1].replace(normaliseStringRegex, '');
+		return message;
 	}
 
 	return false;
