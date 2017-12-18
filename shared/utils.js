@@ -1,3 +1,7 @@
+/* global window */
+
+const STORAGEKEY = 'storedTimes';
+
 const _isNumber = value => !Number.isNaN(parseInt(value, 10));
 
 const checkValidity = (mode, value) => {
@@ -30,9 +34,21 @@ const buildDateFromTimeString = (timeString) => {
 	return new Date(year, month, day, hours, minutes);
 };
 
+const getStorage = name => (
+	JSON.parse(window.localStorage.getItem(name))
+);
+
+const setStorage = (name, data) => {
+	window.localStorage.setItem(name, JSON.stringify(data));
+};
+
+
 module.exports = {
 	checkValidity,
 	timeIsValid,
 	getTimeFromDate,
-	buildDateFromTimeString
+	buildDateFromTimeString,
+	getStorage,
+	setStorage,
+	STORAGEKEY
 };
