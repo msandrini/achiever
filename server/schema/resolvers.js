@@ -1,5 +1,4 @@
 const logger = require('../logger');
-const co = require('co');
 const {
 	login,
 	logout,
@@ -13,60 +12,60 @@ const {
 
 const resolvers = {
 	Query: {
-		dailyActivity: (_, { date }) => co(function* coroutine() {
-			const userDetails = yield login();
+		dailyActivity: async (_, { date }) => {
+			const userDetails = await login();
 
-			const result = yield dailyActivity(userDetails, date);
+			const result = await dailyActivity(userDetails, date);
 
-			yield logout();
-
-			return result;
-		}).catch(err => logger.error('Request failed %o', err)),
-		weeklyActivities: (_, { date }) => co(function* coroutine() {
-			const userDetails = yield login();
-
-			const result = yield weeklyActivities(userDetails, date);
-
-			yield logout();
+			await logout();
 
 			return result;
-		}).catch(err => logger.error('Request failed %o', err)),
-		phaseTypes: (_, { date }) => co(function* coroutine() {
-			const userDetails = yield login();
+		},
+		weeklyActivities: async (_, { date }) => {
+			const userDetails = await login();
 
-			const result = yield phaseTypes(userDetails, date);
+			const result = await weeklyActivities(userDetails, date);
 
-			yield logout();
-
-			return result;
-		}).catch(err => logger.error('Request failed %o', err)),
-		activityTypes: (_, { date, phaseId }) => co(function* coroutine() {
-			const userDetails = yield login();
-
-			const result = yield activityTypes(userDetails, date, phaseId);
-
-			yield logout();
+			await logout();
 
 			return result;
-		}).catch(err => logger.error('Request failed %o', err))
+		},
+		phaseTypes: async (_, { date }) => {
+			const userDetails = await login();
+
+			const result = await phaseTypes(userDetails, date);
+
+			await logout();
+
+			return result;
+		},
+		activityTypes: async (_, { date, phaseId }) => {
+			const userDetails = await login();
+
+			const result = await activityTypes(userDetails, date, phaseId);
+
+			await logout();
+
+			return result;
+		}
 	},
 	Mutation: {
-		addActivity: (_, { activity }) => co(function* coroutine() {
-			const userDetails = yield login();
+		addActivity: async (_, { activity }) => {
+			const userDetails = await login();
 
-			const result = yield addActivity(userDetails, activity);
+			const result = await addActivity(userDetails, activity);
 
-			yield logout();
+			await logout();
 
 			return result;
-		}).catch(err => logger.error('Request failed %o', err)),
-		delActivity: (_, { date }) => co(function* coroutine() {
-			const userDetails = yield login();
+		},
+		delActivity: async (_, { date }) => {
+			const userDetails = await login();
 
-			const activity = yield dailyActivity(userDetails, date);
+			const activity = await dailyActivity(userDetails, date);
 
 			if (!activity || !activity.id) {
-				yield logout();
+				await logout();
 
 				return false;
 			}
@@ -74,17 +73,17 @@ const resolvers = {
 			const { workTimeId, breakTimeId } = activity.id;
 
 			if (workTimeId) {
-				yield delActivity(userDetails, workTimeId);
+				await delActivity(userDetails, workTimeId);
 			}
 
 			if (breakTimeId) {
-				yield delActivity(userDetails, breakTimeId);
+				await delActivity(userDetails, breakTimeId);
 			}
 
-			yield logout();
+			await logout();
 
 			return true;
-		}).catch(err => logger.error('Request failed %o', err))
+		}
 	}
 };
 

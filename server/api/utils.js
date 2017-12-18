@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const moment = require('moment');
 
-const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([\w\d'/\s()<>\\:,.]+)'\);/, 'i');
+const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('(.+)'\);/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
 const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
 
