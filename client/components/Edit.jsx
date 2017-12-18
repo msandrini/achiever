@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import apiCalls from '../apiCalls';
 import TimeGroup from './edit/TimeGroup';
-import { timeIsValid } from '../../shared/utils';
+import { STORAGEKEY, getStorage, setStorage, timeIsValid } from '../../shared/utils';
 import strings from '../../shared/strings';
 
 import '../styles/main.css';
@@ -20,6 +20,12 @@ const replacingValueInsideArray = (array, index, newValue) => [
 	newValue,
 	...array.slice(index + 1)
 ];
+
+const areTheSameDay = (date1, date2) => (
+	date1.day() === date2.day() &&
+	date1.month() === date2.month() &&
+	date1.year() === date2.year()
+);
 
 export default class Main extends React.Component {
 	constructor(props) {
@@ -42,6 +48,9 @@ export default class Main extends React.Component {
 
 	componentWillMount() {
 		this._checkPreEnteredValues();
+		if (STORAGEKEY in localStorage) {
+			this.setState({ storedTimes: getStorage(STORAGEKEY) });
+		}
 	}
 
 	onDateChange(date) {
@@ -76,6 +85,9 @@ export default class Main extends React.Component {
 						shouldHaveFocus: false
 					});
 				}
+			}
+			if (areTheSameDay(this.state.controlDate, moment())) {
+				setStorage(STORAGEKEY, this.state.storedTimes);
 			}
 		};
 	}
