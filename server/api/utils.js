@@ -102,18 +102,6 @@ const stringfyTime = (hours, minutes) => {
 	return `${stringifiedHour}:${stringifiedMinutes}`;
 };
 
-const getUserDetails = (cookieJar, userDetailsHtml) => {
-	const $ = cheerio.load(userDetailsHtml);
-	const formKey = $('input[type="hidden"][name="form_key"]').val();
-	const personId = $('input[type="hidden"][name="person"]').val();
-
-	return {
-		cookieJar,
-		formKey,
-		personId
-	};
-};
-
 const activityToPayload = (activity) => {
 	const PROJECT_PHASE = 329;
 	const CODE_DEVELOPING_ACTIVITY = 7;
@@ -163,6 +151,5 @@ module.exports = {
 	mapTableIntoArray,
 	getOptions,
 	stringfyTime,
-	getUserDetails,
 	activityToPayload
 };

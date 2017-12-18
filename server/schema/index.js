@@ -2,7 +2,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const resolvers = require('./resolvers');
 
 const typeDefs = `
-	input ActivityInput {
+	input TimeEntryInput {
 		date: String!,
 		startTime: String!,
 		endTime: String!,
@@ -10,13 +10,13 @@ const typeDefs = `
 		endBreakTime: String
 	}
 
-	type ActivityId {
+	type TimeEntryId {
 		workTimeId: Int,
 		breakTimeId: Int
 	}
 
-	type Activity {
-		id: ActivityId,
+	type TimeEntry {
+		id: TimeEntryId,
 		date: String!,
 		startTime: String,
 		endTime: String,
@@ -25,31 +25,45 @@ const typeDefs = `
 		total: String
 	}
 
-	type WeekActivities {
-		activities: [Activity]
+	type WeekEntries {
+		timeEntries: [TimeEntry]
 		total: String
 	}
 
-	type Type {
+	type Phase {
+		id: Int,
+		name: String
+		activities: ActivityList
+	}
+
+	type PhaseList {
+		default: Int,
+		types: [Phase]
+	}
+
+	type Activity {
 		id: Int,
 		name: String
 	}
 
-	type TypeList {
+	type ActivityList {
 		default: Int,
-		types: [Type]
+		types: [Activity]
+	}
+
+	type Token {
+		token: String
 	}
 
 	type Query {
-		dailyActivity(date: String!): Activity
-		weeklyActivities(date: String!): WeekActivities
-		phaseTypes(date: String!): TypeList
-		activityTypes(date: String!, phaseId: Int!): TypeList
+		weekEntriesByDate(date: String!): WeekEntries
+		phasesByDate(date: String): PhaseList
 	}
 
 	type Mutation {
-		addActivity(activity: ActivityInput!): Activity
-		delActivity(date: String!): Boolean
+		signIn(user: String!, password: String!): Token
+		addTimeEntry(activity: TimeEntryInput!): TimeEntry
+		delTimeEntry(date: String!): Boolean
 	}
 `;
 
