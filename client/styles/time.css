@@ -39,3 +39,8 @@ label {
 .time-group input::placeholder {
     color: #ddd;
 }
+.static-time h2 {
+    font-size: 36px;
+    display: block;
+    font-weight: bold;
+}
