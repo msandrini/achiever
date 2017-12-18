@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import '../../styles/time.css';
+
+const formatTime = (value) => {
+	return String(value).length === 1 ? `0${String(value)}` : String(value);
+};
+
 const StaticTime = ({ time }) => (
-	<div className="">{time}</div>
+	<div className="static-time">
+		<h2>{formatTime(time.hours)}:{formatTime(time.minutes)}</h2>
+	</div>
 );
 
 StaticTime.propTypes = {
-	time: PropTypes.objectOf({
+	time: PropTypes.shape({
 		hours: PropTypes.number,
 		minutes: PropTypes.number
 	})
