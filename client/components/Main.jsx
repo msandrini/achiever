@@ -4,6 +4,8 @@ import Header from './Header';
 import Edit from './Edit';
 import Today from './Today';
 
+import '../styles/main.styl';
+
 const Main = () => (
 	<div className="root-container">
 		<Header />

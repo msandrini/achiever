@@ -7,8 +7,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
 
-import '../styles/main.css';
-
 const onMark = (event) => {
 	event.preventDefault();
 	// trigger storage
