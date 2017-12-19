@@ -10,8 +10,6 @@ import strings from '../../shared/strings';
 import apiCalls from '../apiCalls';
 import { STORAGEKEY, getStorage, setStorage } from '../../shared/utils';
 
-import '../styles/main.css';
-
 export default class Today extends React.Component {
 	constructor() {
 		super();
