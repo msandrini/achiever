@@ -1,7 +1,9 @@
 require('dotenv').config();
+const tough = require('tough-cookie');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment');
+const jwt = require('jwt-simple');
 const logger = require('../logger');
 const {
 	extractError,
@@ -11,71 +13,108 @@ const {
 	mapTableIntoArray,
 	getOptions,
 	stringfyTime,
-	getUserDetails,
 	activityToPayload,
 	extractSelectOptions
 } = require('./utils');
 
 const url = process.env.SERVICE_URL;
-const user = process.env.AUTH_USER;
-const password = process.env.PASSWORD;
+const jwtSecret = process.env.JWT_SECRET;
 
 const authenticationSucceed = 'Your browser doesnt support frames, but this is required';
 
-const commonPayload = (userDetails, functionName) => ({
-	form_key: userDetails.formKey,
-	person: userDetails.personId,
-	init_userid: userDetails.personId,
+const commonPayload = (id, formKey, functionName) => ({
+	form_key: formKey,
+	person: id,
+	init_userid: id,
 	function: functionName
 });
 
-const login = async () => {
+const tokenFactory = () => {
+	const user = process.env.AUTH_USER;
+	const password = process.env.PASSWORD;
+
+	return jwt.encode({
+		user,
+		password,
+		iat: moment().valueOf()
+	}, jwtSecret);
+};
+
+const cookieJarFactory = (token) => {
 	const cookieJar = rp.jar();
-	let options = getOptions('GET', `${url}/index.php`, cookieJar);
+	const cookie = new tough.Cookie({
+		key: 'achievo',
+		value: token
+	});
+	cookieJar.setCookie(cookie, url);
 
-	await rp(options);
+	return cookieJar;
+};
 
-	options = getOptions('POST', `${url}/index.php`, cookieJar);
-	options.formData = { auth_user: user, auth_pw: password };
+const getUserDetails = async (cookieJar) => {
+	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
+	const formKeyHtml = await rp(options);
 
-	const loginResponseHtml = await rp(options);
-	let error = extractError(loginResponseHtml);
-	if (error ||
-		!loginResponseHtml ||
-		!loginResponseHtml.includes(authenticationSucceed)) {
-		throw error;
-	}
-
-	logger.info('Authenticated!!!');
-	options = getOptions('GET', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
-
-	const userDetailsHtml = await rp(options);
-	error = extractError(userDetailsHtml);
+	const error = extractError(formKeyHtml);
 	if (error) {
 		throw error;
 	}
 
-	return getUserDetails(cookieJar, userDetailsHtml);
+	const $ = cheerio.load(formKeyHtml);
+	const formKey = $('input[type="hidden"][name="form_key"]').val();
+	const personId = $('input[type="hidden"][name="person"]').val();
+
+	return {
+		formKey,
+		personId
+	};
 };
 
-const logout = (cookieJar) => {
+const login = async (token) => {
+	const cookieJar = cookieJarFactory(token);
+
+	let options = getOptions('GET', `${url}/index.php`, cookieJar);
+	const response = await rp(options);
+
+	if (!response || !response.includes(authenticationSucceed)) {
+		const { user, password } = jwt.decode(token, jwtSecret);
+		options = getOptions('POST', `${url}/index.php`, cookieJar);
+		options.formData = { auth_user: user, auth_pw: password };
+
+		const loginResponseHtml = await rp(options);
+		const error = extractError(loginResponseHtml);
+		if (error ||
+			!loginResponseHtml ||
+			!loginResponseHtml.includes(authenticationSucceed)) {
+			throw error;
+		}
+	}
+
+	logger.info('Authenticated!!!');
+
+	return token;
+};
+
+const logout = async (token) => {
+	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${url}/index.php`, cookieJar);
 	options.qs = {
 		atklogout: 1
 	};
 
-	return rp(options)
-		.then(() => logger.info('Logged out!!!'))
-		.catch(() => logger.error('Logout failed...'));
+	await rp(options);
+
+	logger.info('Logged out!!!');
 };
 
-const phaseTypes = async (userDetails, date) => {
-	const { cookieJar } = userDetails;
+const phases = async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId } = await getUserDetails(cookieJar);
 	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	options.qs = {
-		datei: date,
-		person: userDetails.personId,
-		init_userid: userDetails.personId,
+		// datei: date,
+		person: personId,
+		init_userid: personId,
 		function: 'proj_phase'
 	};
 
@@ -84,13 +123,14 @@ const phaseTypes = async (userDetails, date) => {
 	return extractSelectOptions('proj_phase', responseHtml);
 };
 
-const activityTypes = async (userDetails, date, phase) => {
-	const { cookieJar } = userDetails;
+const activities = async (token, phase) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId } = await getUserDetails(cookieJar);
 	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	options.qs = {
-		datei: date,
-		person: userDetails.personId,
-		init_userid: userDetails.personId,
+		// datei: date,
+		person: personId,
+		init_userid: personId,
 		phase,
 		function: 'proj_activity'
 	};
@@ -100,8 +140,8 @@ const activityTypes = async (userDetails, date, phase) => {
 	return extractSelectOptions('proj_activity', responseHtml);
 };
 
-const dailyActivity = async (userDetails, date) => {
-	const { cookieJar } = userDetails;
+const dailyEntries = async (token, date) => {
+	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_list.php`, cookieJar);
 	options.qs = { datei: date };
 
@@ -139,24 +179,24 @@ const dailyActivity = async (userDetails, date) => {
 	};
 };
 
-const weeklyActivities = async (userDetails, date) => {
+const weekEntriesByDate = async (token, date) => {
 	const refDate = moment(date);
 	refDate.day(1);
 
 	const totalWorkedTime = moment().startOf('year');
 
-	const addRequests = [];
+	const asyncRequests = [];
 	for (let i = 0; i < 7; i += 1) {
 		const currentDate = refDate.format('YYYY-MM-DD');
-		addRequests.push(dailyActivity(userDetails, currentDate));
+		asyncRequests.push(dailyEntries(token, currentDate));
 		refDate.add(1, 'days');
 	}
 
-	const activities = await Promise.all(addRequests);
+	const timeEntries = await Promise.all(asyncRequests);
 
-	activities.forEach((activity) => {
-		if (activity && activity.total) {
-			const dailyTotal = moment(activity.total, 'hh:mm');
+	timeEntries.forEach((entry) => {
+		if (entry && entry.total) {
+			const dailyTotal = moment(entry.total, 'hh:mm');
 
 			totalWorkedTime.add(dailyTotal.hour(), 'hours');
 			totalWorkedTime.add(dailyTotal.minute(), 'minutes');
@@ -167,15 +207,18 @@ const weeklyActivities = async (userDetails, date) => {
 	const totalMinutes = totalWorkedTime.diff(moment().startOf('year'), 'minutes') - (totalHours * 60);
 
 	return {
-		activities,
+		timeEntries,
 		total: stringfyTime(totalHours, totalMinutes)
 	};
 };
 
-const addActivity = async (userDetails, activity) => {
-	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, userDetails.cookieJar);
+const addTimeEntry = async (token, activity) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId, formKey } = await getUserDetails(cookieJar);
+
+	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
 	const payload = {
-		...commonPayload(userDetails, 'timereg_insert'),
+		...commonPayload(personId, formKey, 'timereg_insert'),
 		...activityToPayload(activity)
 	};
 
@@ -199,13 +242,14 @@ const addActivity = async (userDetails, activity) => {
 
 	logger.info('Time break registered!!!');
 
-	const response = await dailyActivity(userDetails, activity.date);
+	const response = await dailyEntries(token, activity.date);
 
 	return response;
 };
 
-const delActivity = async (userDetails, id) => {
-	const { cookieJar } = userDetails;
+const delTimeEntry = async (token, id) => {
+	const cookieJar = cookieJarFactory(token);
+
 	let options = getOptions('GET', `${url}/dlabs/timereg/newhours_delete.php`, cookieJar);
 	const deleteFormHtml = await rp({
 		...options,
@@ -215,16 +259,17 @@ const delActivity = async (userDetails, id) => {
 	if (error) {
 		throw error;
 	}
-
 	const $ = cheerio.load(deleteFormHtml);
 	const formKey = $('input[type="hidden"][name="form_key"]').val();
+	const personId = $('input[type="hidden"][name="person"]').val();
+
 
 	options = getOptions('POST', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	const payload = {
 		id,
 		form_key: formKey,
-		person: userDetails.personId,
-		init_userid: userDetails.personId,
+		person: personId,
+		init_userid: personId,
 		function: 'timereg_delete'
 	};
 
@@ -244,10 +289,11 @@ const delActivity = async (userDetails, id) => {
 module.exports = {
 	login,
 	logout,
-	addActivity,
-	delActivity,
-	dailyActivity,
-	weeklyActivities,
-	activityTypes,
-	phaseTypes
+	addTimeEntry,
+	delTimeEntry,
+	dailyEntries,
+	weekEntriesByDate,
+	activities,
+	phases,
+	tokenFactory
 };
