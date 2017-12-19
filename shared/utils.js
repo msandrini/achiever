@@ -1,6 +1,8 @@
 /* global window */
+import moment from 'moment';
 
 const STORAGEKEY = 'storedTimes';
+const STORAGEDAYKEY = 'storedMoment';
 
 const _isNumber = value => !Number.isNaN(parseInt(value, 10));
 
@@ -34,21 +36,46 @@ const buildDateFromTimeString = (timeString) => {
 	return new Date(year, month, day, hours, minutes);
 };
 
-const getStorage = name => (
-	JSON.parse(window.localStorage.getItem(name))
+const areTheSameDay = (date1, date2) => (
+	date1.day() === date2.day() &&
+	date1.month() === date2.month() &&
+	date1.year() === date2.year()
 );
 
-const setStorage = (name, data) => {
-	window.localStorage.setItem(name, JSON.stringify(data));
+const _getStorage = key => (
+	JSON.parse(window.localStorage.getItem(key))
+);
+
+const _setStorage = (key, data) => {
+	window.localStorage.setItem(key, JSON.stringify(data));
 };
 
+const setTodayStorage = (key, dayKey, data) => {
+	const today = moment();
+	_setStorage(dayKey, today);
+	_setStorage(key, data);
+};
+
+const getTodayStorage = (key, dayKey) => {
+	const dayOnLocal = moment(_getStorage(dayKey));
+	const today = moment();
+	if (dayKey in window.localStorage) {
+		if (areTheSameDay(dayOnLocal, today)) {
+			return _getStorage(key);
+		}
+	}
+	setTodayStorage(key, dayKey, []);
+	return [];
+};
 
 module.exports = {
 	checkValidity,
 	timeIsValid,
 	getTimeFromDate,
 	buildDateFromTimeString,
-	getStorage,
-	setStorage,
-	STORAGEKEY
+	areTheSameDay,
+	getTodayStorage,
+	setTodayStorage,
+	STORAGEKEY,
+	STORAGEDAYKEY
 };

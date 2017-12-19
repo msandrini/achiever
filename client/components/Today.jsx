@@ -8,7 +8,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
 import apiCalls from '../apiCalls';
-import { STORAGEKEY, getStorage, setStorage } from '../../shared/utils';
+import {
+	STORAGEDAYKEY,
+	STORAGEKEY,
+	setTodayStorage,
+	getTodayStorage
+} from '../../shared/utils';
 
 export default class Today extends React.Component {
 	constructor() {
@@ -26,9 +31,7 @@ export default class Today extends React.Component {
 
 	componentWillMount() {
 		// Check if any value was defined before
-		if (STORAGEKEY in localStorage) {
-			this.setState({ storedTimes: getStorage(STORAGEKEY) });
-		}
+		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
 	}
 
 	onMark(event) {
@@ -62,7 +65,7 @@ export default class Today extends React.Component {
 			const storedTimes = [...this.state.storedTimes];
 			storedTimes.push(momentTime);
 			this.setState({ storedTimes });
-			setStorage(STORAGEKEY, storedTimes);
+			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, storedTimes);
 		} else {
 			// Raise - or legnth > 4 or not valid time
 		}
@@ -96,11 +99,13 @@ export default class Today extends React.Component {
 			<form onSubmit={e => this.onMark(e)}>
 				<h1 className="current-date">{this.state.controlDate.format('L')}</h1>
 				<div className="column">
-					<div className="time-management-content">
+					<div className="time-show-content">
 						{[0, 1, 2, 3].map(index => (
 							<StaticTime
 								key={index}
 								time={this._getTime(index)}
+								label={strings.times[index].label}
+								emphasis={index < this.state.storedTimes.length}
 							/>
 						))}
 					</div>
@@ -113,9 +118,9 @@ export default class Today extends React.Component {
 						>
 							{this._getString()}
 						</button>
+						<Link to="/edit" className="changeRouteLink">Edit</Link>
 					</div>
 				</div>
-				<Link to="/edit">Edit</Link>
 			</form>
 		);
 	}

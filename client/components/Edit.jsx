@@ -1,12 +1,20 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import apiCalls from '../apiCalls';
 import TimeGroup from './edit/TimeGroup';
-import { STORAGEKEY, getStorage, setStorage, timeIsValid } from '../../shared/utils';
+import {
+	STORAGEDAYKEY,
+	STORAGEKEY,
+	setTodayStorage,
+	getTodayStorage,
+	timeIsValid,
+	areTheSameDay
+} from '../../shared/utils';
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
@@ -18,12 +26,6 @@ const replacingValueInsideArray = (array, index, newValue) => [
 	newValue,
 	...array.slice(index + 1)
 ];
-
-const areTheSameDay = (date1, date2) => (
-	date1.day() === date2.day() &&
-	date1.month() === date2.month() &&
-	date1.year() === date2.year()
-);
 
 export default class Main extends React.Component {
 	constructor(props) {
@@ -46,9 +48,7 @@ export default class Main extends React.Component {
 
 	componentWillMount() {
 		this._checkPreEnteredValues();
-		if (STORAGEKEY in localStorage) {
-			this.setState({ storedTimes: getStorage(STORAGEKEY) });
-		}
+		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
 	}
 
 	onDateChange(date) {
@@ -85,7 +85,7 @@ export default class Main extends React.Component {
 				}
 			}
 			if (areTheSameDay(this.state.controlDate, moment())) {
-				setStorage(STORAGEKEY, this.state.storedTimes);
+				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, this.state.storedTimes);
 			}
 		};
 	}
@@ -217,20 +217,24 @@ export default class Main extends React.Component {
 							/>
 						))}
 						<button
-							type="button"
-							onClick={this.imReligious}
-							className="test"
-							style={{ fontSize: '11px' }}
-						>
-						Test
-						</button>
-						<button
 							type="submit"
 							className="send"
 							ref={(button) => { this.submitButton = button; }}
 							disabled={!this._shouldSendBeAvailable()}
 						>
 							{strings.send}
+						</button>
+						<Link to="/today" className="changeRouteLink">Today</Link>
+						<button
+							type="button"
+							onClick={this.imReligious}
+							className="test"
+							style={{
+								fontSize: '11px',
+								display: 'block',
+							}}
+						>
+						Test
 						</button>
 					</div>
 				</div>
