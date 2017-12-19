@@ -55,7 +55,11 @@ const strings = {
 	noTimesProvided: 'nenhuma hora foi fornecida',
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
-	cannotInsertDisconnectedTime: ' não pode ser inserida sem o(s) horário(s) anterior(es)'
+	cannotInsertDisconnectedTime: ' não pode ser inserida sem o(s) horário(s) anterior(es)',
+	markConfirm: 'Quer marcar agora a',
+	clearConfirm: 'Quer mesmo apagar o arquivo temporário de horas pra hoje?',
+	cliConfirmationAllowed: 'Digite "s" ou "n"',
+	cancelled: 'Cancelado'
 };
 
 module.exports = strings;

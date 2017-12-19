@@ -6,6 +6,7 @@ const strings = require('../shared/strings');
 const logger = require('./logger');
 
 const {
+	confirmAndCall,
 	addTime,
 	updateTime,
 	clearTimes,
@@ -16,16 +17,18 @@ const {
 
 const { buildDateFromTimeString } = sharedUtils;
 
-// clear temporary times
-if (locateKeywordsOnArguments(strings.clearCliKeywords)) {
-	clearTimes();
-	logger.info(strings.timesFlushed);
-	process.exit();
-}
-
+// debug mode
 if (locateKeywordsOnArguments(['debug'])) {
 	logger.info(debug());
 	process.exit();
+}
+
+let fellIntoAnyCase = false;
+
+// clear temporary times
+if (locateKeywordsOnArguments(strings.clearCliKeywords)) {
+	confirmAndCall(`${strings.clearConfirm}`, clearTimes);
+	fellIntoAnyCase = true;
 }
 
 // set specific time
@@ -35,30 +38,17 @@ strings.times.forEach((stringObj, index) => {
 		if (times[0]) {
 			const timeToInsert = buildDateFromTimeString(times[0]);
 			updateTime(index, timeToInsert, stringObj.label);
+			fellIntoAnyCase = true;
 		} else {
 			logger.error(chalk.red(strings.noTimesProvided));
 		}
 		if (times.length > 1) {
 			logger.warn(strings.otherTimesIgnored);
 		}
-		process.exit();
 	}
 });
 
-// set multiple times
-if (locateKeywordsOnArguments(strings.multipleCliKeywords)) {
-	const times = listTimesOnArguments();
-	if (times.length) {
-		clearTimes();
-		times.forEach((time, index) => {
-			const timeToInsert = buildDateFromTimeString(time);
-			updateTime(index, timeToInsert, strings.times[index].label);
-		});
-	} else {
-		logger.error(chalk.red(strings.noTimesProvided));
-	}
-	process.exit();
-}
-
 // default (set next time)
-addTime();
+if (!fellIntoAnyCase) {
+	addTime();
+}
