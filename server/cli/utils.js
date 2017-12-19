@@ -1,6 +1,7 @@
 const storage = require('node-persist');
 const chalk = require('chalk');
 const moment = require('moment');
+const prompt = require('prompt');
 
 const logger = require('../logger');
 const strings = require('../../shared/strings');
@@ -10,6 +11,7 @@ const timeKeys = ['startTime', 'startBreakTime', 'endBreakTime', 'endTime'];
 
 const STORAGE_KEY = 'storedTimes';
 storage.initSync({ dir: 'server/temp' });
+prompt.start();
 
 const debug = () => storage.values();
 
@@ -72,8 +74,33 @@ const _filterArguments = () => {
 	};
 };
 
+/** Main functions */
+
+const confirmAndCall = (message, callback) => {
+	prompt.message = '🕑';
+	prompt.delimiter = ' ';
+	prompt.get({
+		properties: {
+			confirmed: {
+				description: chalk.green(message),
+				message: strings.cliConfirmationAllowed,
+				pattern: /^(s|n|y)$/,
+				default: 'n'
+			}
+		}
+	}, (error, result) => {
+		if (error) {
+			logger.info(strings.cancelled);
+		} else if (result.confirmed === 's' || result.confirmed === 'y') {
+			callback();
+		}
+	});
+};
+
 const clearTimes = () => {
 	storage.setItemSync(STORAGE_KEY, []);
+	logger.info(strings.timesFlushed);
+	process.exit();
 };
 
 const sendTimesAndClearStore = (times) => {
@@ -92,7 +119,7 @@ const sendTimesAndClearStore = (times) => {
 		.catch(_onCallError);
 
 	// and clear the store
-	clearTimes();
+	storage.setItemSync(STORAGE_KEY, []);
 };
 
 const updateTime = (index, timeToInsert = new Date(), timeIdString = strings.thisTime) => {
@@ -101,17 +128,19 @@ const updateTime = (index, timeToInsert = new Date(), timeIdString = strings.thi
 	const valuesMissing = index >= storedTimes.length;
 
 	if (valuesMissing) {
-		storedTimes[index] = Number(timeToInsert);
-		storage.setItemSync(STORAGE_KEY, storedTimes);
+		confirmAndCall(`${strings.markConfirm} ${timeIdString.toLowerCase()}?`, () => {
+			storedTimes[index] = Number(timeToInsert);
+			storage.setItemSync(STORAGE_KEY, storedTimes);
+			const timeString = _getDisplayTime(timeToInsert);
 
-		const timeString = _getDisplayTime(timeToInsert);
-		const message = `${timeIdString} ${strings.storedSuccessfully}`;
-		const messagePlusTime = chalk`${message} {bold (${timeString})}`;
-		logger.info(messagePlusTime);
+			const message = `${timeIdString} ${strings.storedSuccessfully}`;
+			const messagePlusTime = chalk`${message} {bold (${timeString})}`;
+			logger.info(messagePlusTime);
 
-		if (storedTimes.length === 4 && storedTimes.every(Boolean)) {
-			sendTimesAndClearStore(storedTimes);
-		}
+			if (storedTimes.length === 4 && storedTimes.every(Boolean)) {
+				sendTimesAndClearStore(storedTimes);
+			}
+		});
 	} else {
 		logger.error(`${timeIdString}${strings.cannotInsertDisconnectedTime}`);
 	}
@@ -140,6 +169,7 @@ const listTimesOnArguments = () => {
 };
 
 module.exports = {
+	confirmAndCall,
 	debug,
 	addTime,
 	updateTime,

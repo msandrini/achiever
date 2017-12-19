@@ -1,15 +1,17 @@
 const cheerio = require('cheerio');
 const moment = require('moment');
 
-const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([\w\d'/\s()<>\\:,.]+)'\);/, 'i');
+const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([^\0]+)'\);/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
 const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
+const normaliseStringRegex = RegExp(/<[a-z ]+\/>|\\|\s\r?\n/, 'gi');
 
 const extractError = (responseHtml) => {
 	const errorMessages = responseHtml.match(errorMessageRegex);
 
 	if (errorMessages && errorMessages.length > 1) {
-		return errorMessages[1];
+		const message = errorMessages[1].replace(normaliseStringRegex, '');
+		return message;
 	}
 
 	return false;
@@ -100,18 +102,6 @@ const stringfyTime = (hours, minutes) => {
 	return `${stringifiedHour}:${stringifiedMinutes}`;
 };
 
-const getUserDetails = (cookieJar, userDetailsHtml) => {
-	const $ = cheerio.load(userDetailsHtml);
-	const formKey = $('input[type="hidden"][name="form_key"]').val();
-	const personId = $('input[type="hidden"][name="person"]').val();
-
-	return {
-		cookieJar,
-		formKey,
-		personId
-	};
-};
-
 const activityToPayload = (activity) => {
 	const PROJECT_PHASE = 329;
 	const CODE_DEVELOPING_ACTIVITY = 7;
@@ -161,6 +151,5 @@ module.exports = {
 	mapTableIntoArray,
 	getOptions,
 	stringfyTime,
-	getUserDetails,
 	activityToPayload
 };
