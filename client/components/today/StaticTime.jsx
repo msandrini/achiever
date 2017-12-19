@@ -5,17 +5,21 @@ const formatTime = value => (
 	String(value).length === 1 ? `0${String(value)}` : String(value)
 );
 
-const StaticTime = ({ time }) => (
-	<div className="static-time">
-		<h2>{formatTime(time.hours)}:{formatTime(time.minutes)}</h2>
+const StaticTime = ({ time, label, emphasis }) => (
+	<div className={`static-time ${emphasis ? 'emphasis' : ''}`}>
+		<label>
+			{label}
+		</label>
+		<span>
+			{formatTime(time.hours)}:{formatTime(time.minutes)}
+		</span>
 	</div>
 );
 
 StaticTime.propTypes = {
-	time: PropTypes.shape({
-		hours: PropTypes.number,
-		minutes: PropTypes.number
-	})
+	time: PropTypes.object,
+	label: PropTypes.string.isRequired,
+	emphasis: PropTypes.bool.isRequired
 };
 
 StaticTime.defaultProps = {
