@@ -1,88 +1,108 @@
-const logger = require('../logger');
+require('dotenv').config();
+const jwt = require('jwt-simple');
+const moment = require('moment');
 const {
 	login,
 	logout,
-	addActivity,
-	delActivity,
-	dailyActivity,
-	weeklyActivities,
-	activityTypes,
-	phaseTypes
+	addTimeEntry,
+	delTimeEntry,
+	dailyEntries,
+	weekEntriesByDate,
+	activities,
+	phases
 } = require('../api/middleware');
 
 const resolvers = {
 	Query: {
-		dailyActivity: async (_, { date }) => {
-			const userDetails = await login();
+		weekEntriesByDate: async (_, { date }, { token }) => {
+			let result;
 
-			const result = await dailyActivity(userDetails, date);
-
-			await logout();
-
-			return result;
-		},
-		weeklyActivities: async (_, { date }) => {
-			const userDetails = await login();
-
-			const result = await weeklyActivities(userDetails, date);
-
-			await logout();
+			try {
+				await login(token);
+				result = await weekEntriesByDate(token, date);
+			} finally {
+				await logout(token);
+			}
 
 			return result;
 		},
-		phaseTypes: async (_, { date }) => {
-			const userDetails = await login();
+		phasesByDate: async (_, { date }, { token }) => {
+			let result;
 
-			const result = await phaseTypes(userDetails, date);
-
-			await logout();
-
-			return result;
-		},
-		activityTypes: async (_, { date, phaseId }) => {
-			const userDetails = await login();
-
-			const result = await activityTypes(userDetails, date, phaseId);
-
-			await logout();
+			try {
+				await login(token);
+				result = await phases(token, date);
+			} finally {
+				await logout(token);
+			}
 
 			return result;
 		}
 	},
 	Mutation: {
-		addActivity: async (_, { activity }) => {
-			const userDetails = await login();
+		signIn: async (_, { user, password }) => {
+			const jwtSecret = process.env.JWT_SECRET;
+			const token = jwt.encode({
+				user,
+				password,
+				iat: moment().valueOf()
+			}, jwtSecret);
 
-			const result = await addActivity(userDetails, activity);
+			await login(token);
 
-			await logout();
+			return { token };
+		},
+		addTimeEntry: async (_, { activity }, { token }) => {
+			let result;
+
+			try {
+				await login(token);
+				result = await addTimeEntry(token, activity);
+			} finally {
+				await logout(token);
+			}
 
 			return result;
 		},
-		delActivity: async (_, { date }) => {
-			const userDetails = await login();
+		delTimeEntry: async (_, { date }, { token }) => {
+			try {
+				await login(token);
+				const activity = await dailyEntries(token, date);
 
-			const activity = await dailyActivity(userDetails, date);
+				if (!activity || !activity.id) {
+					await logout(token);
 
-			if (!activity || !activity.id) {
-				await logout();
+					return false;
+				}
 
-				return false;
+				const { workTimeId, breakTimeId } = activity.id;
+
+				if (workTimeId) {
+					await delTimeEntry(token, workTimeId);
+				}
+
+				if (breakTimeId) {
+					await delTimeEntry(token, breakTimeId);
+				}
+			} finally {
+				await logout(token);
 			}
-
-			const { workTimeId, breakTimeId } = activity.id;
-
-			if (workTimeId) {
-				await delActivity(userDetails, workTimeId);
-			}
-
-			if (breakTimeId) {
-				await delActivity(userDetails, breakTimeId);
-			}
-
-			await logout();
 
 			return true;
+		}
+	},
+	Phase: {
+		activities: async ({ id }, _, { token }) => {
+			let result;
+
+			try {
+				await login(token);
+				result = await activities(token, id);
+			} finally {
+				await logout(token);
+			}
+
+			return result;
 		}
 	}
 };
