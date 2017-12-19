@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import SuggestionBox from './SuggestionBox';
 import { checkValidity } from '../../../shared/utils';
 
-import '../../styles/time.css';
+import '../../styles/time.styl';
 
 export default class TimeField extends React.Component {
 	constructor(props) {

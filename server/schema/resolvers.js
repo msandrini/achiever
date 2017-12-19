@@ -1,5 +1,6 @@
 const logger = require('../logger');
 const co = require('co');
+
 const {
 	login,
 	logout,
@@ -67,7 +68,6 @@ const resolvers = {
 
 			if (!activity || !activity.id) {
 				yield logout();
-
 				return false;
 			}
 

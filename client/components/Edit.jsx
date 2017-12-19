@@ -9,8 +9,6 @@ import TimeGroup from './edit/TimeGroup';
 import { STORAGEKEY, getStorage, setStorage, timeIsValid } from '../../shared/utils';
 import strings from '../../shared/strings';
 
-import '../styles/main.css';
-
 const referenceHours = [9, 12, 13, 17];
 
 moment.locale('pt-br');

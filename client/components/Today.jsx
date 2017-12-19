@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
+
 import 'react-datepicker/dist/react-datepicker.css';
 
 import StaticTime from './today/StaticTime';
@@ -42,8 +43,7 @@ export default class Today extends React.Component {
 	}
 
 	_submit() {
-		const storedTimes = [...this.state.storedTimes];
-		const controlDate = { ...this.state.controlDate };
+		const { controlDate, storedTimes } = this.state;
 		const dateToSend = ({
 			day: controlDate.date(),
 			month: controlDate.month() + 1,
