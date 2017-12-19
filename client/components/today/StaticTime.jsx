@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/time.css';
-
-const formatTime = (value) => {
-	return String(value).length === 1 ? `0${String(value)}` : String(value);
-};
+const formatTime = value => (
+	String(value).length === 1 ? `0${String(value)}` : String(value)
+);
 
 const StaticTime = ({ time }) => (
 	<div className="static-time">
