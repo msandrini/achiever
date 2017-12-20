@@ -12,7 +12,8 @@ import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
 	setTodayStorage,
-	getTodayStorage
+	getTodayStorage,
+	timeIsValid
 } from '../../shared/utils';
 
 export default class Today extends React.Component {
@@ -20,13 +21,15 @@ export default class Today extends React.Component {
 		super();
 		this.state = {
 			controlDate: moment(),
-			storedTimes: []
+			storedTimes: [{}, {}, {}, {}]
 		};
 		this.onMark = this.onMark.bind(this);
 		this._validTimeEntry = this._validTimeEntry.bind(this);
-		this._getString = this._getString.bind(this);
+		this._getButtonString = this._getButtonString.bind(this);
 		this._submit = this._submit.bind(this);
 		this._updateStoredTimes = this._updateStoredTimes.bind(this);
+		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
+		this._shouldSendBeAvailable = this._shouldSendBeAvailable.bind(this);
 	}
 
 	componentWillMount() {
@@ -36,10 +39,11 @@ export default class Today extends React.Component {
 
 	onMark(event) {
 		event.preventDefault();
-		if (this.state.storedTimes.length === 4) {
+		const index = this._getNextTimeEntryPoint();
+		if (index === -1) {
 			this._submit();
 		} else {
-			this._updateStoredTimes();
+			this._updateStoredTimes(index);
 		}
 	}
 
@@ -59,39 +63,62 @@ export default class Today extends React.Component {
 			.catch(err => console.error(err));
 	}
 
-	_updateStoredTimes() {
+	_updateStoredTimes(index) {
 		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
-		if (this._validTimeEntry(momentTime)) {
+		if (this._validTimeEntry(momentTime, index)) {
 			const storedTimes = [...this.state.storedTimes];
-			storedTimes.push(momentTime);
+			storedTimes[index] = momentTime;
 			this.setState({ storedTimes });
 			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, storedTimes);
 		} else {
-			// Raise - or legnth > 4 or not valid time
+			// Raise clicked on the same minute
 		}
 	}
 
 	_getTime(index) {
-		if (this.state.storedTimes.length < index) {
+		const storedTimesLength = this._getNextTimeEntryPoint()
+		if (storedTimesLength !== -1 && storedTimesLength < index) {
 			return { hours: 0, minutes: 0 };
 		}
 		return this.state.storedTimes[index];
 	}
 
-	_getString() {
-		const len = [...this.state.storedTimes].length;
-		const buttonString = len === 4 ? 'Enviar' : strings.times[len].label;
-		return ('Marcar ', buttonString);
+	_getButtonString() {
+		const len = this._getNextTimeEntryPoint();
+		const complementString = len === -1 ? strings.send : strings.times[len].label;
+		return (`${strings.markConfirm} ${complementString}`);
 	}
 
-	_validTimeEntry(time) {
+	_getNextTimeEntryPoint() {
 		const storedTimes = [...this.state.storedTimes];
-		if (storedTimes.length === 0) {
+		const a = storedTimes.findIndex((element => (
+			Object.keys(element).length === 0 || !('hours' in element) || !('minutes' in element)
+		)));
+		return a;
+	}
+
+	_validTimeEntry(time, index) {
+		const storedTimes = [...this.state.storedTimes];
+		if (index === 0) {
 			return true;
 		}
-		const { hours, minutes } = storedTimes[storedTimes.length - 1];
-		return ((storedTimes.length < 4) &&
-			(time.hours !== hours || time.minutes !== minutes));
+		const { hours, minutes } = storedTimes[index - 1];
+		return (time.hours !== hours || time.minutes !== minutes);
+	}
+
+	_shouldSendBeAvailable() {
+		let comparisonTerm = 0;
+		const isSequentialTime = (time) => {
+			if (time && timeIsValid(time)) {
+				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+				const isLaterThanComparison = date > comparisonTerm;
+				comparisonTerm = Number(date);
+				return isLaterThanComparison;
+			}
+			return false;
+		};
+
+		return (this.state.storedTimes.every(isSequentialTime) || this._getNextTimeEntryPoint() !== -1);
 	}
 
 	render() {
@@ -115,8 +142,9 @@ export default class Today extends React.Component {
 						<button
 							type="submit"
 							className="send"
+							disabled={!this._shouldSendBeAvailable()}
 						>
-							{this._getString()}
+							{this._getButtonString()}
 						</button>
 						<Link to="/edit" className="changeRouteLink">Edit</Link>
 					</div>

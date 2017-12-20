@@ -5,13 +5,17 @@ const formatTime = value => (
 	String(value).length === 1 ? `0${String(value)}` : String(value)
 );
 
+const displayTime = value => (
+	value ? formatTime(value) : formatTime(0)  
+);
+
 const StaticTime = ({ time, label, emphasis }) => (
 	<div className={`static-time ${emphasis ? 'emphasis' : ''}`}>
 		<label>
 			{label}
 		</label>
 		<span>
-			{formatTime(time.hours)}:{formatTime(time.minutes)}
+			{displayTime(time.hours)}:{displayTime(time.minutes)}
 		</span>
 	</div>
 );
