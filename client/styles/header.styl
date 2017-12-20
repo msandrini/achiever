@@ -6,17 +6,40 @@ h1
 
 .header-container
 	background: darkBlueColour
-	color: #fff
 	width: 100%
-	min-height: 70px
+	position: relative
+	border-bottom: 8px solid transitionColour1
 
 	h1
 		text-align: left
-		color: #fff
+		color: transitionColour1
+		font-size: 70px
+		letter-spacing: -.05em
+		margin-left 50px
+		height 62px
+		overflow: hidden
 
-	.header-content
-		display: flex
-		flex-direction: row
-		width: 75%
-		margin: 0px auto
-		padding-top: 1%
+	nav
+		display: block
+		background: transitionColour1
+		padding: 5px 8px
+		list-style: none
+		padding 18px 0 0 45px
+		height 32px
+		a
+			color: darkBlueColour
+			letter-spacing: 2px
+			font-size: 12px
+			text-transform: uppercase
+			text-decoration: none
+			display block
+			float left
+			margin-right 20px
+			padding 6px 10px 20px;
+			border-radius: 5px 5px 0 0;
+
+			&:hover
+				color: white
+
+			&.is-active
+				background: transitionColour2

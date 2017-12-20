@@ -59,7 +59,10 @@ const strings = {
 	markConfirm: 'Quer marcar agora a',
 	clearConfirm: 'Quer mesmo apagar o arquivo temporário de horas pra hoje?',
 	cliConfirmationAllowed: 'Digite "s" ou "n"',
-	cancelled: 'Cancelado'
+	cancelled: 'Cancelado',
+	todayPage: 'Horas de hoje',
+	editPage: 'Editar horários',
+	dateBeingEdited: 'Dia sendo editado'
 };
 
 module.exports = strings;

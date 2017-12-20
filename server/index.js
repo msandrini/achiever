@@ -15,5 +15,7 @@ app.use(cookieParser());
 
 router(app);
 
-app.listen(3000, () => console.info('listening on 3000!'));
+const logger = require('./logger');
+
+app.listen(3000, () => logger.info('listening on 3000!'));
 require('./dummyServer');

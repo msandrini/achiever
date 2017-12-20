@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const api = require('./api');
 const { tokenFactory } = require('./api/middleware');
+const logger = require('./logger');
 
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 
@@ -20,7 +21,7 @@ module.exports = (app) => {
 		res.json(values);
 	});
 	app.post('/times', (req, res) => {
-		console.info('server received:', req.body);
+		logger.info('server received:', req.body);
 		res.json({ success: true });
 	});
 

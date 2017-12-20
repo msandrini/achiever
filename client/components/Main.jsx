@@ -7,17 +7,17 @@ import Today from './Today';
 import '../styles/main.styl';
 
 const Main = () => (
-	<div className="root-container">
-		<Header />
-		<div className="time-management-container">
-			<HashRouter>
+	<HashRouter>
+		<div className="root-container">
+			<Header />
+			<div className="time-management-container">
 				<div>
 					<Route path="/edit" component={Edit} />
 					<Route exact path="/" component={Today} />
 				</div>
-			</HashRouter>
+			</div>
 		</div>
-	</div>
+	</HashRouter>
 );
 
 export default Main;

@@ -11,10 +11,8 @@
 body
 	background-color: backgroundColour
 
-h2
-	font-size: 24px;
-	line-height: 21px;
-	margin: 0 0 30px 70px;
+a
+	transition ease-in all .2s
 
 .column
 	width: calc(50% - 20px);
@@ -32,15 +30,10 @@ h2
 	opacity: 0.5;
 
 .time-management-container
-	padding: 40px;
+	padding-bottom: 40px;
 
 .time-management-content:first-of-type
 	padding-right: 80px;
-
-.current-date
-	text-align: center;
-	color: darkBlueColour;
-	margin-bottom: 40px;
 
 .remaining, .projection
 	font-size: 14px;
@@ -52,3 +45,13 @@ h2
 .react-datepicker
 	float: right;
 	margin-bottom: 20px;
+
+.current-date
+	font-size: 18px;
+	background: transitionColour2;
+	color: transitionColour1;
+	margin-bottom: 50px;
+	padding: 20px 50px;
+	strong
+		color white;
+		font-size: 24px;

@@ -18,25 +18,35 @@ label
 	display: block;
 	float: left;
 	font-size: 24px;
-	width: 5px;
-	margin: 10px;
+	width: 10px;
+	text-align: center;
+	margin: 10px 8px;
 
 .minutes, .hours
 	display: block;
 	float: left;
 	font-size: 30px;
-	padding: 5px 8px;
-	width: 100px;
+	padding: 6px 12px;
+	width: 75px;
+	box-shadow: inset 2px 2px 10px rgba(0,0,0,.2);
+	border-radius: 5px;
+	transition: box-shadow linear .3s;
+	border: 2px solid transitionColour3;
+	&:focus
+		outline: none;
+		background-color: #FFC;
+		box-shadow: none;
 
 .send
 	font-size: 24px;
 	display: block;
 	font-weight: bold;
 	margin: 10px 0 0 70px;
-	width: 265px;
+	width: 232px;
 	height: 60px;
 	background-color: darkBlueColour;
 	color: #fff;
+	border-radius: 5px;
 
 .time-group input::placeholder
 	color: fadedTextColour;
