@@ -53,7 +53,7 @@ export default class TimeGroup extends React.Component {
 TimeGroup.propTypes = {
 	onSet: PropTypes.func,
 	referenceHour: PropTypes.number,
-	time: PropTypes.object.isRequired,
+	time: PropTypes.object,
 	label: PropTypes.string,
 	shouldHaveFocus: PropTypes.oneOfType([
 		PropTypes.oneOf(['hours', 'minutes']),
@@ -66,5 +66,6 @@ TimeGroup.defaultProps = {
 	onSet: () => {},
 	referenceHour: 9,
 	label: '',
-	shouldHaveFocus: false
+	shouldHaveFocus: false,
+	time: { hours: 0, minutes: 0 }
 };
