@@ -1,6 +1,8 @@
 /* global window */
 import moment from 'moment';
 
+moment.locale('pt-br');
+
 const STORAGEKEY = 'storedTimes';
 const STORAGEDAYKEY = 'storedMoment';
 
@@ -64,9 +66,16 @@ const getTodayStorage = (key, dayKey) => {
 			return _getStorage(key);
 		}
 	}
-	setTodayStorage(key, dayKey, []);
-	return [];
+	setTodayStorage(key, dayKey, [{}, {}, {}, {}]);
+	return [{}, {}, {}, {}];
 };
+
+const replacingValueInsideArray = (array, index, newValue) => [
+	...array.slice(0, index),
+	newValue,
+	...array.slice(index + 1)
+];
+
 
 module.exports = {
 	checkValidity,
@@ -76,6 +85,7 @@ module.exports = {
 	areTheSameDay,
 	getTodayStorage,
 	setTodayStorage,
+	replacingValueInsideArray,
 	STORAGEKEY,
 	STORAGEDAYKEY
 };
