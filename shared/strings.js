@@ -62,7 +62,8 @@ const strings = {
 	cancelled: 'Cancelado',
 	todayPage: 'Horas de hoje',
 	editPage: 'Editar horários',
-	dateBeingEdited: 'Dia sendo editado'
+	dateBeingEdited: 'Dia sendo editado',
+	todayDate: 'Dia de hoje'
 };
 
 module.exports = strings;

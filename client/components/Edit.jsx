@@ -1,23 +1,24 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import apiCalls from '../apiCalls';
 import TimeGroup from './edit/TimeGroup';
-import { timeIsValid } from '../../shared/utils';
+import {
+	STORAGEDAYKEY,
+	STORAGEKEY,
+	setTodayStorage,
+	getTodayStorage,
+	timeIsValid,
+	areTheSameDay,
+	replacingValueInsideArray
+} from '../../shared/utils';
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
-
-moment.locale('pt-br');
-
-const replacingValueInsideArray = (array, index, newValue) => [
-	...array.slice(0, index),
-	newValue,
-	...array.slice(index + 1)
-];
 
 export default class Main extends React.Component {
 	constructor(props) {
@@ -40,6 +41,7 @@ export default class Main extends React.Component {
 
 	componentWillMount() {
 		this._checkPreEnteredValues();
+		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
 	}
 
 	onDateChange(date) {
@@ -52,14 +54,20 @@ export default class Main extends React.Component {
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
 			const composedTime = { hours, minutes };
-			this.setState(prevState => ({
-				...prevState,
-				storedTimes: replacingValueInsideArray(
-					prevState.storedTimes,
-					groupIndex,
-					composedTime
-				)
-			}));
+			this.setState((prevState) => {
+				const newState = {
+					...prevState,
+					storedTimes: replacingValueInsideArray(
+						prevState.storedTimes,
+						groupIndex,
+						composedTime
+					)
+				};
+				if (areTheSameDay(prevState.controlDate, moment())) {
+					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, newState.storedTimes);
+				}
+				return newState;
+			});
 			if (this.state.focusedField) {
 				const modeBeingChanged = this.state.focusedField.fieldMode;
 				const valueBeingChanged = composedTime[modeBeingChanged];
@@ -75,6 +83,7 @@ export default class Main extends React.Component {
 					});
 				}
 			}
+
 		};
 	}
 
