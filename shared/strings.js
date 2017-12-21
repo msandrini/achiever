@@ -57,13 +57,20 @@ const strings = {
 	timesFlushed: 'As entradas de tempo foram apagadas',
 	cannotInsertDisconnectedTime: ' não pode ser inserida sem o(s) horário(s) anterior(es)',
 	markConfirm: 'Quer marcar agora a',
+	markNow: 'Marcar agora a',
+	timeSentToday: 'As horas de hoje já foram enviadas',
 	clearConfirm: 'Quer mesmo apagar o arquivo temporário de horas pra hoje?',
 	cliConfirmationAllowed: 'Digite "s" ou "n"',
 	cancelled: 'Cancelado',
 	todayPage: 'Horas de hoje',
 	editPage: 'Editar horários',
 	dateBeingEdited: 'Dia sendo editado',
-	todayDate: 'Dia de hoje'
+	todayDate: 'Dia de hoje',
+	login: 'Entrada',
+	logout: 'Sair',
+	logoutConfirm: 'Quer mesmo sair do sistema?',
+	username: 'Usuário',
+	password: 'Senha'
 };
 
 module.exports = strings;

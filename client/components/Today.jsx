@@ -1,9 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
-
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
@@ -15,6 +11,8 @@ import {
 	getTodayStorage,
 	timeIsValid
 } from '../../shared/utils';
+
+import '../styles/today.styl';
 
 export default class Today extends React.Component {
 	constructor() {
@@ -86,7 +84,11 @@ export default class Today extends React.Component {
 	_getButtonString() {
 		const len = this._getNextTimeEntryPoint();
 		const complementString = len === -1 ? strings.send : strings.times[len].label;
-		return (`${strings.markConfirm} ${complementString}`);
+		return (
+			<span>
+				{strings.markNow} <strong>{complementString}</strong>
+			</span>
+		);
 	}
 
 	_getNextTimeEntryPoint() {
@@ -143,14 +145,13 @@ export default class Today extends React.Component {
 					</div>
 					<div className="column">
 						<div className="time-management-content">
-							<button
-								type="submit"
-								className="send"
-								disabled={!this._shouldSendBeAvailable()}
-							>
-								{this._getButtonString()}
-							</button>
-							<Link to="/edit" className="changeRouteLink">Edit</Link>
+							{this._shouldSendBeAvailable() ?
+								<button type="submit" className="send send-today">
+									{this._getButtonString()}
+								</button>
+								:
+								<span className="time-sent">{strings.timeSentToday}</span>
+							}
 						</div>
 					</div>
 				</form>
