@@ -12,7 +12,7 @@ module.exports = (app) => {
 	app.use('/api', bodyParser.json(), api);
 	app.use('/graphiql', graphiqlExpress({
 		endpointURL: '/api',
-		passHeader: `'Authorization': 'bearer ${tokenFactory()}'`
+		passHeader: `'Authorization': 'Bearer ${tokenFactory()}'`
 	}));
 
 	// dynamic

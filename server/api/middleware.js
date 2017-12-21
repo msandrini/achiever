@@ -70,6 +70,8 @@ const getUserDetails = async (cookieJar) => {
 	};
 };
 
+const authenticationFailedMessage = 'Authentication failed!';
+
 const login = async (token) => {
 	const cookieJar = cookieJarFactory(token);
 
@@ -86,7 +88,7 @@ const login = async (token) => {
 		if (error ||
 			!loginResponseHtml ||
 			!loginResponseHtml.includes(authenticationSucceed)) {
-			throw error;
+			throw authenticationFailedMessage;
 		}
 	}
 
