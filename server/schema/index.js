@@ -18,6 +18,7 @@ const typeDefs = `
 	type TimeEntry {
 		id: TimeEntryId,
 		date: String!,
+		employeeName: String,
 		startTime: String,
 		endTime: String,
 		startBreakTime: String,
@@ -57,12 +58,12 @@ const typeDefs = `
 
 	type Query {
 		weekEntriesByDate(date: String!): WeekEntries
-		phasesByDate(date: String): PhaseList
+		phasesByDate: PhaseList
 	}
 
 	type Mutation {
 		signIn(user: String!, password: String!): Token
-		addTimeEntry(activity: TimeEntryInput!): TimeEntry
+		addTimeEntry(timeEntry: TimeEntryInput!): TimeEntry
 		delTimeEntry(date: String!): Boolean
 	}
 `;

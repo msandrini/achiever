@@ -4,17 +4,17 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment');
 const jwt = require('jwt-simple');
+const md5 = require('md5');
+
 const logger = require('../logger');
 const {
 	extractError,
-	parseTimeToArray,
-	extractId,
-	extractBreakTime,
-	mapTableIntoArray,
 	getOptions,
 	stringfyTime,
 	activityToPayload,
-	extractSelectOptions
+	extractSelectOptions,
+	workTimeFromHtml,
+	breakTimeFromHtml
 } = require('./utils');
 
 const url = process.env.SERVICE_URL;
@@ -44,7 +44,7 @@ const cookieJarFactory = (token) => {
 	const cookieJar = rp.jar();
 	const cookie = new tough.Cookie({
 		key: 'achievo',
-		value: token
+		value: md5(token)
 	});
 	cookieJar.setCookie(cookie, url);
 
@@ -112,7 +112,6 @@ const phases = async (token) => {
 	const { personId } = await getUserDetails(cookieJar);
 	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	options.qs = {
-		// datei: date,
 		person: personId,
 		init_userid: personId,
 		function: 'proj_phase'
@@ -128,7 +127,6 @@ const activities = async (token, phase) => {
 	const { personId } = await getUserDetails(cookieJar);
 	const options = getOptions('GET', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	options.qs = {
-		// datei: date,
 		person: personId,
 		init_userid: personId,
 		phase,
@@ -147,36 +145,31 @@ const dailyEntries = async (token, date) => {
 
 	const responseHtml = await rp(options);
 	const $ = cheerio.load(responseHtml);
-	const workTimeResponse = $('table tr.green a').prop('onclick');
-	const workTimeId = extractId(workTimeResponse);
-	const workTime = !workTimeId ?
-		null :
-		mapTableIntoArray($, 'table tr.green td');
-	const startTime = !workTime
-		? [0, 0]
-		: parseTimeToArray(workTime[1]);
-	const endTime = !workTime
-		? [0, 0]
-		: parseTimeToArray(workTime[4])
-			.map((time, index) => startTime[index] + time);
+	const employeeName = $('div[class="title timeregdiv"]').text().replace(/.*-\s/, '').trim();
+	const {
+		workTimeId,
+		total,
+		startTime,
+		endTime
+	} = workTimeFromHtml($);
+	const {
+		breakTimeId,
+		startBreakTime,
+		endBreakTime
+	} = breakTimeFromHtml($);
 
-	const breakTimeResponse = $('table tr.yellow a').prop('onclick');
-	const breakTimeId = extractId(breakTimeResponse);
-	const breakTime = !breakTimeId ?
-		[''] :
-		mapTableIntoArray($, 'table tr.yellow td');
-
-	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime[0]);
-
-	return {
+	const timeEntry = {
 		id: { workTimeId, breakTimeId },
+		employeeName,
 		date,
-		startTime: !workTime ? null : startTime.join(':'),
-		endTime: !workTime ? null : endTime.join(':'),
+		startTime: !startTime ? null : startTime.join(':'),
+		endTime: !endTime ? null : endTime.join(':'),
 		startBreakTime: startBreakTime || '',
 		endBreakTime: endBreakTime || '',
-		total: !workTime ? null : workTime[4]
+		total
 	};
+
+	return timeEntry;
 };
 
 const weekEntriesByDate = async (token, date) => {
@@ -212,14 +205,14 @@ const weekEntriesByDate = async (token, date) => {
 	};
 };
 
-const addTimeEntry = async (token, activity) => {
+const addTimeEntry = async (token, timeEntry) => {
 	const cookieJar = cookieJarFactory(token);
 	const { personId, formKey } = await getUserDetails(cookieJar);
 
 	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
 	const payload = {
 		...commonPayload(personId, formKey, 'timereg_insert'),
-		...activityToPayload(activity)
+		...activityToPayload(timeEntry)
 	};
 
 	options.formData = payload;
@@ -242,7 +235,7 @@ const addTimeEntry = async (token, activity) => {
 
 	logger.info('Time break registered!!!');
 
-	const response = await dailyEntries(token, activity.date);
+	const response = await dailyEntries(token, timeEntry.date);
 
 	return response;
 };
@@ -261,8 +254,7 @@ const delTimeEntry = async (token, id) => {
 	}
 	const $ = cheerio.load(deleteFormHtml);
 	const formKey = $('input[type="hidden"][name="form_key"]').val();
-	const personId = $('input[type="hidden"][name="person"]').val();
-
+	const personId = $('select[name="person"]').val();
 
 	options = getOptions('POST', `${url}/dlabs/timereg/timereg_lib.php`, cookieJar);
 	const payload = {
