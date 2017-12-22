@@ -13,10 +13,10 @@ import {
 	STORAGEKEY,
 	setTodayStorage,
 	getTodayStorage,
-	timeIsValid,
 	areTheSameDay,
 	replacingValueInsideArray
-} from '../../shared/utils';
+} from './shared/utils';
+import { timeIsValid } from '../../shared/utils';
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
@@ -50,7 +50,8 @@ class Edit extends React.Component {
 			remainingHoursOnWeek: null,
 			storedTimes: [{}, {}, {}, {}],
 			focusedField: null,
-			shouldHaveFocus: null
+			shouldHaveFocus: null,
+			sentToday: false
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
@@ -61,8 +62,10 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
+		console.log(this.props);
 		this._checkPreEnteredValues();
-		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
+		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		this.setState({ storedTimes, sentToday });
 	}
 
 	onDateChange(date) {
@@ -75,6 +78,7 @@ class Edit extends React.Component {
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
 			const composedTime = { hours, minutes };
+
 			this.setState((prevState) => {
 				const newState = {
 					...prevState,
@@ -84,11 +88,16 @@ class Edit extends React.Component {
 						composedTime
 					)
 				};
+
 				if (areTheSameDay(prevState.controlDate, moment())) {
-					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, newState.storedTimes);
+					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, {
+						storedTimes: newState.storedTimes,
+						sentToday: newState.sentToday
+					});
 				}
 				return newState;
 			});
+
 			if (this.state.focusedField) {
 				const modeBeingChanged = this.state.focusedField.fieldMode;
 				const valueBeingChanged = composedTime[modeBeingChanged];
@@ -104,7 +113,6 @@ class Edit extends React.Component {
 					});
 				}
 			}
-
 		};
 	}
 
@@ -132,6 +140,21 @@ class Edit extends React.Component {
 		};
 
 		this._addTimeEntry(timeEntryInput);
+
+		this.setState((prevState) => {
+			const newState = {
+				...prevState,
+				sentToday: true
+			};
+
+			if (areTheSameDay(prevState.controlDate, moment())) {
+				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, {
+					storedTimes: newState.storedTimes,
+					sentToday: newState.sentToday
+				});
+			}
+			return newState;
+		});
 	}
 
 	async _addTimeEntry(timeEntryInput) {

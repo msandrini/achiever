@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import StaticTime from './today/StaticTime';
@@ -8,18 +9,45 @@ import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
 	setTodayStorage,
-	getTodayStorage,
-	timeIsValid
-} from '../../shared/utils';
+	getTodayStorage
+} from './shared/utils';
+import { timeIsValid } from '../../shared/utils';
 
 import '../styles/today.styl';
+
+
+const isEmptyObject = obj => (
+	Object.keys(obj).length === 0
+);
+
+const getNextEmptyObjectOnArray = arr => (
+	arr.findIndex((element => (
+		isEmptyObject(element) || !('hours' in element) || !('minutes' in element)
+	)))
+);
+
+const isValidTime = (times) => {
+	let comparisonTerm = 0;
+	const isSequentialTime = (time) => {
+		if (time && timeIsValid(time)) {
+			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+			const isLaterThanComparison = date > comparisonTerm;
+			comparisonTerm = Number(date);
+			return isLaterThanComparison;
+		}
+		return false;
+	};
+	return times.every(isSequentialTime);
+};
+
 
 export default class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
 			controlDate: moment(),
-			storedTimes: [{}, {}, {}, {}]
+			storedTimes: [{}, {}, {}, {}],
+			sentToday: false
 		};
 		this.onMark = this.onMark.bind(this);
 		this._validTimeEntry = this._validTimeEntry.bind(this);
@@ -27,18 +55,36 @@ export default class Today extends React.Component {
 		this._submit = this._submit.bind(this);
 		this._updateStoredTimes = this._updateStoredTimes.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
-		this._shouldSendBeAvailable = this._shouldSendBeAvailable.bind(this);
+		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 	}
 
 	componentWillMount() {
-		// Check if any value was defined before
-		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
+		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		if (!sentToday) {
+			if (getNextEmptyObjectOnArray(storedTimes) === -1) {
+				if (isValidTime(storedTimes)) {
+					const reply = window.confirm('Existem alterações não salvas. Deseja enviar?');
+					if (reply) {
+						// Submit
+					} else {
+						this.context.router.history.goBack();
+					}
+				} else {
+					window.alert('Horários não válidos');
+					this.context.router.history.goBack();
+				}
+			}
+		}
+		this.setState({ storedTimes, sentToday });
+
 	}
 
 	onMark(event) {
 		event.preventDefault();
+
 		const index = this._getNextTimeEntryPoint();
-		if (index === -1) {
+		if (index === 3) {
+			this._updateStoredTimes(index);
 			this._submit();
 		} else {
 			this._updateStoredTimes(index);
@@ -46,7 +92,8 @@ export default class Today extends React.Component {
 	}
 
 	_submit() {
-		const { controlDate, storedTimes } = this.state;
+		const { controlDate, storedTimes, sentToday } = this.state;
+
 		const dateToSend = ({
 			day: controlDate.date(),
 			month: controlDate.month() + 1,
@@ -59,15 +106,19 @@ export default class Today extends React.Component {
 			.then(response => response.json())
 			.then(json => console.info(JSON.stringify(json)))
 			.catch(err => console.error(err));
+
+		setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
 	}
 
 	_updateStoredTimes(index) {
 		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
+
 		if (this._validTimeEntry(momentTime, index)) {
-			const storedTimes = [...this.state.storedTimes];
+			const { storedTimes, sentToday } = this.state;
+
 			storedTimes[index] = momentTime;
 			this.setState({ storedTimes });
-			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, storedTimes);
+			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
 		} else {
 			// Raise clicked on the same minute
 		}
@@ -93,10 +144,7 @@ export default class Today extends React.Component {
 
 	_getNextTimeEntryPoint() {
 		const storedTimes = [...this.state.storedTimes];
-		const a = storedTimes.findIndex((element => (
-			Object.keys(element).length === 0 || !('hours' in element) || !('minutes' in element)
-		)));
-		return a;
+		return getNextEmptyObjectOnArray(storedTimes);
 	}
 
 	_validTimeEntry(time, index) {
@@ -108,19 +156,8 @@ export default class Today extends React.Component {
 		return (time.hours !== hours || time.minutes !== minutes);
 	}
 
-	_shouldSendBeAvailable() {
-		let comparisonTerm = 0;
-		const isSequentialTime = (time) => {
-			if (time && timeIsValid(time)) {
-				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-				const isLaterThanComparison = date > comparisonTerm;
-				comparisonTerm = Number(date);
-				return isLaterThanComparison;
-			}
-			return false;
-		};
-
-		return (this.state.storedTimes.every(isSequentialTime) || this._getNextTimeEntryPoint() !== -1);
+	_shouldButtonBeAvailable() {
+		return this._getNextTimeEntryPoint() !== -1;
 	}
 
 	render() {
@@ -145,7 +182,7 @@ export default class Today extends React.Component {
 					</div>
 					<div className="column">
 						<div className="time-management-content">
-							{this._shouldSendBeAvailable() ?
+							{this._shouldButtonBeAvailable() ?
 								<button type="submit" className="send send-today">
 									{this._getButtonString()}
 								</button>
@@ -159,3 +196,7 @@ export default class Today extends React.Component {
 		);
 	}
 }
+
+Today.contextTypes = {
+	router: PropTypes.object
+};
