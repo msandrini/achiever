@@ -22,10 +22,12 @@ class Login extends React.Component {
 		super(props);
 
 		this.onSubmit = this.onSubmit.bind(this);
+		this._showError = this._showError.bind(this);
 
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			errorMessage: ''
 		};
 	}
 
@@ -58,13 +60,33 @@ class Login extends React.Component {
 			});
 		} catch (error) {
 			console.error('Authentication failed!', error);
+			this.setState({ errorMessage: strings.authenticationError });
 		}
 
 		if (response) {
 			console.log('Authenticated!!!');
+			this.setState({ errorMessage: '' });
 			const { token } = response.data.signIn;
 			localStorage.setItem(API_AUTH_TOKEN, token);
 		}
+	}
+
+	_showError() {
+		const { errorMessage } = this.state;
+		if (errorMessage) {
+			return (
+				<div className="error">
+					<div className="icon">
+						<img alt="" src="assets/ic_report_problem_white_24px.svg" />
+					</div>
+					<div className="message">
+						{errorMessage}
+					</div>
+				</div>
+			);
+		}
+
+		return '';
 	}
 
 	render() {
@@ -76,20 +98,21 @@ class Login extends React.Component {
 					</h2>
 					<div className="column">&nbsp;</div>
 					<div className="column">
-						<div className="time-management-content">
+						<div className="login-content">
+							{this._showError()}
 							<div className="login-field">
-								<label htmlFor="username">{strings.username}</label>
 								<input
 									type="text"
 									name="username"
+									placeholder={strings.username}
 									onChange={this.onChangeField('username')}
 								/>
 							</div>
 							<div className="login-field">
-								<label htmlFor="password">{strings.password}</label>
 								<input
 									type="password"
 									name="password"
+									placeholder={strings.password}
 									onChange={this.onChangeField('password')}
 								/>
 							</div>

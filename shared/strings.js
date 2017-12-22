@@ -70,7 +70,8 @@ const strings = {
 	logout: 'Sair',
 	logoutConfirm: 'Quer mesmo sair do sistema?',
 	username: 'Usuário',
-	password: 'Senha'
+	password: 'Senha',
+	authenticationError: 'Credenciais inválidas.'
 };
 
 module.exports = strings;
