@@ -74,7 +74,7 @@ export default class Today extends React.Component {
 	}
 
 	_getTime(index) {
-		const storedTimesLength = this._getNextTimeEntryPoint()
+		const storedTimesLength = this._getNextTimeEntryPoint();
 		if (storedTimesLength !== -1 && storedTimesLength < index) {
 			return { hours: 0, minutes: 0 };
 		}
