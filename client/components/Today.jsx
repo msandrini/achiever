@@ -1,15 +1,18 @@
+/* global window */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
-import apiCalls from '../apiCalls';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
 	setTodayStorage,
-	getTodayStorage
+	getTodayStorage,
+	submitToServer
 } from './shared/utils';
 import { timeIsValid } from '../../shared/utils';
 
@@ -29,6 +32,9 @@ const getNextEmptyObjectOnArray = arr => (
 const isValidTime = (times) => {
 	let comparisonTerm = 0;
 	const isSequentialTime = (time) => {
+		if (isEmptyObject(time)) {
+			return true;
+		}
 		if (time && timeIsValid(time)) {
 			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
 			const isLaterThanComparison = date > comparisonTerm;
@@ -40,20 +46,31 @@ const isValidTime = (times) => {
 	return times.every(isSequentialTime);
 };
 
+const ADD_TIME_ENTRY_MUTATION = gql`
+  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+	addTimeEntry(timeEntry: $timeEntry) {
+	  date
+	  employeeName
+	  startTime
+	  startBreakTime
+	  endBreakTime
+	  endTime
+	  total
+	}
+  }
+`;
 
-export default class Today extends React.Component {
+
+class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			controlDate: moment(),
 			storedTimes: [{}, {}, {}, {}],
 			sentToday: false
 		};
 		this.onMark = this.onMark.bind(this);
-		this._validTimeEntry = this._validTimeEntry.bind(this);
+		this._avoidDoubleClick = this._avoidDoubleClick.bind(this);
 		this._getButtonString = this._getButtonString.bind(this);
-		this._submit = this._submit.bind(this);
-		this._updateStoredTimes = this._updateStoredTimes.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 	}
@@ -63,62 +80,47 @@ export default class Today extends React.Component {
 		if (!sentToday) {
 			if (getNextEmptyObjectOnArray(storedTimes) === -1) {
 				if (isValidTime(storedTimes)) {
-					const reply = window.confirm('Existem alterações não salvas. Deseja enviar?');
+					const reply = window.confirm(strings.confirmSave);
 					if (reply) {
-						// Submit
+						this.setState((prevState) => {
+							const newState = { ...prevState, storedTimes, sentToday: true };
+							submitToServer(newState, this.props.addTimeEntry);
+							setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+							return newState;
+						});
 					} else {
 						this.context.router.history.goBack();
 					}
 				} else {
-					window.alert('Horários não válidos');
+					window.alert(strings.invalidTime);
 					this.context.router.history.goBack();
 				}
 			}
 		}
 		this.setState({ storedTimes, sentToday });
-
 	}
 
 	onMark(event) {
 		event.preventDefault();
 
-		const index = this._getNextTimeEntryPoint();
-		if (index === 3) {
-			this._updateStoredTimes(index);
-			this._submit();
-		} else {
-			this._updateStoredTimes(index);
-		}
-	}
-
-	_submit() {
-		const { controlDate, storedTimes, sentToday } = this.state;
-
-		const dateToSend = ({
-			day: controlDate.date(),
-			month: controlDate.month() + 1,
-			year: controlDate.year()
-		});
-
-		const data = JSON.stringify({ date: dateToSend, times: storedTimes });
-
-		apiCalls.send(data)
-			.then(response => response.json())
-			.then(json => console.info(JSON.stringify(json)))
-			.catch(err => console.error(err));
-
-		setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
-	}
-
-	_updateStoredTimes(index) {
 		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
+		const index = this._getNextTimeEntryPoint();
 
-		if (this._validTimeEntry(momentTime, index)) {
+		if (this._avoidDoubleClick(momentTime, index)) {
 			const { storedTimes, sentToday } = this.state;
-
 			storedTimes[index] = momentTime;
-			this.setState({ storedTimes });
-			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
+			if (isValidTime(storedTimes)) {
+				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
+				this.setState((prevState) => {
+					const newState = { ...prevState, storedTimes, sentToday };
+					if (index === 3) {
+						submitToServer(newState, this.props.addTimeEntry);
+					}
+					return newState;
+				});
+			} else {
+				window.alert(strings.invalidAddTime);
+			}
 		} else {
 			// Raise clicked on the same minute
 		}
@@ -147,7 +149,7 @@ export default class Today extends React.Component {
 		return getNextEmptyObjectOnArray(storedTimes);
 	}
 
-	_validTimeEntry(time, index) {
+	_avoidDoubleClick(time, index) {
 		const storedTimes = [...this.state.storedTimes];
 		if (index === 0) {
 			return true;
@@ -196,6 +198,12 @@ export default class Today extends React.Component {
 		);
 	}
 }
+
+export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Today);
+
+Today.propTypes = {
+	addTimeEntry: PropTypes.func.isRequired
+};
 
 Today.contextTypes = {
 	router: PropTypes.object
