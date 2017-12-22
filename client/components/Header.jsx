@@ -1,7 +1,7 @@
 /* global window */
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import Link from '../components/router/Link';
 
 import strings from '../../shared/strings';
 
@@ -21,12 +21,12 @@ const _getNav = () => {
 	if (loggedIn) {
 		return (
 			<nav>
-				<NavLink to="/today" activeClassName="is-active">
+				<Link to="/today" activeClassName="is-active">
 					{strings.todayPage}
-				</NavLink>
-				<NavLink to="/edit" activeClassName="is-active">
+				</Link>
+				<Link to="/edit" activeClassName="is-active">
 					{strings.editPage}
-				</NavLink>
+				</Link>
 				<button className="logout" onClick={onClickLogout}>
 					{strings.logout}
 				</button>
