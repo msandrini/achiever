@@ -1,0 +1,70 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<div class="separator">&nbsp;</div>
+<h4> JOHN DOE </h4>
+<h4> Admission: 2016-02-01 
+</h3>
+<br/>
+</table>
+<br/>
+<br/>
+<div id="all_records">
+    <h2>Hours Survey </h2>
+    <table style="font-size: 10px;">
+        <tr>
+            <th>Date</th>
+            <th>Contracted</th>
+            <th>Entry</th>
+            <th>Working Time</th>
+            <th>Breaks</th>
+            <th>End time</th>
+            <th>Daily Compensation</th>
+            <th>Daily Overtime</th>
+            <th>Balance</th>
+            <th>Remarks</th>
+        </tr>
+        <tr>
+            <td>2017-12-14 Thu 
+                <b></b>
+            </td>
+            <td>8:00</td>
+            <td>9:10</td>
+            <td>8:30</td>
+            <td>
+                <div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+            </td>
+            <td>&nbsp;18:40 </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;2:30</td>
+            <td>
+                <div>  </div>
+            </td>
+        </tr>
+        <tr>
+            <td>2017-12-13 Thu 
+                <b></b>
+            </td>
+            <td>8:00</td>
+            <td>9:30</td>
+            <td>8:00</td>
+            <td>
+                <div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+            </td>
+            <td>&nbsp;18:30 </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;2:00</td>
+            <td>
+                <div>  </div>
+            </td>
+        </tr>
+    </table>
+</div>

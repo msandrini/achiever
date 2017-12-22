@@ -4,17 +4,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import strings from '../../shared/strings';
-
+import UserDetails from './UserDetails';
 import '../styles/header.styl';
-
-const onClickLogout = (event) => {
-	event.preventDefault();
-	/* eslint no-alert: "off" */
-	const shouldLogout = window.confirm(strings.logoutConfirm);
-	if (shouldLogout) {
-		console.log('logout');
-	}
-};
 
 const _getNav = () => {
 	const loggedIn = true; // TODO
@@ -27,9 +18,7 @@ const _getNav = () => {
 				<NavLink to="/edit" activeClassName="is-active">
 					{strings.editPage}
 				</NavLink>
-				<button className="logout" onClick={onClickLogout}>
-					{strings.logout}
-				</button>
+				<UserDetails />
 			</nav>
 		);
 	}

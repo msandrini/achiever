@@ -140,6 +140,32 @@ const activities = async (token, phase) => {
 	return extractSelectOptions('proj_activity', responseHtml);
 };
 
+const userDetails = async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId } = await getUserDetails(cookieJar);
+	const options = getOptions('GET', `${url}/dlabs/timereg/report.php`, cookieJar);
+	options.qs = {
+		init_userid: personId
+	};
+
+	const responseHtml = await rp(options);
+	const error = extractError(responseHtml);
+	if (error) {
+		throw error;
+	}
+
+	const $ = cheerio.load(responseHtml);
+	const name = $('h4').eq(0).text().trim();
+	const dailyContractedHours = $('table tr td').eq(1).text();
+	const balance = $('table tr td').eq(8).text();
+
+	return {
+		name,
+		dailyContractedHours,
+		balance
+	};
+};
+
 const dailyEntries = async (token, date) => {
 	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_list.php`, cookieJar);
@@ -151,21 +177,32 @@ const dailyEntries = async (token, date) => {
 	const {
 		workTimeId,
 		total,
-		startTime,
-		endTime
+		startTime
 	} = workTimeFromHtml($);
 	const {
 		breakTimeId,
 		startBreakTime,
-		endBreakTime
+		endBreakTime,
+		breakTimeDuration
 	} = breakTimeFromHtml($);
+
+	let endTime = '';
+
+	if (startTime) {
+		endTime = moment(startTime, 'hh:mm');
+		const totalWorked = moment(total, 'hh:mm');
+		const durantion = moment(breakTimeDuration, 'hh:mm');
+		endTime.add({ hours: totalWorked.hours(), minutes: totalWorked.minutes() });
+		endTime.add({ hours: durantion.hours(), minutes: durantion.minutes() });
+		endTime = endTime.format('H:mm');
+	}
 
 	const timeEntry = {
 		id: { workTimeId, breakTimeId },
 		employeeName,
 		date,
-		startTime: !startTime ? null : startTime.join(':'),
-		endTime: !endTime ? null : endTime.join(':'),
+		startTime: startTime || '',
+		endTime: endTime || '',
 		startBreakTime: startBreakTime || '',
 		endBreakTime: endBreakTime || '',
 		total
@@ -176,7 +213,7 @@ const dailyEntries = async (token, date) => {
 
 const weekEntriesByDate = async (token, date) => {
 	const refDate = moment(date);
-	refDate.day(1);
+	refDate.day(0);
 
 	const totalWorkedTime = moment().startOf('year');
 
@@ -289,5 +326,6 @@ module.exports = {
 	weekEntriesByDate,
 	activities,
 	phases,
-	tokenFactory
+	tokenFactory,
+	userDetails
 };

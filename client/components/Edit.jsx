@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -28,17 +28,37 @@ const storedTimesIndex = {
 };
 
 const ADD_TIME_ENTRY_MUTATION = gql`
-  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
-	addTimeEntry(timeEntry: $timeEntry) {
-	  date
-	  employeeName
-	  startTime
-	  startBreakTime
-	  endBreakTime
-	  endTime
-	  total
+	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+		addTimeEntry(timeEntry: $timeEntry) {
+			date
+			employeeName
+			startTime
+			startBreakTime
+			endBreakTime
+			endTime
+			total
+		}
 	}
-  }
+`;
+
+const WEEK_ENTRIES_QUERY = gql`
+	query weekEntriesQuery($date: String!) {
+		weekEntries(date: $date) {
+			timeEntries {
+				date
+				startTime
+				startBreakTime
+				endBreakTime
+				endTime
+				total
+			}
+			total
+		}
+		userDetails {
+			dailyContractedHours
+			balance
+		}
+	}
 `;
 
 class Edit extends React.Component {
@@ -61,15 +81,29 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this._checkPreEnteredValues();
 		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
 	}
 
+	componentWillReceiveProps(nextProps) {
+		const { loading, error, weekEntries } = nextProps.weekEntriesQuery;
+
+		if (this.props.weekEntriesQuery.loading && !loading && !error) {
+			this.setState({ remainingHoursOnWeek: weekEntries.total });
+		}
+	}
+
 	onDateChange(date) {
+		const oldSelectedDate = this.state.controlDate;
+		const sameWeek = oldSelectedDate.week() === date.week();
 		this.setState({
 			controlDate: date
 		});
-		this._checkPreEnteredValues();
+
+		if (!sameWeek) {
+			this._fetchWeekEntries(date);
+		}
+
+		this._checkPreEnteredValues(date);
 	}
 
 	onTimeSet(groupIndex) {
@@ -134,6 +168,13 @@ class Edit extends React.Component {
 		this._addTimeEntry(timeEntryInput);
 	}
 
+	async _fetchWeekEntries(date) {
+		const { refetch } = this.props.weekEntriesQuery;
+		const response = await refetch({ date: date.format('YYYY-MM-DD') });
+		console.log('New week entries:', response.data.weekEntries);
+		this._checkPreEnteredValues(date);
+	}
+
 	async _addTimeEntry(timeEntryInput) {
 		let response;
 		try {
@@ -148,6 +189,8 @@ class Edit extends React.Component {
 
 		if (response) {
 			console.info('Time entry saved!!!');
+			const date = moment(this.state.controlDate);
+			await this._fetchWeekEntries(date.format('YYYY-MM-DD'));
 		}
 	}
 
@@ -158,10 +201,43 @@ class Edit extends React.Component {
 		this.onTimeSet(3)(17, 15);
 	}
 
-	_checkPreEnteredValues() {
-		// TODO check server for pre-entered values
-		// populate labouredHoursOnDay and remainingHoursOnWeek
-		this.setState();
+	_checkPreEnteredValues(date) {
+		if (this.props.weekEntriesQuery.loading || this.props.weekEntriesQuery.error) {
+			return;
+		}
+
+		const { timeEntries } = this.props.weekEntriesQuery.weekEntries;
+		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
+
+		if (timeEntry) {
+			const {
+				startTime,
+				startBreakTime,
+				endBreakTime,
+				endTime
+			} = timeEntry;
+
+			const storedTimes = [
+				{
+					hours: moment(startTime, 'H:mm').hours(),
+					minutes: moment(startTime, 'H:mm').minutes()
+				},
+				{
+					hours: moment(startBreakTime, 'H:mm').hours(),
+					minutes: moment(startBreakTime, 'H:mm').minutes()
+				},
+				{
+					hours: moment(endBreakTime, 'H:mm').hours(),
+					minutes: moment(endBreakTime, 'H:mm').minutes()
+				},
+				{
+					hours: moment(endTime, 'H:mm').hours(),
+					minutes: moment(endTime, 'H:mm').minutes()
+				}
+			];
+
+			this.setState({ storedTimes });
+		}
 	}
 
 	_getNextField() {
@@ -239,7 +315,7 @@ class Edit extends React.Component {
 										{' '}
 										<strong>{labouredHoursOnDay}</strong>
 									</p>
-								) : null
+								) : ''
 							}
 						</div>
 					</div>
@@ -251,7 +327,7 @@ class Edit extends React.Component {
 									label={strings.times[index].label}
 									emphasis={index === 0 || index === 3}
 									referenceHour={refHour}
-									time={storedTimes[index]}
+									time={storedTimes[index] || '00'}
 									shouldHaveFocus={this._shouldHaveFocus(index)}
 									onSet={this.onTimeSet(index)}
 									onFocus={this.onFieldFocus(index)}
@@ -281,8 +357,15 @@ class Edit extends React.Component {
 	}
 }
 
-export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Edit);
+export default compose(
+	graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' }),
+	graphql(WEEK_ENTRIES_QUERY, {
+		name: 'weekEntriesQuery',
+		options: { variables: { date: moment().format('YYYY-MM-DD') } }
+	})
+)(Edit);
 
 Edit.propTypes = {
-	addTimeEntry: PropTypes.func.isRequired
+	addTimeEntry: PropTypes.func.isRequired,
+	weekEntriesQuery: PropTypes.object.isRequired
 };

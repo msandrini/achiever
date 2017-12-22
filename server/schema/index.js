@@ -56,9 +56,16 @@ const typeDefs = `
 		token: String
 	}
 
+	type UserDetails {
+		name: String!
+		dailyContractedHours: String!
+		balance: String!
+	}
+
 	type Query {
-		weekEntriesByDate(date: String!): WeekEntries
-		phasesByDate: PhaseList
+		userDetails: UserDetails
+		weekEntries(date: String!): WeekEntries
+		phases: PhaseList
 	}
 
 	type Mutation {

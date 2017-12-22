@@ -9,14 +9,15 @@ const {
 	dailyEntries,
 	weekEntriesByDate,
 	activities,
-	phases
+	phases,
+	userDetails
 } = require('../api/middleware');
 
 const notAuthorizedMessage = 'Not authorized!!!';
 
 const resolvers = {
 	Query: {
-		weekEntriesByDate: async (_, { date }, { token }) => {
+		weekEntries: async (_, { date }, { token }) => {
 			if (!token) {
 				throw notAuthorizedMessage;
 			}
@@ -32,7 +33,7 @@ const resolvers = {
 
 			return result;
 		},
-		phasesByDate: async (_, __, { token }) => {
+		phases: async (_, __, { token }) => {
 			if (!token) {
 				throw notAuthorizedMessage;
 			}
@@ -44,6 +45,26 @@ const resolvers = {
 				result = await phases(token);
 			} finally {
 				await logout(token);
+			}
+
+			return result;
+		},
+		userDetails: async (_, __, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
+			let result;
+
+			try {
+				await login(token);
+				result = await userDetails(token);
+			} finally {
+				await logout(token);
+			}
+
+			if (!result) {
+				throw notAuthorizedMessage;
 			}
 
 			return result;

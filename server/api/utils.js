@@ -88,39 +88,31 @@ const mapTableIntoArray = ($, selector) => (
 );
 
 const workTimeFromHtml = ($) => {
-	const workTimeResponse = $('table tr.green a').prop('onclick');
+	const workTimeResponse = $('table tr.green a').eq(0).prop('onclick');
 	const workTimeId = extractId(workTimeResponse);
-	const workTime = mapTableIntoArray($, 'table tr.green td');
-	const startTime = !workTime || workTime.length < 4
-		? null
-		: parseTimeToArray(workTime[1]);
-	const endTime = !workTime || workTime.length < 4
-		? null
-		: parseTimeToArray(workTime[4])
-			.map((time, index) => startTime[index] + time);
-	const total = !workTime ? null : workTime[4];
+	const total = $('table tr.green td').eq(5).text().trim();
+	const startTime = $('table tr.green td').eq(1).text().trim();
 
 	return {
 		workTimeId,
 		total,
-		startTime,
-		endTime
+		startTime
 	};
 };
 
 const breakTimeFromHtml = ($) => {
 	const breakTimeResponse = $('table tr.yellow a').prop('onclick');
 	const breakTimeId = extractId(breakTimeResponse);
-	const breakTime = !breakTimeId ?
-		[''] :
-		mapTableIntoArray($, 'table tr.yellow td');
+	const breakTimeDuration = $('table tr.yellow td').eq(3).text().trim();
+	const breakTime = $('table tr.yellow td').eq(1).text().trim();
 
-	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime[0]);
+	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime);
 
 	return {
 		breakTimeId,
 		startBreakTime,
-		endBreakTime
+		endBreakTime,
+		breakTimeDuration
 	};
 };
 
