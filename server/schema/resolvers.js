@@ -12,9 +12,15 @@ const {
 	phases
 } = require('../api/middleware');
 
+const notAuthorizedMessage = 'Not authorized!!!';
+
 const resolvers = {
 	Query: {
 		weekEntriesByDate: async (_, { date }, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
 			let result;
 
 			try {
@@ -26,12 +32,16 @@ const resolvers = {
 
 			return result;
 		},
-		phasesByDate: async (_, { date }, { token }) => {
+		phasesByDate: async (_, __, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
 			let result;
 
 			try {
 				await login(token);
-				result = await phases(token, date);
+				result = await phases(token);
 			} finally {
 				await logout(token);
 			}
@@ -52,12 +62,16 @@ const resolvers = {
 
 			return { token };
 		},
-		addTimeEntry: async (_, { activity }, { token }) => {
+		addTimeEntry: async (_, { timeEntry }, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
 			let result;
 
 			try {
 				await login(token);
-				result = await addTimeEntry(token, activity);
+				result = await addTimeEntry(token, timeEntry);
 			} finally {
 				await logout(token);
 			}
@@ -65,24 +79,30 @@ const resolvers = {
 			return result;
 		},
 		delTimeEntry: async (_, { date }, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
 			try {
 				await login(token);
-				const activity = await dailyEntries(token, date);
+				const timeEntry = await dailyEntries(token, date);
 
-				if (!activity || !activity.id) {
+				if (!timeEntry || !timeEntry.id) {
 					await logout(token);
 
 					return false;
 				}
 
-				const { workTimeId, breakTimeId } = activity.id;
+				const { workTimeId, breakTimeId } = timeEntry.id;
 
 				if (workTimeId) {
 					await delTimeEntry(token, workTimeId);
+					console.info('Entry time deleted!!!');
 				}
 
 				if (breakTimeId) {
 					await delTimeEntry(token, breakTimeId);
+					console.info('Break time deleted!!!');
 				}
 			} finally {
 				await logout(token);

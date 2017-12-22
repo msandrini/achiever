@@ -1,11 +1,12 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
+import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import apiCalls from '../apiCalls';
 import TimeGroup from './edit/TimeGroup';
 import {
 	STORAGEDAYKEY,
@@ -19,8 +20,28 @@ import {
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
+const storedTimesIndex = {
+	startTime: 0,
+	startBreakTime: 1,
+	endBreakTime: 2,
+	endTime: 3
+};
 
-export default class Main extends React.Component {
+const ADD_TIME_ENTRY_MUTATION = gql`
+  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+	addTimeEntry(timeEntry: $timeEntry) {
+	  date
+	  employeeName
+	  startTime
+	  startBreakTime
+	  endBreakTime
+	  endTime
+	  total
+	}
+  }
+`;
+
+class Edit extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -97,18 +118,37 @@ export default class Main extends React.Component {
 		event.preventDefault();
 		const { controlDate, storedTimes } = this.state;
 
-		const dateToSend = ({
-			day: controlDate.date(),
-			month: controlDate.month() + 1,
-			year: controlDate.year()
-		});
+		const startTime = storedTimes[storedTimesIndex.startTime];
+		const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
+		const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
+		const endTime = storedTimes[storedTimesIndex.endTime];
 
-		const data = JSON.stringify({ date: dateToSend, times: storedTimes });
+		const timeEntryInput = {
+			date: controlDate.format('YYYY-MM-DD'),
+			startTime: `${startTime.hours}:${startTime.minutes}`,
+			startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
+			endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
+			endTime: `${endTime.hours}:${endTime.minutes}`
+		};
 
-		apiCalls.send(data)
-			.then(response => response.json())
-			.then(json => console.info(JSON.stringify(json)))
-			.catch(err => console.error(err));
+		this._addTimeEntry(timeEntryInput);
+	}
+
+	async _addTimeEntry(timeEntryInput) {
+		let response;
+		try {
+			response = await this.props.addTimeEntry({
+				variables: {
+					timeEntry: timeEntryInput
+				}
+			});
+		} catch (error) {
+			console.error('Time entry failed!', error);
+		}
+
+		if (response) {
+			console.info('Time entry saved!!!');
+		}
 	}
 
 	imReligious() {
@@ -240,3 +280,9 @@ export default class Main extends React.Component {
 		);
 	}
 }
+
+export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Edit);
+
+Edit.propTypes = {
+	addTimeEntry: PropTypes.func.isRequired
+};

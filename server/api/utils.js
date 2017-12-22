@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const moment = require('moment');
 
-const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([^\0]+)'\);/, 'i');
+const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([^\0]+)'\);\s*<\/script>/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
 const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
 const normaliseStringRegex = RegExp(/<[a-z ]+\/>|\\|\s\r?\n/, 'gi');
@@ -17,8 +17,7 @@ const extractError = (responseHtml) => {
 	return false;
 };
 
-const parseTimeToArray = timeAsString =>
-	timeAsString.split(':').map(time => parseInt(time, 10));
+const parseTimeToArray = timeAsString => timeAsString.split(':').map(time => parseInt(time, 10));
 
 const extractId = (responseHtml) => {
 	if (!responseHtml) {
@@ -88,6 +87,43 @@ const mapTableIntoArray = ($, selector) => (
 		.get()
 );
 
+const workTimeFromHtml = ($) => {
+	const workTimeResponse = $('table tr.green a').prop('onclick');
+	const workTimeId = extractId(workTimeResponse);
+	const workTime = mapTableIntoArray($, 'table tr.green td');
+	const startTime = !workTime || workTime.length < 4
+		? null
+		: parseTimeToArray(workTime[1]);
+	const endTime = !workTime || workTime.length < 4
+		? null
+		: parseTimeToArray(workTime[4])
+			.map((time, index) => startTime[index] + time);
+	const total = !workTime ? null : workTime[4];
+
+	return {
+		workTimeId,
+		total,
+		startTime,
+		endTime
+	};
+};
+
+const breakTimeFromHtml = ($) => {
+	const breakTimeResponse = $('table tr.yellow a').prop('onclick');
+	const breakTimeId = extractId(breakTimeResponse);
+	const breakTime = !breakTimeId ?
+		[''] :
+		mapTableIntoArray($, 'table tr.yellow td');
+
+	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime[0]);
+
+	return {
+		breakTimeId,
+		startBreakTime,
+		endBreakTime
+	};
+};
+
 const getOptions = (method, uri, cookieJar) => ({
 	method,
 	uri,
@@ -151,5 +187,7 @@ module.exports = {
 	mapTableIntoArray,
 	getOptions,
 	stringfyTime,
-	activityToPayload
+	activityToPayload,
+	workTimeFromHtml,
+	breakTimeFromHtml
 };

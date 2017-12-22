@@ -6,7 +6,7 @@ const formatTime = value => (
 );
 
 const displayTime = value => (
-	value ? formatTime(value) : formatTime(0)  
+	value ? formatTime(value) : formatTime(0)
 );
 
 const StaticTime = ({ time, label, emphasis }) => (

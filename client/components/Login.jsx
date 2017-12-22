@@ -1,30 +1,34 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import strings from '../../shared/strings';
 
 import '../styles/login.styl';
 
-export default class Main extends React.Component {
+const SIGN_IN_MUTATION = gql`
+  mutation signIn($user: String!, $password: String!) {
+	signIn(user: $user, password: $password) {
+	  token
+	}
+  }
+`;
+
+export const API_AUTH_TOKEN = 'achiever-auth-token';
+
+class Login extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.onSubmit = this.onSubmit.bind(this);
+		this._showError = this._showError.bind(this);
 
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			errorMessage: ''
 		};
-	}
-
-	onSubmit(event) {
-		event.preventDefault();
-
-		const paramsToSend = ({
-			username: this.state.username,
-			password: this.state.password
-		});
-
-		console.log(paramsToSend);
 	}
 
 	onChangeField(field) {
@@ -33,8 +37,56 @@ export default class Main extends React.Component {
 		};
 	}
 
+	onSubmit(event) {
+		event.preventDefault();
+
+		const { username, password } = this.state;
+
+		this._signIn(username, password);
+	}
+
 	_shouldSubmitBeAvailable() {
 		return this.state.username && this.state.password;
+	}
+
+	async _signIn(username, password) {
+		let response;
+		try {
+			response = await this.props.signIn({
+				variables: {
+					user: username,
+					password
+				}
+			});
+		} catch (error) {
+			console.error('Authentication failed!', error);
+			this.setState({ errorMessage: strings.authenticationError });
+		}
+
+		if (response) {
+			console.log('Authenticated!!!');
+			this.setState({ errorMessage: '' });
+			const { token } = response.data.signIn;
+			localStorage.setItem(API_AUTH_TOKEN, token);
+		}
+	}
+
+	_showError() {
+		const { errorMessage } = this.state;
+		if (errorMessage) {
+			return (
+				<div className="error">
+					<div className="icon">
+						<img alt="" src="assets/ic_report_problem_white_24px.svg" />
+					</div>
+					<div className="message">
+						{errorMessage}
+					</div>
+				</div>
+			);
+		}
+
+		return '';
 	}
 
 	render() {
@@ -46,20 +98,21 @@ export default class Main extends React.Component {
 					</h2>
 					<div className="column">&nbsp;</div>
 					<div className="column">
-						<div className="time-management-content">
+						<div className="login-content">
+							{this._showError()}
 							<div className="login-field">
-								<label htmlFor="username">{strings.username}</label>
 								<input
 									type="text"
 									name="username"
+									placeholder={strings.username}
 									onChange={this.onChangeField('username')}
 								/>
 							</div>
 							<div className="login-field">
-								<label htmlFor="password">{strings.password}</label>
 								<input
-									type="text"
+									type="password"
 									name="password"
+									placeholder={strings.password}
 									onChange={this.onChangeField('password')}
 								/>
 							</div>
@@ -78,3 +131,9 @@ export default class Main extends React.Component {
 		);
 	}
 }
+
+export default graphql(SIGN_IN_MUTATION, { name: 'signIn' })(Login);
+
+Login.propTypes = {
+	signIn: PropTypes.func.isRequired
+};
