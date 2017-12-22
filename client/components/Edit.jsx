@@ -14,18 +14,13 @@ import {
 	setTodayStorage,
 	getTodayStorage,
 	areTheSameDay,
-	replacingValueInsideArray
+	replacingValueInsideArray,
+	submitToServer
 } from './shared/utils';
 import { timeIsValid } from '../../shared/utils';
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
-const storedTimesIndex = {
-	startTime: 0,
-	startBreakTime: 1,
-	endBreakTime: 2,
-	endTime: 3
-};
 
 const ADD_TIME_ENTRY_MUTATION = gql`
   mutation addTimeEntry($timeEntry: TimeEntryInput!) {
@@ -62,7 +57,6 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		console.log(this.props);
 		this._checkPreEnteredValues();
 		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
 		this.setState({ storedTimes, sentToday });
@@ -122,56 +116,13 @@ class Edit extends React.Component {
 		};
 	}
 
-	onSubmit(event) {
-		event.preventDefault();
-		const { controlDate, storedTimes } = this.state;
-
-		const startTime = storedTimes[storedTimesIndex.startTime];
-		const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-		const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
-		const endTime = storedTimes[storedTimesIndex.endTime];
-
-		const timeEntryInput = {
-			date: controlDate.format('YYYY-MM-DD'),
-			startTime: `${startTime.hours}:${startTime.minutes}`,
-			startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
-			endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
-			endTime: `${endTime.hours}:${endTime.minutes}`
+	onSubmit(callback) {
+		return (event) => {
+			event.preventDefault();
+			const { storedTimes, sentToday } = { ...this.state };
+			submitToServer({ ...this.state }, callback);
+			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
 		};
-
-		this._addTimeEntry(timeEntryInput);
-
-		this.setState((prevState) => {
-			const newState = {
-				...prevState,
-				sentToday: true
-			};
-
-			if (areTheSameDay(prevState.controlDate, moment())) {
-				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, {
-					storedTimes: newState.storedTimes,
-					sentToday: newState.sentToday
-				});
-			}
-			return newState;
-		});
-	}
-
-	async _addTimeEntry(timeEntryInput) {
-		let response;
-		try {
-			response = await this.props.addTimeEntry({
-				variables: {
-					timeEntry: timeEntryInput
-				}
-			});
-		} catch (error) {
-			console.error('Time entry failed!', error);
-		}
-
-		if (response) {
-			console.info('Time entry saved!!!');
-		}
 	}
 
 	imReligious() {
@@ -242,7 +193,7 @@ class Edit extends React.Component {
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
 				</h2>
-				<form onSubmit={this.onSubmit}>
+				<form onSubmit={this.onSubmit(this.props.addTimeEntry)}>
 					<div className="column">
 						<div className="time-management-content">
 							<DatePicker
