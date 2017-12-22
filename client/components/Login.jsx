@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import Alert from './shared/Alert';
 import strings from '../../shared/strings';
 
 import '../styles/login.styl';
@@ -22,7 +23,6 @@ class Login extends React.Component {
 		super(props);
 
 		this.onSubmit = this.onSubmit.bind(this);
-		this._showError = this._showError.bind(this);
 
 		this.state = {
 			username: '',
@@ -71,24 +71,6 @@ class Login extends React.Component {
 		}
 	}
 
-	_showError() {
-		const { errorMessage } = this.state;
-		if (errorMessage) {
-			return (
-				<div className="error">
-					<div className="icon">
-						<img alt="" src="assets/ic_report_problem_white_24px.svg" />
-					</div>
-					<div className="message">
-						{errorMessage}
-					</div>
-				</div>
-			);
-		}
-
-		return '';
-	}
-
 	render() {
 		return (
 			<div className="page-wrapper">
@@ -99,7 +81,7 @@ class Login extends React.Component {
 					<div className="column">&nbsp;</div>
 					<div className="column">
 						<div className="login-content">
-							{this._showError()}
+							<Alert errorMessage={this.state.errorMessage}/>
 							<div className="login-field">
 								<input
 									type="text"
