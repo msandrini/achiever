@@ -65,7 +65,6 @@ class Login extends React.Component {
 		}
 
 		if (response) {
-			console.log('Authenticated!!!');
 			this.setState({ errorMessage: '' });
 			const { token } = response.data.signIn;
 			localStorage.setItem(API_AUTH_TOKEN, token);

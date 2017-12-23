@@ -118,12 +118,10 @@ const resolvers = {
 
 				if (workTimeId) {
 					await delTimeEntry(token, workTimeId);
-					console.info('Entry time deleted!!!');
 				}
 
 				if (breakTimeId) {
 					await delTimeEntry(token, breakTimeId);
-					console.info('Break time deleted!!!');
 				}
 			} finally {
 				await logout(token);
