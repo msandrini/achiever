@@ -71,7 +71,8 @@ const strings = {
 	logoutConfirm: 'Quer mesmo sair do sistema?',
 	username: 'Usuário',
 	password: 'Senha',
-	authenticationError: 'Credenciais inválidas.'
+	authenticationError: 'Credenciais inválidas.',
+	submitTimeSuccess: 'Horas registradas com sucesso!'
 };
 
 module.exports = strings;

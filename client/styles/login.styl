@@ -1,13 +1,16 @@
 @import "_colours.styl"
 
 .login-content
+	width: 400px;
+	margin: 0;
+
 	.login-field
 		min-height: 60px;
 
 		input
 			font-size: 19px;
 			padding: 11px;
-			width: 400px;
+			width: 375px;
 			border-radius: 2px;
 			border: 1px solid transitionColour3;
 			&:focus
@@ -15,34 +18,9 @@
 				border: 1px solid focusBorderColour
 				box-shadow: none;
 
-	.error
-		display: table;
-		table-layout: fixed;
-		width: 420px;
-		margin-bottom: 15px;
-		
-		.icon
-			display: table-cell;
-			border-style: solid;
-			border-width: 2px 0 2px 2px;
-			border-radius: 8px 0 0 8px;
-			padding: 16px 10px 16px 12px;
-			background-color: errorBorderColour;
-			border-color: errorBorderColour;
-			width: 25px;
-		.message
-			display: table-cell;
-			border: 2px solid errorBorderColour;
-			border-radius: 0 8px 8px 0;
-			padding: 20px;
-			width: 330px;
-			font-size: 19px;
-			color: errorBorderColour;
-
 	button.send
-		width: 422px;
+		padding: 11px;
+		width: 100%;
 		margin: 0;
 		font-size: 19px;
-		padding-top: 12px;
-		padding-bottom: 12px;
 		height: 45px;

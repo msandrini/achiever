@@ -8,6 +8,8 @@ import gql from 'graphql-tag';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import TimeGroup from './edit/TimeGroup';
+import ErrorPanel from './ErrorPanel';
+import SuccessPanel from './SuccessPanel';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
@@ -61,6 +63,97 @@ const WEEK_ENTRIES_QUERY = gql`
 	}
 `;
 
+const calculateLabouredHours = (storedTimes) => {
+	const startTime = storedTimes[storedTimesIndex.startTime];
+	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
+	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
+	const endTime = storedTimes[storedTimesIndex.endTime];
+
+	const labouredHoursOnDay = moment().startOf('day');
+	labouredHoursOnDay.add({
+		hours: endTime.hours,
+		minutes: endTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: startTime.hours,
+		minutes: startTime.minutes
+	});
+	labouredHoursOnDay.add({
+		hours: startBreakTime.hours,
+		minutes: startBreakTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: endBreakTime.hours,
+		minutes: endBreakTime.minutes
+	});
+
+	return labouredHoursOnDay.format('H:mm');
+};
+
+const stringifyTime = (hours, minutes) => {
+	let timeAsString = '';
+	let hoursAsString = hours;
+	let minutesAsString = minutes;
+
+	if (hoursAsString < 0) {
+		timeAsString = '-';
+		hoursAsString *= -1;
+	}
+	if (minutesAsString < 0) {
+		timeAsString = '-';
+		minutesAsString *= -1;
+	}
+
+	if (minutesAsString < 10) {
+		minutesAsString = `0${minutesAsString}`;
+	}
+
+	timeAsString += `${hoursAsString}:${minutesAsString}`;
+
+	return timeAsString;
+};
+
+const calculateRemainingHoursOnWeek = (date, workedTime, contractedHours, totalWeek) => {
+	const businessDay = date.day() > 5 ? 5 : date.day();
+
+	const dailyContractedDuration = moment.duration(contractedHours);
+
+	const expectedDuration = moment.duration().add({
+		hours: dailyContractedDuration.hours() * businessDay,
+		minutes: dailyContractedDuration.minutes() * businessDay
+	});
+
+	expectedDuration.subtract({
+		hours: totalWeek.split(':')[0],
+		minutes: totalWeek.split(':')[1]
+	});
+
+	const labouredHoursDuration = moment.duration(workedTime);
+	expectedDuration.subtract({
+		hours: labouredHoursDuration.hours(),
+		minutes: labouredHoursDuration.minutes()
+	});
+
+	const totalHours = (expectedDuration.days() * 24) + expectedDuration.hours();
+	const totalMinutes = expectedDuration.minutes();
+	return stringifyTime(totalHours, totalMinutes);
+};
+
+const isValid = (storedTimes) => {
+	let comparisonTerm = 0;
+	const isSequentialTime = (time) => {
+		if (time && timeIsValid(time)) {
+			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+			const isLaterThanComparison = date > comparisonTerm;
+			comparisonTerm = Number(date);
+			return isLaterThanComparison;
+		}
+		return false;
+	};
+
+	return storedTimes.every(isSequentialTime);
+};
+
 class Edit extends React.Component {
 	constructor(props) {
 		super(props);
@@ -70,7 +163,8 @@ class Edit extends React.Component {
 			remainingHoursOnWeek: null,
 			storedTimes: [{}, {}, {}, {}],
 			focusedField: null,
-			shouldHaveFocus: null
+			shouldHaveFocus: null,
+			errorMessage: ''
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
@@ -88,7 +182,8 @@ class Edit extends React.Component {
 		const { loading, error, weekEntries } = nextProps.weekEntriesQuery;
 
 		if (this.props.weekEntriesQuery.loading && !loading && !error) {
-			this.setState({ remainingHoursOnWeek: weekEntries.total });
+			const remainingHoursOnWeek = weekEntries.total;
+			this.setState({ remainingHoursOnWeek });
 		}
 	}
 
@@ -109,18 +204,33 @@ class Edit extends React.Component {
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
 			const composedTime = { hours, minutes };
+
 			this.setState((prevState) => {
+				const storedTimes = replacingValueInsideArray(
+					prevState.storedTimes,
+					groupIndex,
+					composedTime
+				);
+
+				const labouredHoursOnDay = (isValid(storedTimes) && calculateLabouredHours(storedTimes)) || '';
+				const remainingHoursOnWeek = calculateRemainingHoursOnWeek(
+					prevState.controlDate,
+					labouredHoursOnDay,
+					this.props.weekEntriesQuery.userDetails.dailyContractedHours,
+					this.props.weekEntriesQuery.weekEntries.total
+				);
+
 				const newState = {
 					...prevState,
-					storedTimes: replacingValueInsideArray(
-						prevState.storedTimes,
-						groupIndex,
-						composedTime
-					)
+					storedTimes,
+					labouredHoursOnDay,
+					remainingHoursOnWeek
 				};
+
 				if (areTheSameDay(prevState.controlDate, moment())) {
 					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, newState.storedTimes);
 				}
+
 				return newState;
 			});
 			if (this.state.focusedField) {
@@ -170,8 +280,7 @@ class Edit extends React.Component {
 
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
-		const response = await refetch({ date: date.format('YYYY-MM-DD') });
-		console.log('New week entries:', response.data.weekEntries);
+		await refetch({ date: date.format('YYYY-MM-DD') });
 		this._checkPreEnteredValues(date);
 	}
 
@@ -184,11 +293,11 @@ class Edit extends React.Component {
 				}
 			});
 		} catch (error) {
-			console.error('Time entry failed!', error);
+			this.setState({ errorMessage: error.graphQLErrors[0].message });
 		}
 
 		if (response) {
-			console.info('Time entry saved!!!');
+			this.setState({ successMessage: strings.submitTimeSuccess });
 			const date = moment(this.state.controlDate);
 			await this._fetchWeekEntries(date.format('YYYY-MM-DD'));
 		}
@@ -202,7 +311,12 @@ class Edit extends React.Component {
 	}
 
 	_checkPreEnteredValues(date) {
-		if (this.props.weekEntriesQuery.loading || this.props.weekEntriesQuery.error) {
+		if (this.props.weekEntriesQuery.loading) {
+			return;
+		}
+
+		if (this.props.weekEntriesQuery.error) {
+			this.setState({ errorMessage: this.props.weekEntriesQuery.error });
 			return;
 		}
 
@@ -210,33 +324,32 @@ class Edit extends React.Component {
 		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
 
 		if (timeEntry) {
-			const {
-				startTime,
-				startBreakTime,
-				endBreakTime,
-				endTime
-			} = timeEntry;
+			const startTime = moment(timeEntry.startTime, 'H:mm');
+			const startBreakTime = moment(timeEntry.startBreakTime, 'H:mm');
+			const endBreakTime = moment(timeEntry.endBreakTime, 'H:mm');
+			const endTime = moment(timeEntry.endTime, 'H:mm');
+			const labouredHoursOnDay = timeEntry.total;
 
 			const storedTimes = [
 				{
-					hours: moment(startTime, 'H:mm').hours(),
-					minutes: moment(startTime, 'H:mm').minutes()
+					hours: startTime.hours(),
+					minutes: startTime.minutes()
 				},
 				{
-					hours: moment(startBreakTime, 'H:mm').hours(),
-					minutes: moment(startBreakTime, 'H:mm').minutes()
+					hours: startBreakTime.hours(),
+					minutes: startBreakTime.minutes()
 				},
 				{
-					hours: moment(endBreakTime, 'H:mm').hours(),
-					minutes: moment(endBreakTime, 'H:mm').minutes()
+					hours: endBreakTime.hours(),
+					minutes: endBreakTime.minutes()
 				},
 				{
-					hours: moment(endTime, 'H:mm').hours(),
-					minutes: moment(endTime, 'H:mm').minutes()
+					hours: endTime.hours(),
+					minutes: endTime.minutes()
 				}
 			];
 
-			this.setState({ storedTimes });
+			this.setState({ storedTimes, labouredHoursOnDay });
 		}
 	}
 
@@ -267,18 +380,7 @@ class Edit extends React.Component {
 	}
 
 	_shouldSendBeAvailable() {
-		let comparisonTerm = 0;
-		const isSequentialTime = (time) => {
-			if (time && timeIsValid(time)) {
-				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-				const isLaterThanComparison = date > comparisonTerm;
-				comparisonTerm = Number(date);
-				return isLaterThanComparison;
-			}
-			return false;
-		};
-
-		return this.state.storedTimes.every(isSequentialTime);
+		return isValid(this.state.storedTimes);
 	}
 
 	render() {
@@ -321,6 +423,8 @@ class Edit extends React.Component {
 					</div>
 					<div className="column">
 						<div className="time-management-content">
+							<SuccessPanel message={this.state.successMessage} />
+							<ErrorPanel message={this.state.errorMessage} />
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}

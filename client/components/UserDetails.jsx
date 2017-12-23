@@ -23,12 +23,8 @@ class UserDetails extends Component {
 		super(props);
 
 		this._logout = this._logout.bind(this);
-
-		const token = localStorage.getItem(API_AUTH_TOKEN);
-		const loggedIn = Boolean(token);
-
 		this.state = {
-			loggedIn
+			authenticated: false
 		};
 	}
 
@@ -37,48 +33,48 @@ class UserDetails extends Component {
 
 		if (error || (!loading && !userDetails)) {
 			localStorage.removeItem(API_AUTH_TOKEN);
-			this.setState({ loggedIn: false });
+			this.setState({ authenticated: false });
 		} else {
 			const token = localStorage.getItem(API_AUTH_TOKEN);
-			const loggedIn = Boolean(token);
-			this.setState({ loggedIn });
+			const authenticated = Boolean(token && userDetails.name);
+			this.setState({ authenticated });
 		}
 	}
 
 	_logout(event) {
 		event.preventDefault();
-		/* eslint no-alert: "off" */
-		const shouldLogout = window.confirm(strings.logoutConfirm);
-		if (shouldLogout) {
-			localStorage.removeItem(API_AUTH_TOKEN);
-			this.setState({ loggedIn: false });
-		}
+		localStorage.removeItem(API_AUTH_TOKEN);
+		this.setState({ authenticated: false });
 	}
 
 	render() {
-		const { loggedIn } = this.state;
+		const { userDetails, loading, error } = this.props.userDetailsQuery;
 
-		if (loggedIn && !this.props.userDetailsQuery.loading) {
-			const { userDetails: { name } } = this.props.userDetailsQuery;
+		if (loading) {
+			return <div>Loading...</div>;
+		}
+
+		const { authenticated } = this.state;
+
+		if (authenticated && !error) {
+			const { name } = userDetails;
 
 			return (
 				<div className="userDetails">
 					<div className="employeeName">
 						{ name }
 					</div>
-					<button className="logout" onClick={this._logout}>
+					<NavLink to="/logout" className="logout">
 						{strings.logout}
-					</button>
+					</NavLink>
 				</div>
 			);
 		}
 		return (
 			<div className="userDetails">
-				<nav className="unlogged">
-					<NavLink to="/login" activeClassName="is-active">
-						{strings.login}
-					</NavLink>
-				</nav>
+				<NavLink to="/login" activeClassName="is-active">
+					{strings.login}
+				</NavLink>
 			</div>
 		);
 	}

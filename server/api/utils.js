@@ -55,25 +55,25 @@ const extractSelectOptions = (id, response) => {
 	const isOptionList = $(`#${id}`).is('select');
 
 	if (!isOptionList) {
-		const types = [{
+		const options = [{
 			id: parseInt($(`#${id}`).val(), 10),
 			name: $('span').text().trim()
 		}];
 
 		return {
-			default: types[0].id,
-			types
+			default: options[0].id,
+			options
 		};
 	}
 
-	const types = $(`#${id} > option`).map((index, item) => ({
+	const options = $(`#${id} > option`).map((index, item) => ({
 		id: parseInt($(item).val(), 10),
 		name: $(item).text().trim()
 	})).get().sort((a, b) => a.id - b.id);
 
 	return {
 		default: parseInt($(`#${id} > option:selected`).val(), 10),
-		types
+		options
 	};
 };
 
@@ -130,41 +130,42 @@ const stringfyTime = (hours, minutes) => {
 	return `${stringifiedHour}:${stringifiedMinutes}`;
 };
 
-const activityToPayload = (activity) => {
-	const PROJECT_PHASE = 329;
-	const CODE_DEVELOPING_ACTIVITY = 7;
+const activityToPayload = (timeEntry, phaseId, activityId) => {
+	const date = moment(timeEntry.date);
+	const startTime = moment(timeEntry.startTime, 'H:mm');
+	const endTime = moment(timeEntry.endTime, 'H:mm');
+	const startBreakTime = moment(timeEntry.startBreakTime || '12:00', 'H:mm');
+	const endBreakTime = moment(timeEntry.endBreakTime || '13:00', 'H:mm');
 
-	const date = moment(activity.date);
-	const startTime = moment(activity.startTime, 'hh:mm');
-	const endTime = moment(activity.endTime, 'hh:mm');
-	const startBreakTime = moment(activity.startBreakTime || '12:00', 'hh:mm');
-	const endBreakTime = moment(activity.endBreakTime || '13:00', 'hh:mm');
-
-	const totalBreakTime = moment().startOf('hour');
-	totalBreakTime.add(endBreakTime.hour(), 'hours');
-	totalBreakTime.add(endBreakTime.minute(), 'minutes');
-	totalBreakTime.subtract(startBreakTime.hour(), 'hours');
-	totalBreakTime.subtract(startBreakTime.minute(), 'minutes');
-
-	const totalWorkedTime = moment().startOf('hour');
-	totalWorkedTime.add(endTime.hour(), 'hours');
-	totalWorkedTime.add(endTime.minute(), 'minutes');
-	totalWorkedTime.subtract(startTime.hour(), 'hours');
-	totalWorkedTime.subtract(startTime.minute(), 'minutes');
-	totalWorkedTime.subtract(totalBreakTime.hour(), 'hours');
-	totalWorkedTime.subtract(totalBreakTime.minute(), 'minutes');
+	const totalWorkedTime = moment().startOf('day');
+	totalWorkedTime.add({
+		hours: endTime.hours,
+		minutes: endTime.minutes
+	});
+	totalWorkedTime.subtract({
+		hours: startTime.hours,
+		minutes: startTime.minutes
+	});
+	totalWorkedTime.add({
+		hours: startBreakTime.hours,
+		minutes: startBreakTime.minutes
+	});
+	totalWorkedTime.subtract({
+		hours: endBreakTime.hours,
+		minutes: endBreakTime.minutes
+	});
 
 	return {
-		proj_phase: PROJECT_PHASE,
-		proj_activity: CODE_DEVELOPING_ACTIVITY,
+		proj_phase: phaseId,
+		proj_activity: activityId,
 		remark: '',
 		diai: date.date(),
 		mesi: date.month() + 1,
 		anoi: date.year(),
 		timehH: startTime.hour(),
 		timemH: startTime.minute(),
-		startBreak6: activity.startBreakTime || '12:00',
-		endBreak6: activity.endBreakTime || '13:00',
+		startBreak6: timeEntry.startBreakTime || '12:00',
+		endBreak6: timeEntry.endBreakTime || '13:00',
 		timeh: totalWorkedTime.hour(),
 		timem: totalWorkedTime.minute()
 	};

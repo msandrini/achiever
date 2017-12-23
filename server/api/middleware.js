@@ -188,7 +188,14 @@ const dailyEntries = async (token, date) => {
 
 	let endTime = '';
 
-	if (startTime) {
+	let isValid = Boolean(startTime);
+
+	// Removes the Thurdays, Friday and Weekend from returned mock values
+	if (process.env.MOCKED) {
+		isValid = Boolean(startTime && moment(date).day() > 0 && moment(date).day() < 4);
+	}
+
+	if (isValid) {
 		endTime = moment(startTime, 'hh:mm');
 		const totalWorked = moment(total, 'hh:mm');
 		const durantion = moment(breakTimeDuration, 'hh:mm');
@@ -201,11 +208,11 @@ const dailyEntries = async (token, date) => {
 		id: { workTimeId, breakTimeId },
 		employeeName,
 		date,
-		startTime: startTime || '',
-		endTime: endTime || '',
-		startBreakTime: startBreakTime || '',
-		endBreakTime: endBreakTime || '',
-		total
+		startTime: (isValid && startTime) || '',
+		endTime: (isValid && endTime) || '',
+		startBreakTime: (isValid && startBreakTime) || '',
+		endBreakTime: (isValid && endBreakTime) || '',
+		total: (isValid && total) || ''
 	};
 
 	return timeEntry;
@@ -246,12 +253,23 @@ const weekEntriesByDate = async (token, date) => {
 
 const addTimeEntry = async (token, timeEntry) => {
 	const cookieJar = cookieJarFactory(token);
+	let { phaseId, activityId } = timeEntry;
+	if (!timeEntry.phaseId || !timeEntry.activityId) {
+		const phaseOptions = await phases(token);
+		const defaultPhaseId = phaseOptions.default;
+		phaseId = phaseId || defaultPhaseId;
+
+		const activityOptions = await activities(token, phaseId);
+		const defaultActivityId = activityOptions.default;
+		activityId = activityId || defaultActivityId;
+	}
+
 	const { personId, formKey } = await getUserDetails(cookieJar);
 
 	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
 	const payload = {
 		...commonPayload(personId, formKey, 'timereg_insert'),
-		...activityToPayload(timeEntry)
+		...activityToPayload(timeEntry, phaseId, activityId)
 	};
 
 	options.formData = payload;
