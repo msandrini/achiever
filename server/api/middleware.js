@@ -140,6 +140,32 @@ const activities = async (token, phase) => {
 	return extractSelectOptions('proj_activity', responseHtml);
 };
 
+const userDetails = async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId } = await getUserDetails(cookieJar);
+	const options = getOptions('GET', `${url}/dlabs/timereg/report.php`, cookieJar);
+	options.qs = {
+		init_userid: personId
+	};
+
+	const responseHtml = await rp(options);
+	const error = extractError(responseHtml);
+	if (error) {
+		throw error;
+	}
+
+	const $ = cheerio.load(responseHtml);
+	const name = $('h4').eq(0).text().trim();
+	const dailyContractedHours = $('table tr td').eq(1).text();
+	const balance = $('table tr td').eq(8).text();
+
+	return {
+		name,
+		dailyContractedHours,
+		balance
+	};
+};
+
 const dailyEntries = async (token, date) => {
 	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${url}/dlabs/timereg/newhours_list.php`, cookieJar);
@@ -151,24 +177,42 @@ const dailyEntries = async (token, date) => {
 	const {
 		workTimeId,
 		total,
-		startTime,
-		endTime
+		startTime
 	} = workTimeFromHtml($);
 	const {
 		breakTimeId,
 		startBreakTime,
-		endBreakTime
+		endBreakTime,
+		breakTimeDuration
 	} = breakTimeFromHtml($);
+
+	let endTime = '';
+
+	let isValid = Boolean(startTime);
+
+	// Removes the Thurdays, Friday and Weekend from returned mock values
+	if (process.env.MOCKED) {
+		isValid = Boolean(startTime && moment(date).day() > 0 && moment(date).day() < 4);
+	}
+
+	if (isValid) {
+		endTime = moment(startTime, 'hh:mm');
+		const totalWorked = moment(total, 'hh:mm');
+		const durantion = moment(breakTimeDuration, 'hh:mm');
+		endTime.add({ hours: totalWorked.hours(), minutes: totalWorked.minutes() });
+		endTime.add({ hours: durantion.hours(), minutes: durantion.minutes() });
+		endTime = endTime.format('H:mm');
+	}
 
 	const timeEntry = {
 		id: { workTimeId, breakTimeId },
 		employeeName,
 		date,
-		startTime: !startTime ? null : startTime.join(':'),
-		endTime: !endTime ? null : endTime.join(':'),
-		startBreakTime: startBreakTime || '',
-		endBreakTime: endBreakTime || '',
-		total
+		startTime: (isValid && startTime) || '',
+		endTime: (isValid && endTime) || '',
+		startBreakTime: (isValid && startBreakTime) || '',
+		endBreakTime: (isValid && endBreakTime) || '',
+		total: (isValid && total) || ''
 	};
 
 	return timeEntry;
@@ -176,7 +220,7 @@ const dailyEntries = async (token, date) => {
 
 const weekEntriesByDate = async (token, date) => {
 	const refDate = moment(date);
-	refDate.day(1);
+	refDate.day(0);
 
 	const totalWorkedTime = moment().startOf('year');
 
@@ -209,12 +253,23 @@ const weekEntriesByDate = async (token, date) => {
 
 const addTimeEntry = async (token, timeEntry) => {
 	const cookieJar = cookieJarFactory(token);
+	let { phaseId, activityId } = timeEntry;
+	if (!timeEntry.phaseId || !timeEntry.activityId) {
+		const phaseOptions = await phases(token);
+		const defaultPhaseId = phaseOptions.default;
+		phaseId = phaseId || defaultPhaseId;
+
+		const activityOptions = await activities(token, phaseId);
+		const defaultActivityId = activityOptions.default;
+		activityId = activityId || defaultActivityId;
+	}
+
 	const { personId, formKey } = await getUserDetails(cookieJar);
 
 	const options = getOptions('POST', `${url}/dlabs/timereg/newhours_insert.php`, cookieJar);
 	const payload = {
 		...commonPayload(personId, formKey, 'timereg_insert'),
-		...activityToPayload(timeEntry)
+		...activityToPayload(timeEntry, phaseId, activityId)
 	};
 
 	options.formData = payload;
@@ -289,5 +344,6 @@ module.exports = {
 	weekEntriesByDate,
 	activities,
 	phases,
-	tokenFactory
+	tokenFactory,
+	userDetails
 };

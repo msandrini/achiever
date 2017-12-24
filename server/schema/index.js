@@ -7,7 +7,9 @@ const typeDefs = `
 		startTime: String!,
 		endTime: String!,
 		startBreakTime: String,
-		endBreakTime: String
+		endBreakTime: String,
+		phaseId: Int,
+		activityId: Int
 	}
 
 	type TimeEntryId {
@@ -39,7 +41,7 @@ const typeDefs = `
 
 	type PhaseList {
 		default: Int,
-		types: [Phase]
+		options: [Phase]
 	}
 
 	type Activity {
@@ -49,16 +51,23 @@ const typeDefs = `
 
 	type ActivityList {
 		default: Int,
-		types: [Activity]
+		options: [Activity]
 	}
 
 	type Token {
 		token: String
 	}
 
+	type UserDetails {
+		name: String!
+		dailyContractedHours: String!
+		balance: String!
+	}
+
 	type Query {
-		weekEntriesByDate(date: String!): WeekEntries
-		phasesByDate: PhaseList
+		userDetails: UserDetails
+		weekEntries(date: String!): WeekEntries
+		phases: PhaseList
 	}
 
 	type Mutation {

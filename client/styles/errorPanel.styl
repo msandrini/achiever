@@ -1,0 +1,31 @@
+@import "_colours.styl"
+
+.errorPanel
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	margin-bottom: 25px;
+	
+	.icon
+		display: table-cell;
+		border-style: solid;
+		border-width: 2px 0 2px 2px;
+		border-radius: 7px 0 0 7px;
+		padding: 12px 10px 12px 12px;
+		align-self: center;
+		background-color: errorBorderColour;
+		border-color: errorBorderColour;
+		width: 25px;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+
+	.message
+		display: table-cell;
+		border: 2px solid errorBorderColour;
+		border-radius: 0 7px 7px 0;
+		padding: 12px;
+		width: 100%;
+		font-size: 14px;
+		color: errorBorderColour;
+		vertical-align: middle;
