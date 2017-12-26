@@ -10,7 +10,7 @@ const Link = (props) => {
 
 		if (!aNewTab && !anExternalLink) {
 			e.preventDefault();
-			history.push(props.href);
+			history.push(props.to);
 		}
 	};
 

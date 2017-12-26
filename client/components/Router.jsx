@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as history from './router/history';
 import PAGES from './router/pages';
-import strings from '../../shared/strings';
+import PageNotFound from './PageNotFound';
 
 // Router
 
@@ -23,9 +23,8 @@ export default class ShowComponentOnRoute extends React.Component {
 	}
 
 	render() {
-		const Handler = PAGES[this.state.path] || strings.pageNotFound;
-
-		return <Handler />;
+		const Component = PAGES[this.state.path] || PageNotFound;
+		return <Component />;
 	}
 }
 

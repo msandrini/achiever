@@ -1,8 +1,14 @@
-const onChangeListeners = [];
+let historyListener = null;
 
 export const push = (pathname) => {
 	window.history.pushState({}, '', pathname);
-	onChangeListeners.forEach(callback => callback(pathname));
+	historyListener(pathname);
 };
 
-export const onChangeLocation = cb => onChangeListeners.push(cb);
+window.onpopstate = (event) => {
+	historyListener(event.path[0].location.pathname);
+};
+
+export const onChangeLocation = (cb) => {
+	historyListener = cb;
+};
