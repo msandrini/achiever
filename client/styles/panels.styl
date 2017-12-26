@@ -1,0 +1,28 @@
+@import "_colours.styl"
+
+.panel
+	width: 100%;
+	margin-bottom: 25px;
+	border-radius: 6px;
+
+	.icon
+		padding: 12px 10px 12px 12px;
+		align-self: center;
+		width: 25px;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+		fill: #fff;
+		float: left;
+
+	.message
+		padding: 12px;
+		font-size: 14px;
+		width: calc(100% - 25px);
+		color: #fff;
+
+	&.success
+		background-color: successPanelColour;
+
+	&.error
+		background-color: errorPanelColour;	

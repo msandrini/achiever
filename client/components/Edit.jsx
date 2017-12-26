@@ -2,12 +2,13 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import TimeGroup from './edit/TimeGroup';
+import Panel from './ui/Panel';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
@@ -28,18 +29,129 @@ const storedTimesIndex = {
 };
 
 const ADD_TIME_ENTRY_MUTATION = gql`
-  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
-	addTimeEntry(timeEntry: $timeEntry) {
-	  date
-	  employeeName
-	  startTime
-	  startBreakTime
-	  endBreakTime
-	  endTime
-	  total
+	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+		addTimeEntry(timeEntry: $timeEntry) {
+			date
+			employeeName
+			startTime
+			startBreakTime
+			endBreakTime
+			endTime
+			total
+		}
 	}
-  }
 `;
+
+const WEEK_ENTRIES_QUERY = gql`
+	query weekEntriesQuery($date: String!) {
+		weekEntries(date: $date) {
+			timeEntries {
+				date
+				startTime
+				startBreakTime
+				endBreakTime
+				endTime
+				total
+			}
+			total
+		}
+		userDetails {
+			dailyContractedHours
+			balance
+		}
+	}
+`;
+
+const calculateLabouredHours = (storedTimes) => {
+	const startTime = storedTimes[storedTimesIndex.startTime];
+	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
+	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
+	const endTime = storedTimes[storedTimesIndex.endTime];
+
+	const labouredHoursOnDay = moment().startOf('day');
+	labouredHoursOnDay.add({
+		hours: endTime.hours,
+		minutes: endTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: startTime.hours,
+		minutes: startTime.minutes
+	});
+	labouredHoursOnDay.add({
+		hours: startBreakTime.hours,
+		minutes: startBreakTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: endBreakTime.hours,
+		minutes: endBreakTime.minutes
+	});
+
+	return labouredHoursOnDay.format('H:mm');
+};
+
+const stringifyTime = (hours, minutes) => {
+	let timeAsString = '';
+	let hoursAsString = hours;
+	let minutesAsString = minutes;
+
+	if (hoursAsString < 0) {
+		timeAsString = '-';
+		hoursAsString *= -1;
+	}
+	if (minutesAsString < 0) {
+		timeAsString = '-';
+		minutesAsString *= -1;
+	}
+
+	if (minutesAsString < 10) {
+		minutesAsString = `0${minutesAsString}`;
+	}
+
+	timeAsString += `${hoursAsString}:${minutesAsString}`;
+
+	return timeAsString;
+};
+
+const calculateRemainingHoursOnWeek = (date, workedTime, contractedHours, totalWeek) => {
+	const businessDay = date.day() > 5 ? 5 : date.day();
+
+	const dailyContractedDuration = moment.duration(contractedHours);
+
+	const expectedDuration = moment.duration().add({
+		hours: dailyContractedDuration.hours() * businessDay,
+		minutes: dailyContractedDuration.minutes() * businessDay
+	});
+
+	expectedDuration.subtract({
+		hours: totalWeek.split(':')[0],
+		minutes: totalWeek.split(':')[1]
+	});
+
+	const labouredHoursDuration = moment.duration(workedTime);
+	expectedDuration.subtract({
+		hours: labouredHoursDuration.hours(),
+		minutes: labouredHoursDuration.minutes()
+	});
+
+	const totalHours = (expectedDuration.days() * 24) + expectedDuration.hours();
+	const totalMinutes = expectedDuration.minutes();
+	return stringifyTime(totalHours, totalMinutes);
+};
+
+const isValid = (storedTimes) => {
+	let comparisonTerm = 0;
+	const isSequentialTime = (time) => {
+		if (time && timeIsValid(time)) {
+			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+			const isLaterThanComparison = date > comparisonTerm;
+			comparisonTerm = Number(date);
+			return isLaterThanComparison;
+		}
+		return false;
+	};
+
+	return storedTimes.every(isSequentialTime);
+};
 
 class Edit extends React.Component {
 	constructor(props) {
@@ -50,7 +162,8 @@ class Edit extends React.Component {
 			remainingHoursOnWeek: null,
 			storedTimes: [{}, {}, {}, {}],
 			focusedField: null,
-			shouldHaveFocus: null
+			shouldHaveFocus: null,
+			errorMessage: ''
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
@@ -61,32 +174,62 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this._checkPreEnteredValues();
 		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
 	}
 
+	componentWillReceiveProps(nextProps) {
+		const { loading, error, weekEntries } = nextProps.weekEntriesQuery;
+
+		if (this.props.weekEntriesQuery.loading && !loading && !error) {
+			const remainingHoursOnWeek = weekEntries.total;
+			this.setState({ remainingHoursOnWeek });
+		}
+	}
+
 	onDateChange(date) {
+		const oldSelectedDate = this.state.controlDate;
+		const sameWeek = oldSelectedDate.week() === date.week();
 		this.setState({
 			controlDate: date
 		});
-		this._checkPreEnteredValues();
+
+		if (!sameWeek) {
+			this._fetchWeekEntries(date);
+		}
+
+		this._checkPreEnteredValues(date);
 	}
 
 	onTimeSet(groupIndex) {
 		return (hours, minutes) => {
 			const composedTime = { hours, minutes };
+
 			this.setState((prevState) => {
+				const storedTimes = replacingValueInsideArray(
+					prevState.storedTimes,
+					groupIndex,
+					composedTime
+				);
+
+				const labouredHoursOnDay = (isValid(storedTimes) && calculateLabouredHours(storedTimes)) || '';
+				const remainingHoursOnWeek = calculateRemainingHoursOnWeek(
+					prevState.controlDate,
+					labouredHoursOnDay,
+					this.props.weekEntriesQuery.userDetails.dailyContractedHours,
+					this.props.weekEntriesQuery.weekEntries.total
+				);
+
 				const newState = {
 					...prevState,
-					storedTimes: replacingValueInsideArray(
-						prevState.storedTimes,
-						groupIndex,
-						composedTime
-					)
+					storedTimes,
+					labouredHoursOnDay,
+					remainingHoursOnWeek
 				};
+
 				if (areTheSameDay(prevState.controlDate, moment())) {
 					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, newState.storedTimes);
 				}
+
 				return newState;
 			});
 			if (this.state.focusedField) {
@@ -134,6 +277,12 @@ class Edit extends React.Component {
 		this._addTimeEntry(timeEntryInput);
 	}
 
+	async _fetchWeekEntries(date) {
+		const { refetch } = this.props.weekEntriesQuery;
+		await refetch({ date: date.format('YYYY-MM-DD') });
+		this._checkPreEnteredValues(date);
+	}
+
 	async _addTimeEntry(timeEntryInput) {
 		let response;
 		try {
@@ -143,11 +292,13 @@ class Edit extends React.Component {
 				}
 			});
 		} catch (error) {
-			console.error('Time entry failed!', error);
+			this.setState({ errorMessage: error.graphQLErrors[0].message });
 		}
 
 		if (response) {
-			console.info('Time entry saved!!!');
+			this.setState({ successMessage: strings.submitTimeSuccess });
+			const date = moment(this.state.controlDate);
+			await this._fetchWeekEntries(date.format('YYYY-MM-DD'));
 		}
 	}
 
@@ -158,10 +309,47 @@ class Edit extends React.Component {
 		this.onTimeSet(3)(17, 15);
 	}
 
-	_checkPreEnteredValues() {
-		// TODO check server for pre-entered values
-		// populate labouredHoursOnDay and remainingHoursOnWeek
-		this.setState();
+	_checkPreEnteredValues(date) {
+		if (this.props.weekEntriesQuery.loading) {
+			return;
+		}
+
+		if (this.props.weekEntriesQuery.error) {
+			this.setState({ errorMessage: this.props.weekEntriesQuery.error });
+			return;
+		}
+
+		const { timeEntries } = this.props.weekEntriesQuery.weekEntries;
+		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
+
+		if (timeEntry) {
+			const startTime = moment(timeEntry.startTime, 'H:mm');
+			const startBreakTime = moment(timeEntry.startBreakTime, 'H:mm');
+			const endBreakTime = moment(timeEntry.endBreakTime, 'H:mm');
+			const endTime = moment(timeEntry.endTime, 'H:mm');
+			const labouredHoursOnDay = timeEntry.total;
+
+			const storedTimes = [
+				{
+					hours: startTime.hours(),
+					minutes: startTime.minutes()
+				},
+				{
+					hours: startBreakTime.hours(),
+					minutes: startBreakTime.minutes()
+				},
+				{
+					hours: endBreakTime.hours(),
+					minutes: endBreakTime.minutes()
+				},
+				{
+					hours: endTime.hours(),
+					minutes: endTime.minutes()
+				}
+			];
+
+			this.setState({ storedTimes, labouredHoursOnDay });
+		}
 	}
 
 	_getNextField() {
@@ -191,18 +379,7 @@ class Edit extends React.Component {
 	}
 
 	_shouldSendBeAvailable() {
-		let comparisonTerm = 0;
-		const isSequentialTime = (time) => {
-			if (time && timeIsValid(time)) {
-				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-				const isLaterThanComparison = date > comparisonTerm;
-				comparisonTerm = Number(date);
-				return isLaterThanComparison;
-			}
-			return false;
-		};
-
-		return this.state.storedTimes.every(isSequentialTime);
+		return isValid(this.state.storedTimes);
 	}
 
 	render() {
@@ -239,19 +416,21 @@ class Edit extends React.Component {
 										{' '}
 										<strong>{labouredHoursOnDay}</strong>
 									</p>
-								) : null
+								) : ''
 							}
 						</div>
 					</div>
 					<div className="column">
 						<div className="time-management-content">
+							<Panel message={this.state.successMessage} type="success" />
+							<Panel message={this.state.errorMessage} type="error" />
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}
 									label={strings.times[index].label}
 									emphasis={index === 0 || index === 3}
 									referenceHour={refHour}
-									time={storedTimes[index]}
+									time={storedTimes[index] || '00'}
 									shouldHaveFocus={this._shouldHaveFocus(index)}
 									onSet={this.onTimeSet(index)}
 									onFocus={this.onFieldFocus(index)}
@@ -281,8 +460,15 @@ class Edit extends React.Component {
 	}
 }
 
-export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Edit);
+export default compose(
+	graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' }),
+	graphql(WEEK_ENTRIES_QUERY, {
+		name: 'weekEntriesQuery',
+		options: { variables: { date: moment().format('YYYY-MM-DD') } }
+	})
+)(Edit);
 
 Edit.propTypes = {
-	addTimeEntry: PropTypes.func.isRequired
+	addTimeEntry: PropTypes.func.isRequired,
+	weekEntriesQuery: PropTypes.object.isRequired
 };

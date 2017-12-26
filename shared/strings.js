@@ -72,7 +72,8 @@ const strings = {
 	username: 'Usuário',
 	password: 'Senha',
 	authenticationError: 'Credenciais inválidas.',
-	pageNotFound: 'Página não encontrada'
+	pageNotFound: 'Página não encontrada',
+	submitTimeSuccess: 'Horas registradas com sucesso!'
 };
 
 module.exports = strings;

@@ -14,6 +14,15 @@ body
 a, button
 	transition ease-in all .2s
 
+input
+	border-radius: 5px;
+	transition: background linear .2s;
+	border: 2px solid transitionColour3;
+	&:focus
+		outline: none;
+		background-color: focusInputColour;
+		box-shadow: none;
+
 .column
 	width: calc(50% - 20px);
 	float: left;
