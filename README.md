@@ -45,13 +45,4 @@ Send your PR now!
 
 ### TODO
 
-- On Client:
-    - Integrate call to send times (Edit, Today)
-    - Integrate backend call to verify times for a day (hopefully to retrieve the hours for a week as well, maybe in another call)
-    - Integrate call to verify remaining hours
-    - Integrate login/logout
-- On CLI: do an integrated test
-- On Server: 
-    - Login/logout
-    - Logger
-    - Fixed time on remaining hours (supposed to take info from the web-based report)
+_Refer to the project section on GitHub_
