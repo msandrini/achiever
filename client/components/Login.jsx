@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import ErrorPanel from './ErrorPanel';
+import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 
 import '../styles/login.styl';
@@ -91,7 +91,7 @@ class Login extends React.Component {
 					<div className="column">&nbsp;</div>
 					<div className="column">
 						<div className="login-content">
-							<ErrorPanel errorMessage={this.state.errorMessage} />
+							<Panel type="error" message={this.state.errorMessage} />
 							<div className="login-field">
 								<input
 									type="text"

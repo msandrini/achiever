@@ -8,8 +8,7 @@ import gql from 'graphql-tag';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import TimeGroup from './edit/TimeGroup';
-import ErrorPanel from './ErrorPanel';
-import SuccessPanel from './SuccessPanel';
+import Panel from './ui/Panel';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
@@ -423,8 +422,8 @@ class Edit extends React.Component {
 					</div>
 					<div className="column">
 						<div className="time-management-content">
-							<SuccessPanel message={this.state.successMessage} />
-							<ErrorPanel message={this.state.errorMessage} />
+							<Panel message={this.state.successMessage} type="success" />
+							<Panel message={this.state.errorMessage} type="error" />
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}
