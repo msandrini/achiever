@@ -74,7 +74,8 @@ const strings = {
 	authenticationError: 'Credenciais inválidas.',
 	confirmSave: 'Existem alterações não salvas. Deseja enviar?',
 	invalidTime: 'Horários inválidos',
-	invalidAddTime: 'Não é possível marcar presença em um horário anterior'
+	invalidAddTime: 'Não é possível marcar presença em um horário anterior',
+	submitTimeSuccess: 'Horas registradas com sucesso!'
 };
 
 module.exports = strings;

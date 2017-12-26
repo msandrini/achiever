@@ -46,6 +46,10 @@ const isValidTime = (times) => {
 	return times.every(isSequentialTime);
 };
 
+const allTheTimesAreFilled = times => (
+	getNextEmptyObjectOnArray(times) === -1
+);
+
 const ADD_TIME_ENTRY_MUTATION = gql`
   mutation addTimeEntry($timeEntry: TimeEntryInput!) {
 	addTimeEntry(timeEntry: $timeEntry) {
@@ -75,20 +79,23 @@ class Today extends React.Component {
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 	}
 
-	componentWillMount() {
+	async componentWillMount() {
 		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
 		if (!sentToday) {
-			if (getNextEmptyObjectOnArray(storedTimes) === -1) {
+			if (allTheTimesAreFilled(storedTimes)) {
 				if (isValidTime(storedTimes)) {
 					const reply = window.confirm(strings.confirmSave);
 					if (reply) {
-						this.setState((prevState) => {
-							const newState = { ...prevState, storedTimes, sentToday: true };
-							submitToServer(newState, this.props.addTimeEntry);
+						const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
+						if (ret.successMessage) {
+							this.setState({ storedTimes, sentToday: true });
 							setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
-							return newState;
-						});
+						} else {
+							// Was not able to send to server even if user said to send
+							this.context.router.history.goBack();
+						}
 					} else {
+						// User dont want to send
 						this.context.router.history.goBack();
 					}
 				} else {
@@ -114,7 +121,7 @@ class Today extends React.Component {
 				this.setState((prevState) => {
 					const newState = { ...prevState, storedTimes, sentToday };
 					if (index === 3) {
-						submitToServer(newState, this.props.addTimeEntry);
+						submitToServer(storedTimes, this.props.addTimeEntry);
 					}
 					return newState;
 				});

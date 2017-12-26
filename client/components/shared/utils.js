@@ -1,6 +1,8 @@
 /* global window */
 import moment from 'moment';
 
+import strings from '../../../shared/strings';
+
 moment.locale('pt-br');
 
 export const STORAGEKEY = 'storedTimes';
@@ -59,21 +61,19 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
 			}
 		});
 	} catch (error) {
-		console.error('Time entry failed!', error);
+		return { errorMessage: error.graphQLErrors[0].message };
 	}
 
 	if (response) {
-		console.info('Time entry saved!!!');
+		return { successMessage: strings.submitTimeSuccess };
 	}
 };
 
-export const submitToServer = (state, addTimeEntry) => {
-	const { storedTimes } = state;
-
-	const startTime = storedTimes[storedTimesIndex.startTime];
-	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
-	const endTime = storedTimes[storedTimesIndex.endTime];
+export const submitToServer = async (stateStoredTimes, addTimeEntry) => {
+	const startTime = stateStoredTimes[storedTimesIndex.startTime];
+	const startBreakTime = stateStoredTimes[storedTimesIndex.startBreakTime];
+	const endBreakTime = stateStoredTimes[storedTimesIndex.endBreakTime];
+	const endTime = stateStoredTimes[storedTimesIndex.endTime];
 
 	const timeEntryInput = {
 		date: moment().format('YYYY-MM-DD'),
@@ -83,5 +83,5 @@ export const submitToServer = (state, addTimeEntry) => {
 		endTime: `${endTime.hours}:${endTime.minutes}`
 	};
 
-	_addTimeEntry(timeEntryInput, addTimeEntry);
+	return _addTimeEntry(timeEntryInput, addTimeEntry);
 };

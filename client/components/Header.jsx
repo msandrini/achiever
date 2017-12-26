@@ -4,21 +4,15 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import strings from '../../shared/strings';
-
+import UserDetails from './UserDetails';
 import '../styles/header.styl';
-
-const onClickLogout = (event) => {
-	event.preventDefault();
-	/* eslint no-alert: "off" */
-	const shouldLogout = window.confirm(strings.logoutConfirm);
-	if (shouldLogout) {
-		console.log('logout');
-	}
-};
+import { API_AUTH_TOKEN } from './Login';
 
 const _getNav = () => {
-	const loggedIn = true; // TODO
-	if (loggedIn) {
+	const token = localStorage.getItem(API_AUTH_TOKEN);
+	const authenticated = Boolean(token);
+
+	if (authenticated) {
 		return (
 			<nav>
 				<NavLink to="/today" activeClassName="is-active">
@@ -27,13 +21,15 @@ const _getNav = () => {
 				<NavLink to="/edit" activeClassName="is-active">
 					{strings.editPage}
 				</NavLink>
-				<button className="logout" onClick={onClickLogout}>
-					{strings.logout}
-				</button>
+				<UserDetails />
 			</nav>
 		);
 	}
-	return <nav className="unlogged" />;
+	return (
+		<nav className="unlogged">
+			<UserDetails />
+		</nav>
+	);
 };
 
 const Header = () => (

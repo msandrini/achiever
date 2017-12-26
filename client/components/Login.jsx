@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Alert from './shared/Alert';
+import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 
 import '../styles/login.styl';
@@ -27,7 +28,8 @@ class Login extends React.Component {
 		this.state = {
 			username: '',
 			password: '',
-			errorMessage: ''
+			errorMessage: '',
+			redirectToReferrer: false
 		};
 	}
 
@@ -59,19 +61,27 @@ class Login extends React.Component {
 				}
 			});
 		} catch (error) {
-			console.error('Authentication failed!', error);
 			this.setState({ errorMessage: strings.authenticationError });
 		}
 
 		if (response) {
-			console.log('Authenticated!!!');
 			this.setState({ errorMessage: '' });
 			const { token } = response.data.signIn;
 			localStorage.setItem(API_AUTH_TOKEN, token);
+			this.setState({ redirectToReferrer: true });
 		}
 	}
 
 	render() {
+		const { from } = this.props.location.state || {
+			from: { pathname: '/' }
+		};
+		const { redirectToReferrer } = this.state;
+
+		if (redirectToReferrer) {
+			return <Redirect to={from} />;
+		}
+
 		return (
 			<div className="page-wrapper">
 				<form onSubmit={this.onSubmit}>
@@ -81,7 +91,7 @@ class Login extends React.Component {
 					<div className="column">&nbsp;</div>
 					<div className="column">
 						<div className="login-content">
-							<Alert errorMessage={this.state.errorMessage}/>
+							<Panel type="error" message={this.state.errorMessage} />
 							<div className="login-field">
 								<input
 									type="text"
@@ -117,5 +127,6 @@ class Login extends React.Component {
 export default graphql(SIGN_IN_MUTATION, { name: 'signIn' })(Login);
 
 Login.propTypes = {
-	signIn: PropTypes.func.isRequired
+	signIn: PropTypes.func.isRequired,
+	location: PropTypes.object.isRequired
 };
