@@ -1,73 +1,133 @@
+/* global window */
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
-import apiCalls from '../apiCalls';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
 	setTodayStorage,
 	getTodayStorage,
-	timeIsValid
-} from '../../shared/utils';
+	submitToServer
+} from './shared/utils';
+import { timeIsValid } from '../../shared/utils';
 
 import '../styles/today.styl';
 
-export default class Today extends React.Component {
+
+const isEmptyObject = obj => (
+	Object.keys(obj).length === 0
+);
+
+const getNextEmptyObjectOnArray = arr => (
+	arr.findIndex((element => (
+		isEmptyObject(element) || !('hours' in element) || !('minutes' in element)
+	)))
+);
+
+const isValidTime = (times) => {
+	let comparisonTerm = 0;
+	const isSequentialTime = (time) => {
+		if (isEmptyObject(time)) {
+			return true;
+		}
+		if (time && timeIsValid(time)) {
+			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+			const isLaterThanComparison = date > comparisonTerm;
+			comparisonTerm = Number(date);
+			return isLaterThanComparison;
+		}
+		return false;
+	};
+	return times.every(isSequentialTime);
+};
+
+const allTheTimesAreFilled = times => (
+	getNextEmptyObjectOnArray(times) === -1
+);
+
+const ADD_TIME_ENTRY_MUTATION = gql`
+  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+	addTimeEntry(timeEntry: $timeEntry) {
+	  date
+	  employeeName
+	  startTime
+	  startBreakTime
+	  endBreakTime
+	  endTime
+	  total
+	}
+  }
+`;
+
+
+class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			controlDate: moment(),
-			storedTimes: [{}, {}, {}, {}]
+			storedTimes: [{}, {}, {}, {}],
+			sentToday: false
 		};
 		this.onMark = this.onMark.bind(this);
-		this._validTimeEntry = this._validTimeEntry.bind(this);
+		this._avoidDoubleClick = this._avoidDoubleClick.bind(this);
 		this._getButtonString = this._getButtonString.bind(this);
-		this._submit = this._submit.bind(this);
-		this._updateStoredTimes = this._updateStoredTimes.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
-		this._shouldSendBeAvailable = this._shouldSendBeAvailable.bind(this);
+		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 	}
 
-	componentWillMount() {
-		// Check if any value was defined before
-		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
+	async componentWillMount() {
+		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		if (!sentToday) {
+			if (allTheTimesAreFilled(storedTimes)) {
+				if (isValidTime(storedTimes)) {
+					const reply = window.confirm(strings.confirmSave);
+					if (reply) {
+						const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
+						if (ret.successMessage) {
+							this.setState({ storedTimes, sentToday: true });
+							setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+						} else {
+							// Was not able to send to server even if user said to send
+							this.context.router.history.goBack();
+						}
+					} else {
+						// User dont want to send
+						this.context.router.history.goBack();
+					}
+				} else {
+					window.alert(strings.invalidTime);
+					this.context.router.history.goBack();
+				}
+			}
+		}
+		this.setState({ storedTimes, sentToday });
 	}
 
 	onMark(event) {
 		event.preventDefault();
-		const index = this._getNextTimeEntryPoint();
-		if (index === -1) {
-			this._submit();
-		} else {
-			this._updateStoredTimes(index);
-		}
-	}
 
-	_submit() {
-		const { controlDate, storedTimes } = this.state;
-		const dateToSend = ({
-			day: controlDate.date(),
-			month: controlDate.month() + 1,
-			year: controlDate.year()
-		});
-
-		const data = JSON.stringify({ date: dateToSend, times: storedTimes });
-
-		apiCalls.send(data)
-			.then(response => response.json())
-			.then(json => console.info(JSON.stringify(json)))
-			.catch(err => console.error(err));
-	}
-
-	_updateStoredTimes(index) {
 		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
-		if (this._validTimeEntry(momentTime, index)) {
-			const storedTimes = [...this.state.storedTimes];
+		const index = this._getNextTimeEntryPoint();
+
+		if (this._avoidDoubleClick(momentTime, index)) {
+			const { storedTimes, sentToday } = this.state;
 			storedTimes[index] = momentTime;
-			this.setState({ storedTimes });
-			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, storedTimes);
+			if (isValidTime(storedTimes)) {
+				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
+				this.setState((prevState) => {
+					const newState = { ...prevState, storedTimes, sentToday };
+					if (index === 3) {
+						submitToServer(storedTimes, this.props.addTimeEntry);
+					}
+					return newState;
+				});
+			} else {
+				window.alert(strings.invalidAddTime);
+			}
 		} else {
 			// Raise clicked on the same minute
 		}
@@ -93,13 +153,10 @@ export default class Today extends React.Component {
 
 	_getNextTimeEntryPoint() {
 		const storedTimes = [...this.state.storedTimes];
-		const a = storedTimes.findIndex((element => (
-			Object.keys(element).length === 0 || !('hours' in element) || !('minutes' in element)
-		)));
-		return a;
+		return getNextEmptyObjectOnArray(storedTimes);
 	}
 
-	_validTimeEntry(time, index) {
+	_avoidDoubleClick(time, index) {
 		const storedTimes = [...this.state.storedTimes];
 		if (index === 0) {
 			return true;
@@ -108,19 +165,8 @@ export default class Today extends React.Component {
 		return (time.hours !== hours || time.minutes !== minutes);
 	}
 
-	_shouldSendBeAvailable() {
-		let comparisonTerm = 0;
-		const isSequentialTime = (time) => {
-			if (time && timeIsValid(time)) {
-				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-				const isLaterThanComparison = date > comparisonTerm;
-				comparisonTerm = Number(date);
-				return isLaterThanComparison;
-			}
-			return false;
-		};
-
-		return (this.state.storedTimes.every(isSequentialTime) || this._getNextTimeEntryPoint() !== -1);
+	_shouldButtonBeAvailable() {
+		return this._getNextTimeEntryPoint() !== -1;
 	}
 
 	render() {
@@ -145,7 +191,7 @@ export default class Today extends React.Component {
 					</div>
 					<div className="column">
 						<div className="time-management-content">
-							{this._shouldSendBeAvailable() ?
+							{this._shouldButtonBeAvailable() ?
 								<button type="submit" className="send send-today">
 									{this._getButtonString()}
 								</button>
@@ -159,3 +205,13 @@ export default class Today extends React.Component {
 		);
 	}
 }
+
+export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Today);
+
+Today.propTypes = {
+	addTimeEntry: PropTypes.func.isRequired
+};
+
+Today.contextTypes = {
+	router: PropTypes.object
+};

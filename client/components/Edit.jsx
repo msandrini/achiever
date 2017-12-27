@@ -12,21 +12,17 @@ import Panel from './ui/Panel';
 import {
 	STORAGEDAYKEY,
 	STORAGEKEY,
+	storedTimesIndex,
 	setTodayStorage,
 	getTodayStorage,
-	timeIsValid,
 	areTheSameDay,
-	replacingValueInsideArray
-} from '../../shared/utils';
+	replacingValueInsideArray,
+	submitToServer
+} from './shared/utils';
+import { timeIsValid } from '../../shared/utils';
 import strings from '../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
-const storedTimesIndex = {
-	startTime: 0,
-	startBreakTime: 1,
-	endBreakTime: 2,
-	endTime: 3
-};
 
 const ADD_TIME_ENTRY_MUTATION = gql`
 	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
@@ -163,7 +159,9 @@ class Edit extends React.Component {
 			storedTimes: [{}, {}, {}, {}],
 			focusedField: null,
 			shouldHaveFocus: null,
-			errorMessage: ''
+			sentToday: false,
+			errorMessage: '',
+			successMessage: ''
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
@@ -174,7 +172,8 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this.setState({ storedTimes: getTodayStorage(STORAGEKEY, STORAGEDAYKEY) });
+		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		this.setState({ storedTimes, sentToday });
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -227,11 +226,15 @@ class Edit extends React.Component {
 				};
 
 				if (areTheSameDay(prevState.controlDate, moment())) {
-					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, newState.storedTimes);
+					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, {
+						storedTimes: newState.storedTimes,
+						sentToday: newState.sentToday
+					});
 				}
 
 				return newState;
 			});
+
 			if (this.state.focusedField) {
 				const modeBeingChanged = this.state.focusedField.fieldMode;
 				const valueBeingChanged = composedTime[modeBeingChanged];
@@ -247,7 +250,6 @@ class Edit extends React.Component {
 					});
 				}
 			}
-
 		};
 	}
 
@@ -257,49 +259,26 @@ class Edit extends React.Component {
 		};
 	}
 
-	onSubmit(event) {
-		event.preventDefault();
-		const { controlDate, storedTimes } = this.state;
-
-		const startTime = storedTimes[storedTimesIndex.startTime];
-		const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-		const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
-		const endTime = storedTimes[storedTimesIndex.endTime];
-
-		const timeEntryInput = {
-			date: controlDate.format('YYYY-MM-DD'),
-			startTime: `${startTime.hours}:${startTime.minutes}`,
-			startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
-			endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
-			endTime: `${endTime.hours}:${endTime.minutes}`
+	onSubmit(callback) {
+		return async (event) => {
+			event.preventDefault();
+			const { storedTimes } = { ...this.state };
+			const ret = await submitToServer(storedTimes, callback);
+			if (ret.successMessage) {
+				const date = moment(this.state.controlDate);
+				this.setState({ ...this.state, ...ret, sentToday: true});
+				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+				await this._fetchWeekEntries(date);
+			} else {
+				this.setState(ret);
+			}
 		};
-
-		this._addTimeEntry(timeEntryInput);
 	}
 
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
 		this._checkPreEnteredValues(date);
-	}
-
-	async _addTimeEntry(timeEntryInput) {
-		let response;
-		try {
-			response = await this.props.addTimeEntry({
-				variables: {
-					timeEntry: timeEntryInput
-				}
-			});
-		} catch (error) {
-			this.setState({ errorMessage: error.graphQLErrors[0].message });
-		}
-
-		if (response) {
-			this.setState({ successMessage: strings.submitTimeSuccess });
-			const date = moment(this.state.controlDate);
-			await this._fetchWeekEntries(date.format('YYYY-MM-DD'));
-		}
 	}
 
 	imReligious() {
@@ -396,7 +375,7 @@ class Edit extends React.Component {
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
 				</h2>
-				<form onSubmit={this.onSubmit}>
+				<form onSubmit={this.onSubmit(this.props.addTimeEntry)}>
 					<div className="column">
 						<div className="time-management-content">
 							<DatePicker

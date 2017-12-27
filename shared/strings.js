@@ -73,6 +73,9 @@ const strings = {
 	password: 'Senha',
 	authenticationError: 'Credenciais inválidas.',
 	pageNotFound: 'Página não encontrada',
+	confirmSave: 'Existem alterações não salvas. Deseja enviar?',
+	invalidTime: 'Horários inválidos',
+	invalidAddTime: 'Não é possível marcar presença em um horário anterior',
 	submitTimeSuccess: 'Horas registradas com sucesso!'
 };
 
