@@ -1,10 +1,10 @@
 /* global window */
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import Link from '../components/router/Link';
 
 import strings from '../../shared/strings';
-import UserDetails from './UserDetails';
+import UserDetails from './authentication/UserDetails';
 import '../styles/header.styl';
 import { API_AUTH_TOKEN } from './Login';
 
@@ -15,12 +15,12 @@ const _getNav = () => {
 	if (authenticated) {
 		return (
 			<nav>
-				<NavLink to="/today" activeClassName="is-active">
+				<Link to="/today" activeClassName="is-active">
 					{strings.todayPage}
-				</NavLink>
-				<NavLink to="/edit" activeClassName="is-active">
+				</Link>
+				<Link to="/edit" activeClassName="is-active">
 					{strings.editPage}
-				</NavLink>
+				</Link>
 				<UserDetails />
 			</nav>
 		);

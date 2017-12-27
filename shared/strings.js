@@ -34,14 +34,6 @@ const strings = {
 			]
 		}
 	],
-	thisTime: 'esta hora',
-	hoursLabouredOnThisDay: 'Horas trabalhadas no dia: ',
-	remainingHoursOnWeek: 'Saldo de horas na semana:',
-	storedSuccessfully: 'gravada com sucesso',
-	morningPeriod: 'Período da manhã',
-	afternoonPeriod: 'Período da tarde',
-	total: 'Total',
-	send: 'Enviar',
 	clearCliKeywords: [
 		'clear', 'clean', 'reset', 'apaga'
 	],
@@ -52,6 +44,14 @@ const strings = {
 		error: 'Erro ao executar api call para inserir horas:',
 		success: 'Api call para inserir horas executada com sucesso!'
 	},
+	thisTime: 'esta hora',
+	hoursLabouredOnThisDay: 'Horas trabalhadas no dia: ',
+	remainingHoursOnWeek: 'Saldo de horas na semana:',
+	storedSuccessfully: 'gravada com sucesso',
+	morningPeriod: 'Período da manhã',
+	afternoonPeriod: 'Período da tarde',
+	total: 'Total',
+	send: 'Enviar',
 	noTimesProvided: 'nenhuma hora foi fornecida',
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
@@ -72,10 +72,14 @@ const strings = {
 	username: 'Usuário',
 	password: 'Senha',
 	authenticationError: 'Credenciais inválidas.',
+	pageNotFound: 'Página não encontrada',
+	pageLoading: 'Carregando...',
 	confirmSave: 'Existem alterações não salvas. Deseja enviar?',
 	invalidTime: 'Horários inválidos',
 	invalidAddTime: 'Não é possível marcar presença em um horário anterior',
-	submitTimeSuccess: 'Horas registradas com sucesso!'
+	submitTimeSuccess: 'Horas registradas com sucesso!',
+	goBack: 'Voltar',
+	helloName: 'Olá '
 };
 
 module.exports = strings;

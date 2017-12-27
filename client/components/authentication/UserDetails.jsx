@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import Link from '../router/Link';
 
-import strings from '../../shared/strings';
-import { API_AUTH_TOKEN } from './Login';
-import '../styles/userDetails.styl';
+import strings from '../../../shared/strings';
+import { API_AUTH_TOKEN } from '../Login';
+import '../../styles/userDetails.styl';
 
 const USER_DETAILS_QUERY = gql`
 	query userDetails {
@@ -57,24 +57,24 @@ class UserDetails extends Component {
 		const { authenticated } = this.state;
 
 		if (authenticated && !error) {
-			const { name } = userDetails;
+			const [firstName] = userDetails.name.split(' ');
 
 			return (
 				<div className="userDetails">
 					<div className="employeeName">
-						{ name }
+						{`${strings.helloName} ${firstName}`}
 					</div>
-					<NavLink to="/logout" className="logout">
+					<Link to="/logout" className="logout">
 						{strings.logout}
-					</NavLink>
+					</Link>
 				</div>
 			);
 		}
 		return (
 			<div className="userDetails">
-				<NavLink to="/login" activeClassName="is-active">
+				<Link to="/login" activeClassName="is-active">
 					{strings.login}
-				</NavLink>
+				</Link>
 			</div>
 		);
 	}

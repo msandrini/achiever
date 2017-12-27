@@ -27,8 +27,11 @@ module.exports = (app) => {
 
 	// static
 	app.use('/assets', express.static(getFromRoot('client/assets')));
-	app.get('/', (req, res) => {
-		res.sendFile(getFromRoot('client/index.htm'));
+	const pageWhitelist = ['', 'edit', 'today', 'login', 'advanced'];
+	pageWhitelist.forEach((page) => {
+		app.get(`/${page}`, (req, res) => {
+			res.sendFile(getFromRoot('client/index.htm'));
+		});
 	});
 	app.get('/app.js', (req, res) => {
 		res.sendFile(getFromRoot('client/dist/app.js'));
