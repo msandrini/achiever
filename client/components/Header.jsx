@@ -4,7 +4,7 @@ import React from 'react';
 import Link from '../components/router/Link';
 
 import strings from '../../shared/strings';
-import UserDetails from './UserDetails';
+import UserDetails from './authentication/UserDetails';
 import '../styles/header.styl';
 import { API_AUTH_TOKEN } from './Login';
 

@@ -2,10 +2,13 @@ import Login from '../Login';
 import Today from '../Today';
 import Edit from '../Edit';
 
-const PAGES = {
-	'/login': Login,
-	'/today': Today,
-	'/edit': Edit
+export const routeDefinitions = {
+	'/login': { component: Login },
+	'/today': { component: Today, private: true },
+	'/edit': { component: Edit, private: true }
 };
 
-export default PAGES;
+export const defaultPages = {
+	public: '/login',
+	private: '/today'
+};

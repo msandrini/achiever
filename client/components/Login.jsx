@@ -1,11 +1,13 @@
+/* global window */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
+import { setAuthToken } from './authentication/token';
 
 import '../styles/login.styl';
 
@@ -17,8 +19,6 @@ const SIGN_IN_MUTATION = gql`
   }
 `;
 
-export const API_AUTH_TOKEN = 'achiever-auth-token';
-
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -28,8 +28,7 @@ class Login extends React.Component {
 		this.state = {
 			username: '',
 			password: '',
-			errorMessage: '',
-			redirectToReferrer: false
+			errorMessage: ''
 		};
 	}
 
@@ -67,21 +66,12 @@ class Login extends React.Component {
 		if (response) {
 			this.setState({ errorMessage: '' });
 			const { token } = response.data.signIn;
-			localStorage.setItem(API_AUTH_TOKEN, token);
-			this.setState({ redirectToReferrer: true });
+			setAuthToken(token);
+			window.location.reload();
 		}
 	}
 
 	render() {
-		const { from } = this.props.location.state || {
-			from: { pathname: '/' }
-		};
-		const { redirectToReferrer } = this.state;
-
-		if (redirectToReferrer) {
-			return <Redirect to={from} />;
-		}
-
 		return (
 			<div className="page-wrapper">
 				<form onSubmit={this.onSubmit}>
@@ -127,6 +117,5 @@ class Login extends React.Component {
 export default graphql(SIGN_IN_MUTATION, { name: 'signIn' })(Login);
 
 Login.propTypes = {
-	signIn: PropTypes.func.isRequired,
-	location: PropTypes.object.isRequired
+	signIn: PropTypes.func.isRequired
 };
