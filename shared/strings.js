@@ -72,6 +72,9 @@ const strings = {
 	username: 'Usuário',
 	password: 'Senha',
 	authenticationError: 'Credenciais inválidas.',
+	confirmSave: 'Existem alterações não salvas. Deseja enviar?',
+	invalidTime: 'Horários inválidos',
+	invalidAddTime: 'Não é possível marcar presença em um horário anterior',
 	submitTimeSuccess: 'Horas registradas com sucesso!'
 };
 
