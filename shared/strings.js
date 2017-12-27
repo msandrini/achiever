@@ -52,6 +52,10 @@ const strings = {
 	afternoonPeriod: 'Período da tarde',
 	total: 'Total',
 	send: 'Enviar',
+	ok: 'OK',
+	cancel: 'Cancelar',
+	yes: 'Sim',
+	no: 'Não',
 	noTimesProvided: 'nenhuma hora foi fornecida',
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
@@ -79,7 +83,9 @@ const strings = {
 	invalidAddTime: 'Não é possível marcar presença em um horário anterior',
 	submitTimeSuccess: 'Horas registradas com sucesso!',
 	goBack: 'Voltar',
-	helloName: 'Olá '
+	helloName: 'Olá ',
+	warning: 'Atenção',
+	confirmation: 'Confirmação'
 };
 
 module.exports = strings;

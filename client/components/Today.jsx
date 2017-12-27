@@ -5,6 +5,8 @@ import moment from 'moment';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import AlertModal from './ui/modals/AlertModal';
+import ConfirmModal from './ui/modals/ConfirmModal';
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
 import {
@@ -18,6 +20,9 @@ import { timeIsValid } from '../../shared/utils';
 
 import '../styles/today.styl';
 
+const MODAL_ALERT = 'alert';
+const MODAL_CONFIRM = 'confirm';
+
 
 const isEmptyObject = obj => (
 	Object.keys(obj).length === 0
@@ -29,7 +34,7 @@ const getNextEmptyObjectOnArray = arr => (
 	)))
 );
 
-const isValidTime = (times) => {
+const timeSetIsValid = (times) => {
 	let comparisonTerm = 0;
 	const isSequentialTime = (time) => {
 		if (isEmptyObject(time)) {
@@ -49,6 +54,10 @@ const isValidTime = (times) => {
 const allTheTimesAreFilled = times => (
 	getNextEmptyObjectOnArray(times) === -1
 );
+
+const goBack = () => {
+	window.history.back();
+};
 
 const ADD_TIME_ENTRY_MUTATION = gql`
   mutation addTimeEntry($timeEntry: TimeEntryInput!) {
@@ -70,37 +79,36 @@ class Today extends React.Component {
 		super();
 		this.state = {
 			storedTimes: [{}, {}, {}, {}],
-			sentToday: false
+			sentToday: false,
+			showModal: null,
+			alertInfo: {}
 		};
 		this.onMark = this.onMark.bind(this);
 		this._avoidDoubleClick = this._avoidDoubleClick.bind(this);
 		this._getButtonString = this._getButtonString.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
+		this._onConfirmSubmit = this._onConfirmSubmit.bind(this);
+		this._hideAlert = this._hideAlert.bind(this);
 	}
 
-	async componentWillMount() {
-		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+	componentWillMount() {
+		const { sentToday, storedTimes } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
 		if (!sentToday) {
 			if (allTheTimesAreFilled(storedTimes)) {
-				if (isValidTime(storedTimes)) {
-					const reply = window.confirm(strings.confirmSave);
-					if (reply) {
-						const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
-						if (ret.successMessage) {
-							this.setState({ storedTimes, sentToday: true });
-							setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
-						} else {
-							// Was not able to send to server even if user said to send
-							this.context.router.history.goBack();
-						}
-					} else {
-						// User dont want to send
-						this.context.router.history.goBack();
-					}
+				if (timeSetIsValid(storedTimes)) {
+					this.setState({
+						showModal: MODAL_CONFIRM
+					});
+
 				} else {
-					window.alert(strings.invalidTime);
-					this.context.router.history.goBack();
+					this.setState({
+						alertInfo: {
+							content: strings.invalidTime,
+							onClose: () => goBack()
+						},
+						showModal: MODAL_ALERT
+					});
 				}
 			}
 		}
@@ -116,7 +124,7 @@ class Today extends React.Component {
 		if (this._avoidDoubleClick(momentTime, index)) {
 			const { storedTimes, sentToday } = this.state;
 			storedTimes[index] = momentTime;
-			if (isValidTime(storedTimes)) {
+			if (timeSetIsValid(storedTimes)) {
 				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
 				this.setState((prevState) => {
 					const newState = { ...prevState, storedTimes, sentToday };
@@ -126,10 +134,28 @@ class Today extends React.Component {
 					return newState;
 				});
 			} else {
-				window.alert(strings.invalidAddTime);
+				this.setState({
+					alertInfo: {
+						content: strings.invalidAddTime,
+						onClose: this._hideAlert
+					},
+					showModal: MODAL_ALERT
+				});
 			}
 		} else {
 			// Raise clicked on the same minute
+		}
+	}
+
+	async _onConfirmSubmit() {
+		const { storedTimes } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
+		if (ret.successMessage) {
+			this.setState({ storedTimes, sentToday: true });
+			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+		} else {
+			// Was not able to send to server even if user said to send
+			goBack();
 		}
 	}
 
@@ -169,6 +195,12 @@ class Today extends React.Component {
 		return this._getNextTimeEntryPoint() !== -1;
 	}
 
+	_hideAlert() {
+		this.setState({
+			showModal: null
+		});
+	}
+
 	render() {
 		return (
 			<div className="page-wrapper">
@@ -201,6 +233,17 @@ class Today extends React.Component {
 						</div>
 					</div>
 				</form>
+				<AlertModal
+					active={this.state.showModal === MODAL_ALERT}
+					content={this.state.alertInfo.content}
+					onClose={this.state.alertInfo.onClose}
+				/>
+				<ConfirmModal
+					active={this.state.showModal === MODAL_CONFIRM}
+					content={strings.confirmSave}
+					onCancel={() => goBack()}
+					onConfirm={this._onConfirmSubmit}
+				/>
 			</div>
 		);
 	}
