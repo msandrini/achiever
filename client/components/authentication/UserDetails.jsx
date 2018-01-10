@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import Link from '../router/Link';
 
 import strings from '../../../shared/strings';
-import { API_AUTH_TOKEN } from '../Login';
+import { getAuthToken, removeAuthToken } from './token';
 import '../../styles/userDetails.styl';
 
 const USER_DETAILS_QUERY = gql`
@@ -18,11 +18,16 @@ const USER_DETAILS_QUERY = gql`
 	}
 `;
 
+const _logout = (event) => {
+	event.preventDefault();
+	removeAuthToken();
+	window.location.reload();
+};
+
 class UserDetails extends Component {
 	constructor(props) {
 		super(props);
 
-		this._logout = this._logout.bind(this);
 		this.state = {
 			authenticated: false
 		};
@@ -32,19 +37,13 @@ class UserDetails extends Component {
 		const { userDetails, loading, error } = nextProps.userDetailsQuery;
 
 		if (error || (!loading && !userDetails)) {
-			localStorage.removeItem(API_AUTH_TOKEN);
+			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-			const token = localStorage.getItem(API_AUTH_TOKEN);
+			const token = getAuthToken();
 			const authenticated = Boolean(token && userDetails.name);
 			this.setState({ authenticated });
 		}
-	}
-
-	_logout(event) {
-		event.preventDefault();
-		localStorage.removeItem(API_AUTH_TOKEN);
-		this.setState({ authenticated: false });
 	}
 
 	render() {
@@ -64,9 +63,9 @@ class UserDetails extends Component {
 					<div className="employeeName">
 						{`${strings.helloName} ${firstName}`}
 					</div>
-					<Link to="/logout" className="logout">
+					<button className="logout" onClick={_logout}>
 						{strings.logout}
-					</Link>
+					</button>
 				</div>
 			);
 		}

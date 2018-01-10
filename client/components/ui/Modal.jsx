@@ -39,7 +39,7 @@ Modal.propTypes = {
 		PropTypes.string,
 		PropTypes.element
 	]).isRequired,
-	buttons: PropTypes.arrayOf(PropTypes.objectOf({
+	buttons: PropTypes.arrayOf(PropTypes.shape({
 		action: PropTypes.func,
 		label: PropTypes.string
 	}))

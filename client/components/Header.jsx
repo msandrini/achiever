@@ -6,11 +6,10 @@ import Link from '../components/router/Link';
 import strings from '../../shared/strings';
 import UserDetails from './authentication/UserDetails';
 import '../styles/header.styl';
-import { API_AUTH_TOKEN } from './Login';
+import { getAuthToken } from './authentication/token';
 
 const _getNav = () => {
-	const token = localStorage.getItem(API_AUTH_TOKEN);
-	const authenticated = Boolean(token);
+	const authenticated = Boolean(getAuthToken());
 
 	if (authenticated) {
 		return (

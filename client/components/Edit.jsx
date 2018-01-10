@@ -266,7 +266,7 @@ class Edit extends React.Component {
 			const ret = await submitToServer(storedTimes, callback);
 			if (ret.successMessage) {
 				const date = moment(this.state.controlDate);
-				this.setState({ ...this.state, ...ret, sentToday: true});
+				this.setState({ ...this.state, ...ret, sentToday: true });
 				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
 				await this._fetchWeekEntries(date);
 			} else {

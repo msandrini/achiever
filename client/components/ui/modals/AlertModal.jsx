@@ -22,13 +22,14 @@ AlertModal.propTypes = {
 	content: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.element
-	]).isRequired,
+	]),
 	onClose: PropTypes.func
 };
 
 AlertModal.defaultProps = {
 	active: false,
 	title: '',
+	content: '',
 	onClose: () => {}
 };
 

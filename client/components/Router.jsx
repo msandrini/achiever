@@ -51,8 +51,8 @@ class ShowComponentOnRoute extends React.Component {
 		}
 	}
 
-	componentWillUpdate() {
-		const pageDefinition = routeDefinitions[this.state.path];
+	componentWillUpdate(nextProps, nextState) {
+		const pageDefinition = routeDefinitions[nextState.path];
 		if (pageDefinition) {
 			// if user is going to a private page...
 			if (pageDefinition.private) {
