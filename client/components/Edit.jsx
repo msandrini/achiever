@@ -189,7 +189,9 @@ class Edit extends React.Component {
 		const oldSelectedDate = this.state.controlDate;
 		const sameWeek = oldSelectedDate.week() === date.week();
 		this.setState({
-			controlDate: date
+			controlDate: date,
+			errorMessage: '',
+			successMessage: ''
 		});
 
 		if (!sameWeek) {
