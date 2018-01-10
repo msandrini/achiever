@@ -89,13 +89,21 @@ const stringifyTime = (hours, minutes) => {
 	let timeAsString = '';
 	let hoursAsString = hours;
 	let minutesAsString = minutes;
+	let balanceSign;
 
-	if (hoursAsString < 0) {
-		timeAsString = '-';
+	if (hours > 0 || minutes > 0) {
+		balanceSign = '-';
+	} else if (hours < 0 || minutes < 0) {
+		balanceSign = '+';
+	} else {
+		balanceSign = '';
+	}
+
+	if (hours < 0) {
 		hoursAsString *= -1;
 	}
-	if (minutesAsString < 0) {
-		timeAsString = '-';
+
+	if (minutes < 0) {
 		minutesAsString *= -1;
 	}
 
@@ -103,7 +111,7 @@ const stringifyTime = (hours, minutes) => {
 		minutesAsString = `0${minutesAsString}`;
 	}
 
-	timeAsString += `${hoursAsString}:${minutesAsString}`;
+	timeAsString += `${balanceSign}${hoursAsString}:${minutesAsString}`;
 
 	return timeAsString;
 };
@@ -189,7 +197,9 @@ class Edit extends React.Component {
 		const oldSelectedDate = this.state.controlDate;
 		const sameWeek = oldSelectedDate.week() === date.week();
 		this.setState({
-			controlDate: date
+			controlDate: date,
+			errorMessage: '',
+			successMessage: ''
 		});
 
 		if (!sameWeek) {
@@ -263,9 +273,9 @@ class Edit extends React.Component {
 		return async (event) => {
 			event.preventDefault();
 			const { storedTimes } = { ...this.state };
-			const ret = await submitToServer(storedTimes, callback);
+			const date = moment(this.state.controlDate);
+			const ret = await submitToServer(date, storedTimes, callback);
 			if (ret.successMessage) {
-				const date = moment(this.state.controlDate);
 				this.setState({ ...this.state, ...ret, sentToday: true });
 				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
 				await this._fetchWeekEntries(date);
