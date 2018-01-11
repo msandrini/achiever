@@ -37,9 +37,16 @@
 	&__day-name
 		color: white
 
+	&__navigation--next
+		border-left-color: white
+
+	&__navigation--previous
+		border-right-color: white
+
+
 .calendar-checked, .calendar-unchecked
 	position: relative
-	color: darkBlueColor
+	color: darkBlueColour
 
 	&:after
 		content: '✓'
@@ -48,7 +55,7 @@
 		color: successPanelColour
 
 .calendar-unchecked
-	color: darkBlueColor
+	color: darkBlueColour
 	&:after
 		content: '✗'
 		color: errorPanelColour

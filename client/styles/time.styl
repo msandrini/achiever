@@ -1,18 +1,15 @@
 @import "_colours.styl"
+@import "_standards.styl"
 	
 .time-group
 	min-height: 70px;
 	clear: both;
 
 	label
-		width: 60px;
-		margin-right: 10px;
-		font-size: 11px;
-		float: left;
-		text-align: right;
+		label-style()
 
 		.emphasis &
-			font-size: 13px;
+			font-size: 13px
 	
 	.separator
 		display: block;
@@ -28,7 +25,7 @@
 			float: left;
 			font-size: 30px;
 			padding: 6px 12px;
-			width: 75px;
+			width: 102px;
 			
 
 .time-group input::placeholder
