@@ -69,14 +69,14 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
 	}
 };
 
-export const submitToServer = async (stateStoredTimes, addTimeEntry) => {
+export const submitToServer = async (date, stateStoredTimes, addTimeEntry) => {
 	const startTime = stateStoredTimes[storedTimesIndex.startTime];
 	const startBreakTime = stateStoredTimes[storedTimesIndex.startBreakTime];
 	const endBreakTime = stateStoredTimes[storedTimesIndex.endBreakTime];
 	const endTime = stateStoredTimes[storedTimesIndex.endTime];
 
 	const timeEntryInput = {
-		date: moment().format('YYYY-MM-DD'),
+		date: date.format('YYYY-MM-DD'),
 		startTime: `${startTime.hours}:${startTime.minutes}`,
 		startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
 		endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
