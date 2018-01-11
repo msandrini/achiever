@@ -6,6 +6,7 @@ import Link from '../router/Link';
 
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
+import { clearTodayStorage } from '../shared/utils';
 import '../../styles/userDetails.styl';
 
 const USER_DETAILS_QUERY = gql`
@@ -21,6 +22,7 @@ const USER_DETAILS_QUERY = gql`
 const _logout = (event) => {
 	event.preventDefault();
 	removeAuthToken();
+	clearTodayStorage();
 	window.location.reload();
 };
 
