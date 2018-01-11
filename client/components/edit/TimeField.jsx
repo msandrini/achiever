@@ -20,6 +20,7 @@ export default class TimeField extends React.Component {
 
 		this.randomId = `${props.mode}_${String(Math.random())}`;
 		this.input = null;
+		this.timeoutId = null;
 	}
 
 	componentDidUpdate(prevProps) {
@@ -27,6 +28,10 @@ export default class TimeField extends React.Component {
 		if (shouldHaveFocus && !prevProps.shouldHaveFocus) {
 			this.input.focus();
 		}
+	}
+
+	componentWillUnmount() {
+		window.clearTimeout(this.timeoutId);
 	}
 
 	onFocus() {
@@ -40,8 +45,9 @@ export default class TimeField extends React.Component {
 	}
 
 	onBlur() {
+		const _this = this;
 		return () => {
-			setTimeout(() => {
+			_this.timeoutId = setTimeout(() => {
 				this.setState({
 					isFocused: false
 				});
