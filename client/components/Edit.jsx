@@ -10,10 +10,9 @@ import '../styles/calendar.styl';
 
 import TimeGroup from './edit/TimeGroup';
 import LabouredHoursGauge from './edit/LabouredHoursGauge';
+import SelectGroup from './edit/SelectGroup';
 import Panel from './ui/Panel';
 import {
-	STORAGEDAYKEY,
-	STORAGEKEY,
 	storedTimesIndex,
 	setTodayStorage,
 	getTodayStorage,
@@ -447,6 +446,7 @@ class Edit extends React.Component {
 						<div className="time-management-content">
 							<Panel message={this.state.successMessage} type="success" />
 							<Panel message={this.state.errorMessage} type="error" />
+							<SelectGroup options={[]} />
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}
