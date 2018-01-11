@@ -65,7 +65,7 @@ export default class TimeField extends React.Component {
 	}
 
 	_changeTime(valueRaw) {
-		const value = !this._isInputValid(parseInt(valueRaw, 10)) ? 0 : valueRaw;
+		const value = !this._isInputValid(valueRaw) ? 0 : valueRaw;
 		this.props.onChange(this.props.mode, value);
 	}
 
