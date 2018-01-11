@@ -6,8 +6,10 @@ import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import '../styles/calendar.styl';
 
 import TimeGroup from './edit/TimeGroup';
+import LabouredHoursGauge from './edit/LabouredHoursGauge';
 import Panel from './ui/Panel';
 import {
 	STORAGEDAYKEY,
@@ -351,6 +353,31 @@ class Edit extends React.Component {
 		};
 	}
 
+	_getWeekEntriesQuerySafe(object = 'weekEntries') {
+		return (this.props.weekEntriesQuery && this.props.weekEntriesQuery[object]) || {};
+	}
+
+	_getHighlightedDates() {
+		const highlights = [
+			{ 'calendar-checked': [] },
+			{ 'calendar-unchecked': [] }
+		];
+		const weekEntriesQuery = this._getWeekEntriesQuerySafe();
+		if (!weekEntriesQuery.timeEntries) {
+			return highlights;
+		}
+		const weekDayNumbers = [1, 2, 3, 4, 5];
+		weekDayNumbers.forEach((day) => {
+			const dayInfo = weekEntriesQuery.timeEntries[day];
+			const elementToPush = dayInfo.total ?
+				highlights[0]['calendar-checked'] :
+				highlights[1]['calendar-unchecked'];
+
+			elementToPush.push(moment(dayInfo.date));
+		});
+		return highlights;
+	}
+
 	_shouldHaveFocus(index) {
 		const { shouldHaveFocus } = this.state;
 		if (shouldHaveFocus && shouldHaveFocus.index === index) {
@@ -371,6 +398,9 @@ class Edit extends React.Component {
 			storedTimes
 		} = this.state;
 
+		const userDetails = this._getWeekEntriesQuerySafe('userDetails');
+		const { dailyContractedHours } = userDetails;
+
 		return (
 			<div className="page-wrapper">
 				<h2 className="current-date">
@@ -382,23 +412,27 @@ class Edit extends React.Component {
 						<div className="time-management-content">
 							<DatePicker
 								inline
+								highlightDates={this._getHighlightedDates()}
 								selected={this.state.controlDate}
 								onChange={this.onDateChange}
 							/>
+							{ labouredHoursOnDay ?
+								(
+									<LabouredHoursGauge
+										entitledHours={dailyContractedHours}
+										labouredHours={labouredHoursOnDay}
+									>
+										{strings.hoursLabouredOnThisDay}
+										{' '}
+										<strong>{labouredHoursOnDay}</strong>
+									</LabouredHoursGauge>
+								) : ''
+							}
 							<p className="remaining">
 								{strings.remainingHoursOnWeek}
 								{' '}
 								<strong>{remainingHoursOnWeek}</strong>
 							</p>
-							{ labouredHoursOnDay ?
-								(
-									<p className="projection">
-										{strings.hoursLabouredOnThisDay}
-										{' '}
-										<strong>{labouredHoursOnDay}</strong>
-									</p>
-								) : ''
-							}
 						</div>
 					</div>
 					<div className="column">
@@ -410,6 +444,7 @@ class Edit extends React.Component {
 									key={refHour}
 									label={strings.times[index].label}
 									emphasis={index === 0 || index === 3}
+									tabIndexes={index * 2}
 									referenceHour={refHour}
 									time={storedTimes[index] || '00'}
 									shouldHaveFocus={this._shouldHaveFocus(index)}

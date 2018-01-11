@@ -1,0 +1,54 @@
+@import "_colours.styl"
+
+.react-datepicker
+	border: 2px solid transitionColour3
+	border-radius: 7px
+	float: right;
+
+	&__header
+		background: transitionColour3
+		border: 0
+		border-radius: 0
+
+	&__current-month
+		color: darkBlueColour
+		text-transform: uppercase
+
+	&__day
+		color: transitionColour2
+		transition: background .3s, color .3s
+
+		&--weekend
+			color: transitionColour3
+
+		&.active
+			color: darkBlueColour
+
+		&--selected
+			background: transitionColour1
+			color: white
+
+			&--selected:hover
+				background: darkBlueColor
+
+		&--outside-month
+			opacity: .5
+
+	&__day-name
+		color: white
+
+.calendar-checked, .calendar-unchecked
+	position: relative
+	color: darkBlueColor
+
+	&:after
+		content: '✓'
+		position: absolute
+		top: 10px
+		color: successPanelColour
+
+.calendar-unchecked
+	color: darkBlueColor
+	&:after
+		content: '✗'
+		color: errorPanelColour

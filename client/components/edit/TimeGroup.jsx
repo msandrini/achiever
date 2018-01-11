@@ -36,6 +36,7 @@ export default class TimeGroup extends React.Component {
 					shouldHaveFocus={this.props.shouldHaveFocus === 'hours'}
 					onChange={this.onChangeTime('hours')}
 					onFocus={this.props.onFocus}
+					tabIndex={this.props.tabIndexes}
 				/>
 				<span className="separator">:</span>
 				<TimeField
@@ -44,6 +45,7 @@ export default class TimeGroup extends React.Component {
 					shouldHaveFocus={this.props.shouldHaveFocus === 'minutes'}
 					onChange={this.onChangeTime('minutes')}
 					onFocus={this.props.onFocus}
+					tabIndex={this.props.tabIndexes + 1}
 				/>
 			</div>
 		);
@@ -59,7 +61,8 @@ TimeGroup.propTypes = {
 		PropTypes.oneOf(['hours', 'minutes']),
 		PropTypes.bool
 	]),
-	onFocus: PropTypes.func.isRequired
+	onFocus: PropTypes.func.isRequired,
+	tabIndexes: PropTypes.number
 };
 
 TimeGroup.defaultProps = {
