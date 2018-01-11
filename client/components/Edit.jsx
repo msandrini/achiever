@@ -172,7 +172,7 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		const { storedTimes, sentToday } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		const { storedTimes, sentToday } = getTodayStorage();
 		this.setState({ storedTimes, sentToday });
 	}
 
@@ -228,7 +228,7 @@ class Edit extends React.Component {
 				};
 
 				if (areTheSameDay(prevState.controlDate, moment())) {
-					setTodayStorage(STORAGEKEY, STORAGEDAYKEY, {
+					setTodayStorage({
 						storedTimes: newState.storedTimes,
 						sentToday: newState.sentToday
 					});
@@ -269,7 +269,7 @@ class Edit extends React.Component {
 			if (ret.successMessage) {
 				const date = moment(this.state.controlDate);
 				this.setState({ ...this.state, ...ret, sentToday: true });
-				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+				setTodayStorage({ storedTimes, sentToday: true });
 				await this._fetchWeekEntries(date);
 			} else {
 				this.setState(ret);

@@ -93,7 +93,7 @@ class Today extends React.Component {
 	}
 
 	componentWillMount() {
-		const { sentToday, storedTimes } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		const { sentToday, storedTimes } = getTodayStorage();
 		if (!sentToday) {
 			if (allTheTimesAreFilled(storedTimes)) {
 				if (timeSetIsValid(storedTimes)) {
@@ -125,7 +125,7 @@ class Today extends React.Component {
 			const { storedTimes, sentToday } = this.state;
 			storedTimes[index] = momentTime;
 			if (timeSetIsValid(storedTimes)) {
-				setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday });
+				setTodayStorage({ storedTimes, sentToday });
 				this.setState((prevState) => {
 					const newState = { ...prevState, storedTimes, sentToday };
 					if (index === 3) {
@@ -148,11 +148,11 @@ class Today extends React.Component {
 	}
 
 	async _onConfirmSubmit() {
-		const { storedTimes } = getTodayStorage(STORAGEKEY, STORAGEDAYKEY);
+		const { storedTimes } = getTodayStorage();
 		const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
 		if (ret.successMessage) {
 			this.setState({ storedTimes, sentToday: true });
-			setTodayStorage(STORAGEKEY, STORAGEDAYKEY, { storedTimes, sentToday: true });
+			setTodayStorage({ storedTimes, sentToday: true });
 		} else {
 			// Was not able to send to server even if user said to send
 			goBack();
