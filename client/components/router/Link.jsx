@@ -14,8 +14,11 @@ const Link = (props) => {
 		}
 	};
 
+	const activeClass = props.to === window.location.pathname ? props.activeClassName : '';
+	const className = `${props.className}${activeClass}`;
+
 	return (
-		<a href={props.to} className={props.className} onClick={onClick}>
+		<a href={props.to} className={className} onClick={onClick}>
 			{props.children}
 		</a>
 	);
@@ -28,13 +31,15 @@ Link.propTypes = {
 	]),
 	href: PropTypes.string,
 	className: PropTypes.string,
-	to: PropTypes.string.isRequired
+	to: PropTypes.string.isRequired,
+	activeClassName: PropTypes.string
 };
 
 Link.defaultProps = {
 	children: null,
 	className: '',
-	href: '#'
+	href: '#',
+	activeClassName: ''
 };
 
 export default Link;
