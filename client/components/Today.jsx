@@ -129,7 +129,8 @@ class Today extends React.Component {
 				this.setState((prevState) => {
 					const newState = { ...prevState, storedTimes, sentToday };
 					if (index === 3) {
-						submitToServer(storedTimes, this.props.addTimeEntry);
+						const date = moment();
+						submitToServer(date, storedTimes, this.props.addTimeEntry);
 					}
 					return newState;
 				});
@@ -149,7 +150,8 @@ class Today extends React.Component {
 
 	async _onConfirmSubmit() {
 		const { storedTimes } = getTodayStorage();
-		const ret = await submitToServer(storedTimes, this.props.addTimeEntry);
+		const date = moment();
+		const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
 		if (ret.successMessage) {
 			this.setState({ storedTimes, sentToday: true });
 			setTodayStorage({ storedTimes, sentToday: true });

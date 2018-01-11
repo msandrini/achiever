@@ -138,21 +138,25 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 	const endBreakTime = moment(timeEntry.endBreakTime || '13:00', 'H:mm');
 
 	const totalWorkedTime = moment().startOf('day');
+
 	totalWorkedTime.add({
-		hours: endTime.hours,
-		minutes: endTime.minutes
+		hours: endTime.hours(),
+		minutes: endTime.minutes()
 	});
+
 	totalWorkedTime.subtract({
-		hours: startTime.hours,
-		minutes: startTime.minutes
+		hours: startTime.hours(),
+		minutes: startTime.minutes()
 	});
+
 	totalWorkedTime.add({
-		hours: startBreakTime.hours,
-		minutes: startBreakTime.minutes
+		hours: startBreakTime.hours(),
+		minutes: startBreakTime.minutes()
 	});
+
 	totalWorkedTime.subtract({
-		hours: endBreakTime.hours,
-		minutes: endBreakTime.minutes
+		hours: endBreakTime.hours(),
+		minutes: endBreakTime.minutes()
 	});
 
 	return {
@@ -162,12 +166,12 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 		diai: date.date(),
 		mesi: date.month() + 1,
 		anoi: date.year(),
-		timehH: startTime.hour(),
-		timemH: startTime.minute(),
+		timehH: startTime.hours(),
+		timemH: startTime.minutes(),
 		startBreak6: timeEntry.startBreakTime || '12:00',
 		endBreak6: timeEntry.endBreakTime || '13:00',
-		timeh: totalWorkedTime.hour(),
-		timem: totalWorkedTime.minute()
+		timeh: totalWorkedTime.hours(),
+		timem: totalWorkedTime.minutes()
 	};
 };
 

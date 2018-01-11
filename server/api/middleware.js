@@ -188,12 +188,7 @@ const dailyEntries = async (token, date) => {
 
 	let endTime = '';
 
-	let isValid = Boolean(startTime);
-
-	// Removes the Thurdays, Friday and Weekend from returned mock values
-	if (process.env.MOCKED) {
-		isValid = Boolean(startTime && moment(date).day() > 0 && moment(date).day() < 4);
-	}
+	const isValid = Boolean(startTime);
 
 	if (isValid) {
 		endTime = moment(startTime, 'hh:mm');

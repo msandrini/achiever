@@ -1,5 +1,6 @@
 import React from 'react';
-import strings from '../../../shared/strings';
+
+import '../../styles/pageLoading.styl';
 
 const PageLoading = () => (
 	<div className="page-wrapper">
@@ -9,8 +10,11 @@ const PageLoading = () => (
 		<div className="column">
 			&nbsp;
 		</div>
-		<div className="column page-not-found">
-			{strings.pageLoading}
+		<div className="column">
+			<div className="spinner">
+				<div className="dot1" />
+				<div className="dot2" />
+			</div>
 		</div>
 	</div>
 );
