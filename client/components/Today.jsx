@@ -63,7 +63,6 @@ const ADD_TIME_ENTRY_MUTATION = gql`
   mutation addTimeEntry($timeEntry: TimeEntryInput!) {
 	addTimeEntry(timeEntry: $timeEntry) {
 	  date
-	  employeeName
 	  startTime
 	  startBreakTime
 	  endBreakTime

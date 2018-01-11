@@ -85,7 +85,9 @@ const strings = {
 	goBack: 'Voltar',
 	helloName: 'Olá ',
 	warning: 'Atenção',
-	confirmation: 'Confirmação'
+	confirmation: 'Confirmação',
+	projectPhase: 'Projeto / Fase',
+	activity: 'Atividade'
 };
 
 module.exports = strings;
