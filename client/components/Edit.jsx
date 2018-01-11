@@ -12,8 +12,6 @@ import TimeGroup from './edit/TimeGroup';
 import LabouredHoursGauge from './edit/LabouredHoursGauge';
 import Panel from './ui/Panel';
 import {
-	STORAGEDAYKEY,
-	STORAGEKEY,
 	storedTimesIndex,
 	setTodayStorage,
 	getTodayStorage,
@@ -45,6 +43,8 @@ const WEEK_ENTRIES_QUERY = gql`
 		weekEntries(date: $date) {
 			timeEntries {
 				date
+				phase
+				activity
 				startTime
 				startBreakTime
 				endBreakTime

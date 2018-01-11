@@ -20,7 +20,8 @@ const typeDefs = `
 	type TimeEntry {
 		id: TimeEntryId,
 		date: String!,
-		employeeName: String,
+		phase: String,
+		activity: String,
 		startTime: String,
 		endTime: String,
 		startBreakTime: String,
