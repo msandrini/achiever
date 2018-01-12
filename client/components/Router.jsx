@@ -87,10 +87,10 @@ class ShowComponentOnRoute extends React.Component {
 	}
 
 	render() {
-		const Component = this.componentToBeRendered;
 		if (this.props.userDetailsQuery.loading) {
-			return <PageLoading />;
+			return <PageLoading active={this.props.userDetailsQuery.loading} />;
 		}
+		const Component = this.componentToBeRendered;
 		return Component ? <Component /> : null;
 	}
 }
