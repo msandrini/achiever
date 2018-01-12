@@ -173,11 +173,12 @@ const dailyEntries = async (token, date) => {
 
 	const responseHtml = await rp(options);
 	const $ = cheerio.load(responseHtml);
-	const employeeName = $('div[class="title timeregdiv"]').text().replace(/.*-\s/, '').trim();
 	const {
 		workTimeId,
-		total,
-		startTime
+		startTime,
+		phase,
+		activity,
+		total
 	} = workTimeFromHtml($);
 	const {
 		breakTimeId,
@@ -201,8 +202,9 @@ const dailyEntries = async (token, date) => {
 
 	const timeEntry = {
 		id: { workTimeId, breakTimeId },
-		employeeName,
 		date,
+		phase,
+		activity,
 		startTime: (isValid && startTime) || '',
 		endTime: (isValid && endTime) || '',
 		startBreakTime: (isValid && startBreakTime) || '',

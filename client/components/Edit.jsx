@@ -31,7 +31,6 @@ const ADD_TIME_ENTRY_MUTATION = gql`
 	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
 		addTimeEntry(timeEntry: $timeEntry) {
 			date
-			employeeName
 			startTime
 			startBreakTime
 			endBreakTime
@@ -46,6 +45,8 @@ const WEEK_ENTRIES_QUERY = gql`
 		weekEntries(date: $date) {
 			timeEntries {
 				date
+				phase
+				activity
 				startTime
 				startBreakTime
 				endBreakTime
@@ -55,8 +56,23 @@ const WEEK_ENTRIES_QUERY = gql`
 			total
 		}
 		userDetails {
+			name
 			dailyContractedHours
 			balance
+		}
+		phases {
+			default
+			options {
+				id
+				name
+				activities {
+					default
+					options {
+						id
+						name
+					}
+				}
+			}
 		}
 	}
 `;
@@ -168,6 +184,17 @@ class Edit extends React.Component {
 			labouredHoursOnDay: null,
 			remainingHoursOnWeek: null,
 			storedTimes: [{}, {}, {}, {}],
+			phase: {
+				id: null,
+				name: '',
+				activities: [],
+				default: null
+			},
+			activity: {
+				id: null,
+				name: '',
+				default: null
+			},
 			focusedField: null,
 			shouldHaveFocus: null,
 			sentToday: false,
@@ -187,10 +214,24 @@ class Edit extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { loading, error } = nextProps.weekEntriesQuery;
-
-		if (this.props.weekEntriesQuery.loading && !loading && !error) {
+		const {
+			loading,
+			error,
+			weekEntries,
+			phases
+		} = nextProps.weekEntriesQuery;
+        
+    if (this.props.weekEntriesQuery.loading && !loading && !error) {
 			this._checkEnteredValues(this.state.controlDate, nextProps.weekEntriesQuery);
+
+			const phase = phases.options.find(option => option.id === phases.default);
+			const { activities } = phase;
+			const activity = activities.options.find(option => option.id === activities.default);
+
+			this.setState({
+				phase,
+				activity
+			});
 		}
 	}
 
@@ -273,9 +314,9 @@ class Edit extends React.Component {
 	onSubmit(callback) {
 		return async (event) => {
 			event.preventDefault();
-			const { storedTimes } = { ...this.state };
-			const date = moment(this.state.controlDate);
-			const ret = await submitToServer(date, storedTimes, callback);
+			const { storedTimes, phase, activity } = { ...this.state };
+			const date = this.state.controlDate;
+			const ret = await submitToServer(date, storedTimes, phase, activity, callback);
 			if (ret.successMessage) {
 				this.setState({ ...this.state, ...ret, sentToday: true });
 				setTodayStorage({ storedTimes, sentToday: true });
@@ -283,6 +324,31 @@ class Edit extends React.Component {
 			} else {
 				this.setState(ret);
 			}
+		};
+	}
+
+	_setProjectPhase(phases) {
+		return (value) => {
+			const phase = phases.find(option => option.id === value.id);
+
+			const { activities } = phase;
+			const activity = activities.options.find(option => option.id === activities.default);
+
+			this.setState({
+				phase,
+				activity
+			});
+		};
+	}
+
+	_setActivity(activities) {
+		return (value) => {
+			const id = parseInt(value, 10);
+			const activity = activities.find(option => option.id === id);
+
+			this.setState({
+				activity
+			});
 		};
 	}
 
@@ -436,11 +502,14 @@ class Edit extends React.Component {
 			controlDate,
 			labouredHoursOnDay,
 			remainingHoursOnWeek,
-			storedTimes
+			storedTimes,
+			phase,
+			activity
 		} = this.state;
 
 		const userDetails = this._getWeekEntriesQuerySafe('userDetails');
 		const { dailyContractedHours } = userDetails;
+		const phases = this._getWeekEntriesQuerySafe('phases');
 
 		return (
 			<div className="page-wrapper">
@@ -483,7 +552,20 @@ class Edit extends React.Component {
 						<div className="time-management-content">
 							<Panel message={this.state.successMessage} type="success" />
 							<Panel message={this.state.errorMessage} type="error" />
-							<SelectGroup options={[]} />
+							<SelectGroup
+								name="projectPhase"
+								label={strings.projectPhase}
+								options={phases.options}
+								selected={phase.id}
+								onChange={this._setProjectPhase(phases.options)}
+							/>
+							<SelectGroup
+								name="activity"
+								label={strings.activity}
+								options={phase.activities.options}
+								selected={activity.id}
+								onChange={this._setActivity(phase.activities.options)}
+							/>
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}
