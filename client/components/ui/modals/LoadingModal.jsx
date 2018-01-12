@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import Icon from './Icon';
 import Modal from '../Modal';
 import Spinner from '../Spinner';
 import strings from '../../../../shared/strings';
