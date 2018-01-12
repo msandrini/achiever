@@ -90,13 +90,17 @@ const mapTableIntoArray = ($, selector) => (
 const workTimeFromHtml = ($) => {
 	const workTimeResponse = $('table tr.green a').eq(0).prop('onclick');
 	const workTimeId = extractId(workTimeResponse);
-	const total = $('table tr.green td').eq(5).text().trim();
 	const startTime = $('table tr.green td').eq(1).text().trim();
+	const phase = $('table tr.green td').eq(2).text().trim();
+	const activity = $('table tr.green td').eq(3).text().trim();
+	const total = $('table tr.green td').eq(5).text().trim();
 
 	return {
 		workTimeId,
-		total,
-		startTime
+		startTime,
+		phase,
+		activity,
+		total
 	};
 };
 
