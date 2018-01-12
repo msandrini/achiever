@@ -1,22 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+import Spinner from '../ui/Spinner';
 
 import '../../styles/pageLoading.styl';
 
-const PageLoading = () => (
-	<div className="page-wrapper">
-		<h2 className="current-date">
-			{' '}
-		</h2>
-		<div className="column">
-			&nbsp;
-		</div>
-		<div className="column">
-			<div className="spinner">
-				<div className="dot1" />
-				<div className="dot2" />
+const PageLoading = props => (
+	props.active ?
+		(
+			<div className="pageLoading-layer">
+				<Spinner
+					class="loadingPage"
+				/>
 			</div>
-		</div>
-	</div>
+		)
+		: ''
 );
+
+PageLoading.propTypes = {
+	active: PropTypes.bool
+};
+
+PageLoading.defaultProps = {
+	active: false
+};
 
 export default PageLoading;

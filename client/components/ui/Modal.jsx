@@ -6,6 +6,21 @@ import strings from '../../../shared/strings';
 
 import '../../styles/modal.styl';
 
+
+const showButtons = buttons => (
+	<div className="buttons">
+		{buttons.map(button => (
+			<button
+				key={button.label}
+				type="button"
+				onClick={button.action}
+			>
+				{button.label}
+			</button>
+		))}
+	</div>
+);
+
 const Modal = props => (
 	<div className={`modal-layer ${props.active ? 'active' : ''}`}>
 		<div className="modal">
@@ -15,17 +30,10 @@ const Modal = props => (
 			<div className="content">
 				{props.content}
 			</div>
-			<div className="buttons">
-				{props.buttons.map(button => (
-					<button
-						key={button.label}
-						type="button"
-						onClick={button.action}
-					>
-						{button.label}
-					</button>
-				))}
-			</div>
+			{props.hasButtons ?
+				showButtons(props.buttons) :
+				''
+			}
 		</div>
 	</div>
 );
@@ -39,6 +47,7 @@ Modal.propTypes = {
 		PropTypes.string,
 		PropTypes.element
 	]).isRequired,
+	hasButtons: PropTypes.bool,
 	buttons: PropTypes.arrayOf(PropTypes.shape({
 		action: PropTypes.func,
 		label: PropTypes.string
@@ -48,5 +57,6 @@ Modal.propTypes = {
 Modal.defaultProps = {
 	active: false,
 	title: '',
+	hasButtons: true,
 	buttons: [{ action: () => {}, label: strings.ok }]
 };

@@ -1,20 +1,25 @@
 @import "_colours.styl"
 
 .panel
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
 	width: 100%;
 	margin-bottom: 25px;
 	border-radius: 6px;
 	min-height: 25px;
 
 	.icon
-		padding: 12px 10px 12px 12px;
-		align-self: center;
-		width: 25px;
 		display: table-cell;
-		text-align: center;
-		vertical-align: middle;
-		fill: #fff;
 		float: left;
+		align-self: center;
+		vertical-align: middle;
+		text-align: center;
+		background-color: #fff;
+		margin: 0 8px 0 14px;
+		width: 30px;
+		height: 27px;
+		border-radius: 50%
 
 	.message
 		padding: 12px;
@@ -25,5 +30,15 @@
 	&.success
 		background-color: successPanelColour;
 
+		.icon:before
+			content: '✓';
+			font-size: 22px;
+			color: successPanelColour;
+
 	&.error
 		background-color: errorPanelColour;	
+
+		.icon:before
+			content: '⚠';
+			font-size: 22px;
+			color: errorPanelColour;

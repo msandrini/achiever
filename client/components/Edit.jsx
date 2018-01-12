@@ -12,12 +12,14 @@ import TimeGroup from './edit/TimeGroup';
 import LabouredHoursGauge from './edit/LabouredHoursGauge';
 import SelectGroup from './edit/SelectGroup';
 import Panel from './ui/Panel';
+import PageLoading from './genericPages/PageLoading';
+
 import {
-	storedTimesIndex,
-	setTodayStorage,
-	getTodayStorage,
 	areTheSameDay,
+	getTodayStorage,
 	replacingValueInsideArray,
+	setTodayStorage,
+	storedTimesIndex,
 	submitToServer
 } from './shared/utils';
 import { timeIsValid } from '../../shared/utils';
@@ -208,8 +210,7 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		const { storedTimes, sentToday } = getTodayStorage();
-		this.setState({ storedTimes, sentToday });
+		this._checkEnteredValues(this.state.controlDate, this.props.weekEntriesQuery);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -219,16 +220,15 @@ class Edit extends React.Component {
 			weekEntries,
 			phases
 		} = nextProps.weekEntriesQuery;
-
-		if (this.props.weekEntriesQuery.loading && !loading && !error) {
-			const remainingHoursOnWeek = weekEntries.total;
+        
+    if (this.props.weekEntriesQuery.loading && !loading && !error) {
+			this._checkEnteredValues(this.state.controlDate, nextProps.weekEntriesQuery);
 
 			const phase = phases.options.find(option => option.id === phases.default);
 			const { activities } = phase;
 			const activity = activities.options.find(option => option.id === activities.default);
 
 			this.setState({
-				remainingHoursOnWeek,
 				phase,
 				activity
 			});
@@ -248,7 +248,7 @@ class Edit extends React.Component {
 			this._fetchWeekEntries(date);
 		}
 
-		this._checkPreEnteredValues(date);
+		this._checkEnteredValues(date, this.props.weekEntriesQuery);
 	}
 
 	onTimeSet(groupIndex) {
@@ -355,7 +355,7 @@ class Edit extends React.Component {
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
-		this._checkPreEnteredValues(date);
+		this._checkEnteredValues(date, this.props.weekEntriesQuery);
 	}
 
 	imReligious() {
@@ -365,17 +365,17 @@ class Edit extends React.Component {
 		this.onTimeSet(3)(17, 15);
 	}
 
-	_checkPreEnteredValues(date) {
-		if (this.props.weekEntriesQuery.loading) {
+	_checkEnteredValues(date, weekEntriesQuery) {
+		if (weekEntriesQuery.loading) {
 			return;
 		}
 
-		if (this.props.weekEntriesQuery.error) {
-			this.setState({ errorMessage: this.props.weekEntriesQuery.error });
+		if (weekEntriesQuery.error) {
+			this.setState({ errorMessage: weekEntriesQuery.error });
 			return;
 		}
 
-		const { timeEntries } = this.props.weekEntriesQuery.weekEntries;
+		const { timeEntries } = weekEntriesQuery.weekEntries;
 		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
 
 		if (timeEntry) {
@@ -385,26 +385,60 @@ class Edit extends React.Component {
 			const endTime = moment(timeEntry.endTime, 'H:mm');
 			const labouredHoursOnDay = timeEntry.total;
 
-			const storedTimes = [
-				{
-					hours: startTime.hours(),
-					minutes: startTime.minutes()
-				},
-				{
-					hours: startBreakTime.hours(),
-					minutes: startBreakTime.minutes()
-				},
-				{
-					hours: endBreakTime.hours(),
-					minutes: endBreakTime.minutes()
-				},
-				{
-					hours: endTime.hours(),
-					minutes: endTime.minutes()
-				}
-			];
+			const isToday = areTheSameDay(moment(timeEntry.date), moment());
 
-			this.setState({ storedTimes, labouredHoursOnDay });
+			// If data is on server
+			if (startTime.isValid() &&
+				startBreakTime.isValid() &&
+				endBreakTime.isValid() &&
+				endTime.isValid()
+			) {
+				const storedTimes = [
+					{
+						hours: startTime.hours(),
+						minutes: startTime.minutes()
+					},
+					{
+						hours: startBreakTime.hours(),
+						minutes: startBreakTime.minutes()
+					},
+					{
+						hours: endBreakTime.hours(),
+						minutes: endBreakTime.minutes()
+					},
+					{
+						hours: endTime.hours(),
+						minutes: endTime.minutes()
+					}
+				];
+				// If today was fecthed
+				if (isToday) {
+					setTodayStorage({
+						storedTimes,
+						sentToday: true
+					});
+				}
+				this.setState({
+					storedTimes,
+					sentToday: true,
+					labouredHoursOnDay
+				});
+			} else if (isToday) {
+				// If today and not in server, use localStorage
+				const { storedTimes: localStoredTimes, sentToday } = getTodayStorage();
+				this.setState({
+					storedTimes: localStoredTimes,
+					sentToday,
+					labouredHoursOnDay: (isValid(localStoredTimes) && calculateLabouredHours(localStoredTimes)) || ''
+				});
+			} else {
+				// If not today should do something... for now, just set state empty
+				this.setState({
+					storedTimes: [{}, {}, {}, {}],
+					labouredHoursOnDay
+				});
+			}
+
 		}
 	}
 
@@ -479,6 +513,9 @@ class Edit extends React.Component {
 
 		return (
 			<div className="page-wrapper">
+				<PageLoading
+					active={this.props.weekEntriesQuery.loading}
+				/>;
 				<h2 className="current-date">
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
