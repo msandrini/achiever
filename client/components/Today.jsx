@@ -10,8 +10,6 @@ import ConfirmModal from './ui/modals/ConfirmModal';
 import StaticTime from './today/StaticTime';
 import strings from '../../shared/strings';
 import {
-	STORAGEDAYKEY,
-	STORAGEKEY,
 	setTodayStorage,
 	getTodayStorage,
 	submitToServer
@@ -93,6 +91,7 @@ class Today extends React.Component {
 	}
 
 	componentWillMount() {
+		// TODO: request from server today.
 		const { sentToday, storedTimes } = getTodayStorage();
 		if (!sentToday) {
 			if (allTheTimesAreFilled(storedTimes)) {
