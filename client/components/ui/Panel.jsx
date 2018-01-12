@@ -9,9 +9,7 @@ const Panel = ({ message, type }) => {
 	if (message) {
 		return (
 			<div className={`panel ${type}`}>
-				<div className="icon">
-					<Icon type={type} />
-				</div>
+				<div className="icon" />
 				<div className="message">
 					{message}
 				</div>
