@@ -288,7 +288,7 @@ class Today extends React.Component {
 			<div className="page-wrapper">
 				<PageLoading
 					active={dayEntryQuery.loading}
-				/>;
+				/>
 				<form onSubmit={e => this.onMark(e)}>
 					<h2 className="current-date">
 						{strings.todayDate}:{' '}

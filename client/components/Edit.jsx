@@ -524,7 +524,7 @@ class Edit extends React.Component {
 			<div className="page-wrapper">
 				<PageLoading
 					active={this.props.weekEntriesQuery.loading}
-				/>;
+				/>
 				<h2 className="current-date">
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
