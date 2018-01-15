@@ -33,6 +33,22 @@ const resolvers = {
 
 			return result;
 		},
+		dayEntry: async (_, { date }, { token }) => {
+			if (!token) {
+				throw notAuthorizedMessage;
+			}
+
+			let result;
+
+			try {
+				await login(token);
+				result = await dailyEntries(token, date);
+			} finally {
+				await logout(token);
+			}
+
+			return { timeEntry: result };
+		},
 		phases: async (_, __, { token }) => {
 			if (!token) {
 				throw notAuthorizedMessage;

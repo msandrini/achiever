@@ -34,6 +34,10 @@ const typeDefs = `
 		total: String
 	}
 
+	type DayEntry {
+		timeEntry: TimeEntry
+	}
+
 	type Phase {
 		id: Int,
 		name: String
@@ -68,6 +72,7 @@ const typeDefs = `
 	type Query {
 		userDetails: UserDetails
 		weekEntries(date: String!): WeekEntries
+		dayEntry(date: String!): DayEntry
 		phases: PhaseList
 	}
 
