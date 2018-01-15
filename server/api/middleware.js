@@ -20,6 +20,8 @@ const {
 const url = process.env.SERVICE_URL;
 const jwtSecret = process.env.JWT_SECRET;
 
+let thereAreLoggedInCalls = 0;
+
 const authenticationSucceed = 'Your browser doesnt support frames, but this is required';
 
 const commonPayload = (id, formKey, functionName) => ({
@@ -73,6 +75,11 @@ const getUserDetails = async (cookieJar) => {
 const authenticationFailedMessage = 'Authentication failed!';
 
 const login = async (token) => {
+	if (thereAreLoggedInCalls) {
+		thereAreLoggedInCalls += 1;
+		return token;
+	}
+
 	const cookieJar = cookieJarFactory(token);
 
 	let options = getOptions('GET', `${url}/index.php`, cookieJar);
@@ -94,10 +101,17 @@ const login = async (token) => {
 
 	logger.info('Authenticated!!!');
 
+	thereAreLoggedInCalls += 1;
+
 	return token;
 };
 
 const logout = async (token) => {
+	thereAreLoggedInCalls -= 1;
+	// This avoid a logout while another must be logged in
+	if (thereAreLoggedInCalls) {
+		return;
+	}
 	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${url}/index.php`, cookieJar);
 	options.qs = {
