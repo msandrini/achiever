@@ -2,12 +2,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import AlertModal from './ui/modals/AlertModal';
 import ConfirmModal from './ui/modals/ConfirmModal';
 import StaticTime from './today/StaticTime';
+import PageLoading from './genericPages/PageLoading';
 import strings from '../../shared/strings';
 import {
 	setTodayStorage,
@@ -58,16 +59,33 @@ const goBack = () => {
 };
 
 const ADD_TIME_ENTRY_MUTATION = gql`
-  mutation addTimeEntry($timeEntry: TimeEntryInput!) {
-	addTimeEntry(timeEntry: $timeEntry) {
-	  date
-	  startTime
-	  startBreakTime
-	  endBreakTime
-	  endTime
-	  total
+	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+		addTimeEntry(timeEntry: $timeEntry) {
+			date
+			startTime
+			startBreakTime
+			endBreakTime
+			endTime
+			total
+		}
 	}
-  }
+`;
+
+const FETCH_DAY_ENTRY = gql`
+	query dayEntryQuery($date: String!) {
+		dayEntry(date: $date) {
+			timeEntry {
+				date
+				phase
+				activity
+				startTime
+				startBreakTime
+				endBreakTime
+				endTime
+				total
+			}
+		}
+	}
 `;
 
 
@@ -87,30 +105,23 @@ class Today extends React.Component {
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 		this._onConfirmSubmit = this._onConfirmSubmit.bind(this);
 		this._hideAlert = this._hideAlert.bind(this);
+		this._checkEnteredValues = this._checkEnteredValues.bind(this);
 	}
 
-	componentWillMount() {
-		// TODO: request from server today.
-		const { sentToday, storedTimes } = getTodayStorage();
-		if (!sentToday) {
-			if (allTheTimesAreFilled(storedTimes)) {
-				if (timeSetIsValid(storedTimes)) {
-					this.setState({
-						showModal: MODAL_CONFIRM
-					});
+	componentDidMount() {
+		this._checkEnteredValues(this.props.dayEntryQuery);
+	}
 
-				} else {
-					this.setState({
-						alertInfo: {
-							content: strings.invalidTime,
-							onClose: () => goBack()
-						},
-						showModal: MODAL_ALERT
-					});
-				}
-			}
+	componentWillReceiveProps(nextProps) {
+		// If finished (was loading and stoped) loading from server and no erros fill the state
+		const {
+			loading,
+			error
+		} = nextProps.dayEntryQuery;
+
+		if (this.props.dayEntryQuery.loading && !loading && !error) {
+			this._checkEnteredValues(nextProps.dayEntryQuery);
 		}
-		this.setState({ storedTimes, sentToday });
 	}
 
 	onMark(event) {
@@ -159,6 +170,76 @@ class Today extends React.Component {
 		}
 	}
 
+	_checkEnteredValues(dayEntryQuery) {
+		const {	loading, dayEntry } = dayEntryQuery;
+
+		if (loading) {
+			return;
+		}
+
+		const { timeEntry } = dayEntry;
+		if (timeEntry) {
+			const startTime = moment(timeEntry.startTime, 'H:mm');
+			const startBreakTime = moment(timeEntry.startBreakTime, 'H:mm');
+			const endBreakTime = moment(timeEntry.endBreakTime, 'H:mm');
+			const endTime = moment(timeEntry.endTime, 'H:mm');
+
+			// If data is on server
+			if (startTime.isValid() &&
+				startBreakTime.isValid() &&
+				endBreakTime.isValid() &&
+				endTime.isValid()
+			) {
+				const storedTimes = [
+					{
+						hours: startTime.hours(),
+						minutes: startTime.minutes()
+					},
+					{
+						hours: startBreakTime.hours(),
+						minutes: startBreakTime.minutes()
+					},
+					{
+						hours: endBreakTime.hours(),
+						minutes: endBreakTime.minutes()
+					},
+					{
+						hours: endTime.hours(),
+						minutes: endTime.minutes()
+					}
+				];
+				setTodayStorage({
+					storedTimes,
+					sentToday: true
+				});
+				this.setState({
+					storedTimes,
+					sentToday: true
+				});
+			} else {
+				const { sentToday, storedTimes } = getTodayStorage();
+				if (!sentToday) {
+					if (allTheTimesAreFilled(storedTimes)) {
+						if (timeSetIsValid(storedTimes)) {
+							this.setState({
+								showModal: MODAL_CONFIRM
+							});
+						} else {
+							this.setState({
+								alertInfo: {
+									content: strings.invalidTime,
+									onClose: () => goBack()
+								},
+								showModal: MODAL_ALERT
+							});
+						}
+					}
+				}
+				this.setState({ storedTimes, sentToday });
+			}
+		}
+	}
+
 	_getTime(index) {
 		const storedTimesLength = this._getNextTimeEntryPoint();
 		if (storedTimesLength !== -1 && storedTimesLength < index) {
@@ -202,8 +283,12 @@ class Today extends React.Component {
 	}
 
 	render() {
+		const { dayEntryQuery } = this.props;
 		return (
 			<div className="page-wrapper">
+				<PageLoading
+					active={dayEntryQuery.loading}
+				/>;
 				<form onSubmit={e => this.onMark(e)}>
 					<h2 className="current-date">
 						{strings.todayDate}:{' '}
@@ -249,10 +334,19 @@ class Today extends React.Component {
 	}
 }
 
-export default graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' })(Today);
+export default compose(
+	graphql(ADD_TIME_ENTRY_MUTATION, {
+		name: 'addTimeEntry'
+	}),
+	graphql(FETCH_DAY_ENTRY, {
+		name: 'dayEntryQuery',
+		options: { variables: { date: moment().format('YYYY-MM-DD') } }
+	})
+)(Today);
 
 Today.propTypes = {
-	addTimeEntry: PropTypes.func.isRequired
+	addTimeEntry: PropTypes.func.isRequired,
+	dayEntryQuery: PropTypes.object.isRequired
 };
 
 Today.contextTypes = {
