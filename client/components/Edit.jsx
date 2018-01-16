@@ -214,24 +214,14 @@ class Edit extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		// If finished (was loading and stoped) loading from server and no erros
 		const {
 			loading,
-			error,
-			weekEntries,
-			phases
+			error
 		} = nextProps.weekEntriesQuery;
-        
-    if (this.props.weekEntriesQuery.loading && !loading && !error) {
+
+		if (this.props.weekEntriesQuery.loading && !loading && !error) {
 			this._checkEnteredValues(this.state.controlDate, nextProps.weekEntriesQuery);
-
-			const phase = phases.options.find(option => option.id === phases.default);
-			const { activities } = phase;
-			const activity = activities.options.find(option => option.id === activities.default);
-
-			this.setState({
-				phase,
-				activity
-			});
 		}
 	}
 
@@ -366,16 +356,35 @@ class Edit extends React.Component {
 	}
 
 	_checkEnteredValues(date, weekEntriesQuery) {
-		if (weekEntriesQuery.loading) {
+		const {
+			loading,
+			error,
+			weekEntries,
+			phases
+		} = weekEntriesQuery;
+
+		if (loading) {
 			return;
 		}
 
-		if (weekEntriesQuery.error) {
-			this.setState({ errorMessage: weekEntriesQuery.error });
+		if (error) {
+			this.setState({ errorMessage: error });
 			return;
 		}
 
-		const { timeEntries } = weekEntriesQuery.weekEntries;
+
+		// Set queried phases and activities from server
+		const phase = phases.options.find(option => option.id === phases.default);
+		const { activities } = phase;
+		const activity = activities.options.find(option => option.id === activities.default);
+
+		this.setState({
+			phase,
+			activity
+		});
+
+		// Now check whether the times are already on server or not
+		const { timeEntries } = weekEntries;
 		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
 
 		if (timeEntry) {
@@ -515,7 +524,7 @@ class Edit extends React.Component {
 			<div className="page-wrapper">
 				<PageLoading
 					active={this.props.weekEntriesQuery.loading}
-				/>;
+				/>
 				<h2 className="current-date">
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
