@@ -1,14 +1,16 @@
-let historyListener = null;
+const historyListeners = [];
 
 window.onpopstate = (event) => {
-	historyListener(event.path[0].location.pathname);
+	historyListeners.forEach(callback => callback(event.path[0].location.pathname));
 };
 
 export const push = (pathname) => {
 	window.history.pushState({}, '', pathname);
-	historyListener(pathname);
+	historyListeners.forEach(callback => callback(pathname));
 };
 
 export const onChangeLocation = (cb) => {
-	historyListener = cb;
+	historyListeners.push(cb);
 };
+
+window.hLTemp = historyListeners;

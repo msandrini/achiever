@@ -14,11 +14,15 @@ const Link = (props) => {
 		}
 	};
 
-	const activeClass = props.to === window.location.pathname ? props.activeClassName : '';
+	const activeClass = props.isActive ? props.activeClassName : '';
 	const className = `${props.className}${activeClass}`;
 
 	return (
-		<a href={props.to} className={className} onClick={onClick}>
+		<a
+			href={props.to}
+			className={className}
+			onClick={onClick}
+		>
 			{props.children}
 		</a>
 	);
@@ -32,14 +36,16 @@ Link.propTypes = {
 	href: PropTypes.string,
 	className: PropTypes.string,
 	to: PropTypes.string.isRequired,
-	activeClassName: PropTypes.string
+	activeClassName: PropTypes.string,
+	isActive: PropTypes.bool
 };
 
 Link.defaultProps = {
 	children: null,
 	className: '',
 	href: '#',
-	activeClassName: ''
+	activeClassName: 'is-active',
+	isActive: false
 };
 
 export default Link;
