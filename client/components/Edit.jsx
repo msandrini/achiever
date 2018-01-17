@@ -3,14 +3,13 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
-import gql from 'graphql-tag';
-
 import 'react-datepicker/dist/react-datepicker.css';
-import '../styles/calendar.styl';
 
+import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
 import LabouredHoursGauge from './edit/LabouredHoursGauge';
 import SelectGroup from './edit/SelectGroup';
+import WeeklyCalendar from './edit/WeeklyCalendar';
 import Panel from './ui/Panel';
 import PageLoading from './genericPages/PageLoading';
 
@@ -19,162 +18,18 @@ import {
 	getTodayStorage,
 	replacingValueInsideArray,
 	setTodayStorage,
-	storedTimesIndex,
-	submitToServer
-} from './shared/utils';
-import { timeIsValid } from '../../shared/utils';
+	submitToServer,
+	calculateLabouredHours,
+	calculateRemainingHoursOnWeek,
+	timesAreValid,
+	dismemberTimeString
+} from '../utils';
+
 import strings from '../../shared/strings';
 
+import '../styles/calendar.styl';
+
 const referenceHours = [9, 12, 13, 17];
-
-const ADD_TIME_ENTRY_MUTATION = gql`
-	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
-		addTimeEntry(timeEntry: $timeEntry) {
-			date
-			startTime
-			startBreakTime
-			endBreakTime
-			endTime
-			total
-		}
-	}
-`;
-
-const WEEK_ENTRIES_QUERY = gql`
-	query weekEntriesQuery($date: String!) {
-		weekEntries(date: $date) {
-			timeEntries {
-				date
-				phase
-				activity
-				startTime
-				startBreakTime
-				endBreakTime
-				endTime
-				total
-			}
-			total
-		}
-		userDetails {
-			name
-			dailyContractedHours
-			balance
-		}
-		phases {
-			default
-			options {
-				id
-				name
-				activities {
-					default
-					options {
-						id
-						name
-					}
-				}
-			}
-		}
-	}
-`;
-
-const calculateLabouredHours = (storedTimes) => {
-	const startTime = storedTimes[storedTimesIndex.startTime];
-	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
-	const endTime = storedTimes[storedTimesIndex.endTime];
-
-	const labouredHoursOnDay = moment().startOf('day');
-	labouredHoursOnDay.add({
-		hours: endTime.hours,
-		minutes: endTime.minutes
-	});
-	labouredHoursOnDay.subtract({
-		hours: startTime.hours,
-		minutes: startTime.minutes
-	});
-	labouredHoursOnDay.add({
-		hours: startBreakTime.hours,
-		minutes: startBreakTime.minutes
-	});
-	labouredHoursOnDay.subtract({
-		hours: endBreakTime.hours,
-		minutes: endBreakTime.minutes
-	});
-
-	return labouredHoursOnDay.format('H:mm');
-};
-
-const stringifyTime = (hours, minutes) => {
-	let timeAsString = '';
-	let hoursAsString = hours;
-	let minutesAsString = minutes;
-	let balanceSign;
-
-	if (hours > 0 || minutes > 0) {
-		balanceSign = '-';
-	} else if (hours < 0 || minutes < 0) {
-		balanceSign = '+';
-	} else {
-		balanceSign = '';
-	}
-
-	if (hours < 0) {
-		hoursAsString *= -1;
-	}
-
-	if (minutes < 0) {
-		minutesAsString *= -1;
-	}
-
-	if (minutesAsString < 10) {
-		minutesAsString = `0${minutesAsString}`;
-	}
-
-	timeAsString += `${balanceSign}${hoursAsString}:${minutesAsString}`;
-
-	return timeAsString;
-};
-
-const calculateRemainingHoursOnWeek = (date, workedTime, contractedHours, totalWeek) => {
-	const businessDay = date.day() > 5 ? 5 : date.day();
-
-	const dailyContractedDuration = moment.duration(contractedHours);
-
-	const expectedDuration = moment.duration().add({
-		hours: dailyContractedDuration.hours() * businessDay,
-		minutes: dailyContractedDuration.minutes() * businessDay
-	});
-
-	expectedDuration.subtract({
-		hours: totalWeek.split(':')[0],
-		minutes: totalWeek.split(':')[1]
-	});
-
-	const labouredHoursDuration = moment.duration(workedTime);
-	expectedDuration.subtract({
-		hours: labouredHoursDuration.hours(),
-		minutes: labouredHoursDuration.minutes()
-	});
-
-	const totalHours = (expectedDuration.days() * 24) + expectedDuration.hours();
-	const totalMinutes = expectedDuration.minutes();
-	return stringifyTime(totalHours, totalMinutes);
-};
-
-const isValid = (storedTimes) => {
-	let comparisonTerm = 0;
-	const isSequentialTime = (time) => {
-		if (time && timeIsValid(time)) {
-			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-			const isLaterThanComparison = date > comparisonTerm;
-			comparisonTerm = Number(date);
-			return isLaterThanComparison;
-		}
-		return false;
-	};
-
-	return storedTimes.every(isSequentialTime);
-};
 
 class Edit extends React.Component {
 	constructor(props) {
@@ -182,7 +37,7 @@ class Edit extends React.Component {
 		this.state = {
 			controlDate: moment(),
 			labouredHoursOnDay: null,
-			remainingHoursOnWeek: null,
+			remainingHoursOnWeek: {},
 			storedTimes: [{}, {}, {}, {}],
 			phase: {
 				id: null,
@@ -210,19 +65,29 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this._checkEnteredValues(this.state.controlDate, this.props.weekEntriesQuery);
+		this._getTimesForChosenDate(this.state.controlDate, this.props.weekEntriesQuery);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// If finished (was loading and stoped) loading from server and no erros
+		// If finished (was loading and stopped) loading from server and no errors
 		const {
-			loading,
-			error
-		} = nextProps.weekEntriesQuery;
+			weekEntriesQuery,
+			projectPhasesQuery
+		} = nextProps;
 
-		if (this.props.weekEntriesQuery.loading && !loading && !error) {
-			this._checkEnteredValues(this.state.controlDate, nextProps.weekEntriesQuery);
+		const error = weekEntriesQuery.error || projectPhasesQuery.error;
+		if (error) {
+			this.setState({ errorMessage: error });
+			return;
 		}
+
+		if (this.props.weekEntriesQuery.loading && !weekEntriesQuery.loading) {
+			this._getTimesForChosenDate(this.state.controlDate, nextProps.weekEntriesQuery);
+		}
+		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
+			this._afterFetchingFromServer(nextProps.projectPhasesQuery.phases);
+		}
+
 	}
 
 	onDateChange(date) {
@@ -238,7 +103,7 @@ class Edit extends React.Component {
 			this._fetchWeekEntries(date);
 		}
 
-		this._checkEnteredValues(date, this.props.weekEntriesQuery);
+		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
 	onTimeSet(groupIndex) {
@@ -252,11 +117,11 @@ class Edit extends React.Component {
 					composedTime
 				);
 
-				const labouredHoursOnDay = (isValid(storedTimes) && calculateLabouredHours(storedTimes)) || '';
+				const labouredHoursOnDay = (timesAreValid(storedTimes) && calculateLabouredHours(storedTimes)) || '';
 				const remainingHoursOnWeek = calculateRemainingHoursOnWeek(
 					prevState.controlDate,
 					labouredHoursOnDay,
-					this.props.weekEntriesQuery.userDetails.dailyContractedHours,
+					this.props.userDetailsQuery.dailyContractedHours,
 					this.props.weekEntriesQuery.weekEntries.total
 				);
 
@@ -345,36 +210,19 @@ class Edit extends React.Component {
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
-		this._checkEnteredValues(date, this.props.weekEntriesQuery);
+		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
 	imReligious() {
-		this.onTimeSet(0)(8, 15);
-		this.onTimeSet(1)(12, 15);
-		this.onTimeSet(2)(13, 15);
-		this.onTimeSet(3)(17, 15);
+		this.onTimeSet(0)(7, 30);
+		this.onTimeSet(1)(11, 30);
+		this.onTimeSet(2)(12, 30);
+		this.onTimeSet(3)(16, 30);
 	}
 
-	_checkEnteredValues(date, weekEntriesQuery) {
-		const {
-			loading,
-			error,
-			weekEntries,
-			phases
-		} = weekEntriesQuery;
-
-		if (loading) {
-			return;
-		}
-
-		if (error) {
-			this.setState({ errorMessage: error });
-			return;
-		}
-
-
-		// Set queried phases and activities from server
-		const phase = phases.options.find(option => option.id === phases.default);
+	_afterFetchingFromServer(projectPhases) {
+		// Set queried project phases and activities from server
+		const phase = projectPhases.options.find(option => option.id === projectPhases.default);
 		const { activities } = phase;
 		const activity = activities.options.find(option => option.id === activities.default);
 
@@ -382,6 +230,18 @@ class Edit extends React.Component {
 			phase,
 			activity
 		});
+	}
+
+	_getTimesForChosenDate(date, weekEntriesQuery) {
+		const {
+			loading,
+			error,
+			weekEntries
+		} = weekEntriesQuery;
+
+		if (loading || error) {
+			return;
+		}
 
 		// Now check whether the times are already on server or not
 		const { timeEntries } = weekEntries;
@@ -389,38 +249,25 @@ class Edit extends React.Component {
 
 		if (timeEntry) {
 			const startTime = moment(timeEntry.startTime, 'H:mm');
-			const startBreakTime = moment(timeEntry.startBreakTime, 'H:mm');
-			const endBreakTime = moment(timeEntry.endBreakTime, 'H:mm');
 			const endTime = moment(timeEntry.endTime, 'H:mm');
 			const labouredHoursOnDay = timeEntry.total;
 
 			const isToday = areTheSameDay(moment(timeEntry.date), moment());
 
 			// If data is on server
-			if (startTime.isValid() &&
-				startBreakTime.isValid() &&
-				endBreakTime.isValid() &&
-				endTime.isValid()
-			) {
-				const storedTimes = [
-					{
-						hours: startTime.hours(),
-						minutes: startTime.minutes()
-					},
-					{
-						hours: startBreakTime.hours(),
-						minutes: startBreakTime.minutes()
-					},
-					{
-						hours: endBreakTime.hours(),
-						minutes: endBreakTime.minutes()
-					},
-					{
-						hours: endTime.hours(),
-						minutes: endTime.minutes()
-					}
+			if (startTime.isValid() && endTime.isValid()) {
+				const timesAsString = [
+					timeEntry.startTime,
+					timeEntry.startBreakTime,
+					timeEntry.endBreakTime,
+					timeEntry.endTime
 				];
-				// If today was fecthed
+				const storedTimes = timesAsString.map(timeString =>
+					dismemberTimeString(timeString));
+
+				console.log(storedTimes);
+
+				// If today was fetched
 				if (isToday) {
 					setTodayStorage({
 						storedTimes,
@@ -438,7 +285,8 @@ class Edit extends React.Component {
 				this.setState({
 					storedTimes: localStoredTimes,
 					sentToday,
-					labouredHoursOnDay: (isValid(localStoredTimes) && calculateLabouredHours(localStoredTimes)) || ''
+					labouredHoursOnDay: (timesAreValid(localStoredTimes) &&
+						calculateLabouredHours(localStoredTimes)) || ''
 				});
 			} else {
 				// If not today should do something... for now, just set state empty
@@ -503,7 +351,7 @@ class Edit extends React.Component {
 	}
 
 	_shouldSendBeAvailable() {
-		return isValid(this.state.storedTimes);
+		return timesAreValid(this.state.storedTimes);
 	}
 
 	render() {
@@ -516,9 +364,13 @@ class Edit extends React.Component {
 			activity
 		} = this.state;
 
-		const userDetails = this._getWeekEntriesQuerySafe('userDetails');
-		const { dailyContractedHours } = userDetails;
-		const phases = this._getWeekEntriesQuerySafe('phases');
+		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
+		const projectPhases = this.props.projectPhasesQuery.phases || {};
+
+		const showProjectPhaseAsText = projectPhases.options &&
+			projectPhases.options.length === 1 ? projectPhases.options[0].name : null;
+
+		console.log(activity)
 
 		return (
 			<div className="page-wrapper">
@@ -550,11 +402,18 @@ class Edit extends React.Component {
 									</LabouredHoursGauge>
 								) : ''
 							}
-							<p className="remaining">
-								{strings.remainingHoursOnWeek}
-								{' '}
-								<strong>{remainingHoursOnWeek}</strong>
-							</p>
+							{ remainingHoursOnWeek.remainingTime ?
+								(
+									<LabouredHoursGauge
+										entitledDuration={remainingHoursOnWeek.entitledDuration}
+										labouredHours={labouredHoursOnDay}
+									>
+										{strings.remainingHoursOnWeek}
+										{' '}
+										<strong>{remainingHoursOnWeek.remainingTime}</strong>
+									</LabouredHoursGauge>
+								) : ''
+							}
 						</div>
 					</div>
 					<div className="column">
@@ -564,9 +423,10 @@ class Edit extends React.Component {
 							<SelectGroup
 								name="projectPhase"
 								label={strings.projectPhase}
-								options={phases.options}
+								options={projectPhases.options}
 								selected={phase.id}
-								onChange={this._setProjectPhase(phases.options)}
+								onChange={this._setProjectPhase(projectPhases.options)}
+								showTextInstead={showProjectPhaseAsText}
 							/>
 							<SelectGroup
 								name="activity"
@@ -574,6 +434,7 @@ class Edit extends React.Component {
 								options={phase.activities.options}
 								selected={activity.id}
 								onChange={this._setActivity(phase.activities.options)}
+								showTextInstead={null}
 							/>
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
@@ -607,20 +468,32 @@ class Edit extends React.Component {
 						</div>
 					</div>
 				</form>
+				<WeeklyCalendar
+					controlDate={this.state.controlDate}
+					weekEntries={this.props.weekEntriesQuery.weekEntries}
+				/>
 			</div>
 		);
 	}
 }
 
 export default compose(
-	graphql(ADD_TIME_ENTRY_MUTATION, { name: 'addTimeEntry' }),
-	graphql(WEEK_ENTRIES_QUERY, {
+	graphql(queries.addTimeEntry, { name: 'addTimeEntry' }),
+	graphql(queries.projectPhases, { name: 'projectPhasesQuery' }),
+	graphql(queries.userDetails, { name: 'userDetailsQuery' }),
+	graphql(queries.weekEntries, {
 		name: 'weekEntriesQuery',
-		options: { variables: { date: moment().format('YYYY-MM-DD') } }
+		options: {
+			variables: {
+				date: moment().format('YYYY-MM-DD')
+			}
+		}
 	})
 )(Edit);
 
 Edit.propTypes = {
 	addTimeEntry: PropTypes.func.isRequired,
-	weekEntriesQuery: PropTypes.object.isRequired
+	weekEntriesQuery: PropTypes.object.isRequired,
+	projectPhasesQuery: PropTypes.object.isRequired,
+	userDetailsQuery: PropTypes.object.isRequired
 };

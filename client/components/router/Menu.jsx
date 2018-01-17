@@ -32,6 +32,7 @@ class Menu extends React.Component {
 			if (isPrivateWithAuth || notPrivateWithoutAuth) {
 				return (
 					<Link
+						key={key}
 						to={key}
 						isActive={this.state.path === key}
 					>

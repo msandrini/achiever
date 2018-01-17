@@ -1,7 +1,8 @@
 /* global window */
 import moment from 'moment';
 
-import strings from '../../../shared/strings';
+import strings from '../shared/strings';
+import { timeIsValid } from '../shared/utils';
 
 moment.locale('pt-br');
 
@@ -105,6 +106,8 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
 	if (response) {
 		return { successMessage: strings.submitTimeSuccess };
 	}
+
+	return { successMessage: '' };
 };
 
 /**
@@ -130,4 +133,114 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
 	};
 
 	return _addTimeEntry(timeEntryInput, addTimeEntry);
+};
+
+export const calculateLabouredHours = (storedTimes) => {
+	const startTime = storedTimes[storedTimesIndex.startTime];
+	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
+	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
+	const endTime = storedTimes[storedTimesIndex.endTime];
+
+	const labouredHoursOnDay = moment().startOf('day');
+	labouredHoursOnDay.add({
+		hours: endTime.hours,
+		minutes: endTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: startTime.hours,
+		minutes: startTime.minutes
+	});
+	labouredHoursOnDay.add({
+		hours: startBreakTime.hours,
+		minutes: startBreakTime.minutes
+	});
+	labouredHoursOnDay.subtract({
+		hours: endBreakTime.hours,
+		minutes: endBreakTime.minutes
+	});
+
+	return labouredHoursOnDay.format('H:mm');
+};
+
+export const stringifyTime = (hours, minutes) => {
+	let timeAsString = '';
+	let hoursAsString = hours;
+	let minutesAsString = minutes;
+	let balanceSign;
+
+	if (hours > 0 || minutes > 0) {
+		balanceSign = '-';
+	} else if (hours < 0 || minutes < 0) {
+		balanceSign = '+';
+	} else {
+		balanceSign = '';
+	}
+
+	if (hours < 0) {
+		hoursAsString *= -1;
+	}
+
+	if (minutes < 0) {
+		minutesAsString *= -1;
+	}
+
+	if (minutesAsString < 10) {
+		minutesAsString = `0${minutesAsString}`;
+	}
+
+	timeAsString += `${balanceSign}${hoursAsString}:${minutesAsString}`;
+
+	return timeAsString;
+};
+
+export const calculateRemainingHoursOnWeek = (date, workedTime, contractedHours, totalWeek) => {
+	const businessDay = date.day() > 5 ? 5 : date.day();
+
+	const dailyContractedDuration = moment.duration(contractedHours);
+
+	const expectedDuration = moment.duration().add({
+		hours: dailyContractedDuration.hours() * businessDay,
+		minutes: dailyContractedDuration.minutes() * businessDay
+	});
+
+	expectedDuration.subtract({
+		hours: totalWeek.split(':')[0],
+		minutes: totalWeek.split(':')[1]
+	});
+
+	const labouredHoursDuration = moment.duration(workedTime);
+	expectedDuration.subtract({
+		hours: labouredHoursDuration.hours(),
+		minutes: labouredHoursDuration.minutes()
+	});
+
+	const totalHours = (expectedDuration.days() * 24) + expectedDuration.hours();
+	const totalMinutes = expectedDuration.minutes();
+
+	return {
+		remainingTime: stringifyTime(totalHours, totalMinutes),
+		entitledDuration: expectedDuration,
+		labouredDuration: labouredHoursDuration
+	};
+};
+
+export const timesAreValid = (times) => {
+	let comparisonTerm = 0;
+	const isSequentialTime = (time) => {
+		if (time && timeIsValid(time)) {
+			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+			const isLaterThanComparison = date > comparisonTerm;
+			comparisonTerm = Number(date);
+			return isLaterThanComparison;
+		}
+		return false;
+	};
+
+	return times.every(isSequentialTime);
+};
+
+export const dismemberTimeString = (timeString) => {
+	const [hours, minutesRaw] = String(timeString).split(':');
+	const minutes = (parseInt(minutesRaw < 10, 10)) ? `0${minutesRaw}` : minutesRaw;
+	return { hours, minutes };
 };

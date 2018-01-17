@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { graphql, compose } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import * as queries from '../queries.graphql';
 import AlertModal from './ui/modals/AlertModal';
 import ConfirmModal from './ui/modals/ConfirmModal';
 import StaticTime from './today/StaticTime';
@@ -14,7 +14,7 @@ import {
 	setTodayStorage,
 	getTodayStorage,
 	submitToServer
-} from './shared/utils';
+} from '../utils';
 import { timeIsValid } from '../../shared/utils';
 
 import '../styles/today.styl';
@@ -57,37 +57,6 @@ const allTheTimesAreFilled = times => (
 const goBack = () => {
 	window.history.back();
 };
-
-const ADD_TIME_ENTRY_MUTATION = gql`
-	mutation addTimeEntry($timeEntry: TimeEntryInput!) {
-		addTimeEntry(timeEntry: $timeEntry) {
-			date
-			startTime
-			startBreakTime
-			endBreakTime
-			endTime
-			total
-		}
-	}
-`;
-
-const FETCH_DAY_ENTRY = gql`
-	query dayEntryQuery($date: String!) {
-		dayEntry(date: $date) {
-			timeEntry {
-				date
-				phase
-				activity
-				startTime
-				startBreakTime
-				endBreakTime
-				endTime
-				total
-			}
-		}
-	}
-`;
-
 
 class Today extends React.Component {
 	constructor() {
@@ -335,10 +304,10 @@ class Today extends React.Component {
 }
 
 export default compose(
-	graphql(ADD_TIME_ENTRY_MUTATION, {
+	graphql(queries.addTimeEntry, {
 		name: 'addTimeEntry'
 	}),
-	graphql(FETCH_DAY_ENTRY, {
+	graphql(queries.dayEntry, {
 		name: 'dayEntryQuery',
 		options: { variables: { date: moment().format('YYYY-MM-DD') } }
 	})

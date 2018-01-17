@@ -88,8 +88,15 @@ export default class TimeField extends React.Component {
 	}
 
 	render() {
-		const { mode, referenceHour, value, tabIndex } = this.props;
+		const {
+			mode,
+			referenceHour,
+			value,
+			tabIndex
+		} = this.props;
+
 		const { isFocused } = this.state;
+
 		return (
 			<div className="field">
 				<input

@@ -70,5 +70,6 @@ TimeGroup.defaultProps = {
 	referenceHour: 9,
 	label: '',
 	shouldHaveFocus: false,
-	time: { hours: 0, minutes: 0 }
+	time: { hours: 0, minutes: 0 },
+	tabIndexes: 0
 };
