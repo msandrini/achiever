@@ -1,10 +1,19 @@
 const cheerio = require('cheerio');
+const jwt = require('jwt-simple');
+const md5 = require('md5');
 const moment = require('moment');
+const rp = require('request-promise');
+const tough = require('tough-cookie');
 
 const errorMessageRegex = RegExp(/\$\('errmsg'\)\.update\('([^\0]+)'\);\s*<\/script>/, 'i');
 const idRegex = RegExp(/&id=([0-9]+)&/, 'i');
 const timeBreakRegex = RegExp(/([0-9]{1,2}:[0-9]{2}) to ([0-9]{1,2}:[0-9]{2})/, 'i');
 const normaliseStringRegex = RegExp(/<[a-z ]+\/>|\\|\s\r?\n/, 'gi');
+
+const ACHIEVO_URL = process.env.SERVICE_URL;
+const jwtSecret = process.env.JWT_SECRET;
+
+const loggedInUsers = new Map();
 
 const extractError = (responseHtml) => {
 	const errorMessages = responseHtml.match(errorMessageRegex);
@@ -179,7 +188,73 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 	};
 };
 
+/**
+ * Generates a jwt token using user and password
+ * @param  {String} user=process.env.AUTH_USER
+ * @param  {String} password=process.env.PASSWORD
+ */
+const tokenFactory = (user = process.env.AUTH_USER, password = process.env.PASSWORD) => (
+	jwt.encode({
+		user,
+		password,
+		iat: moment().valueOf()
+	}, jwtSecret)
+);
+
+const cookieJarFactory = (token) => {
+	const cookieJar = rp.jar();
+	const cookie = new tough.Cookie({
+		key: 'achievo',
+		value: md5(token)
+	});
+	cookieJar.setCookie(cookie, ACHIEVO_URL);
+
+	return cookieJar;
+};
+
+/**
+ * Check whether userToken is in use or not
+ * @param  {String} userToken token sent by user
+ * @param  {Map} map is a hashmap containing all tokens; by default is a global loggedInUsers
+ * @returns {Number} number of uses
+ */
+const thereIsSessionFrom = (userToken, map = loggedInUsers) => {
+	const sessionsCounter = map.get(userToken);
+	if (sessionsCounter === undefined) {
+		return 0;
+	}
+	return sessionsCounter;
+};
+
+/**
+ * Increment the number of sessions of userToken
+ * @param  {String} userToken token sent by user
+ * @param  {Map} map is a hashmap containing all tokens; by default is a global loggedInUsers
+ */
+const setSession = (userToken, map = loggedInUsers) => {
+	map.set(userToken, thereIsSessionFrom(userToken) + 1);
+};
+
+/**
+ * Decrement the number of sessions of userToken
+ * @param  {String} userToken token sent by user
+ * @param  {Map} map is a hashmap containing all tokens; by default is a global loggedInUsers
+ * @returns {Number} number of sessions of userToken after remove
+ */
+const removeSession = (userToken, map = loggedInUsers) => {
+	const sessionsCounter = thereIsSessionFrom(userToken);
+	if (sessionsCounter === 0) {
+		// This is error - called remove logout and it was not logged in
+	} else if (sessionsCounter === 1) {
+		map.delete(userToken);
+	} else {
+		map.set(userToken, sessionsCounter - 1);
+	}
+	return (sessionsCounter - 1);
+};
+
 module.exports = {
+	ACHIEVO_URL,
 	extractError,
 	parseTimeToArray,
 	extractId,
@@ -190,5 +265,10 @@ module.exports = {
 	stringfyTime,
 	activityToPayload,
 	workTimeFromHtml,
-	breakTimeFromHtml
+	breakTimeFromHtml,
+	tokenFactory,
+	cookieJarFactory,
+	thereIsSessionFrom,
+	setSession,
+	removeSession
 };
