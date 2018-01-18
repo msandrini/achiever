@@ -346,13 +346,13 @@ class Edit extends React.Component {
 			{ 'calendar-checked': [] },
 			{ 'calendar-unchecked': [] }
 		];
-		const weekEntriesQuery = this.props.weekEntriesQuery || {};
-		if (!weekEntriesQuery.timeEntries) {
+		const weekEntries = this.props.weekEntriesQuery.weekEntries || {};
+		if (!weekEntries.timeEntries) {
 			return highlights;
 		}
 		const weekDayNumbers = [1, 2, 3, 4, 5];
 		weekDayNumbers.forEach((day) => {
-			const dayInfo = weekEntriesQuery.timeEntries[day];
+			const dayInfo = weekEntries.timeEntries[day];
 			const elementToPush = dayInfo.total ?
 				highlights[0]['calendar-checked'] :
 				highlights[1]['calendar-unchecked'];
