@@ -3,10 +3,13 @@ const path = require('path');
 const appPath = dir => path.resolve(__dirname, dir);
 
 module.exports = {
-	entry: appPath('client/index.jsx'),
+	entry: {
+		app: appPath('client/index.jsx')
+	},
 	output: {
 		path: appPath('client/dist'),
-		filename: 'app.js'
+		filename: 'app.js',
+		publicPath: '/'
 	},
 	module: {
 		rules: [
