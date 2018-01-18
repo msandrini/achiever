@@ -30,6 +30,10 @@ import strings from '../../shared/strings';
 import '../styles/calendar.styl';
 
 const referenceHours = [9, 12, 13, 17];
+const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
+
+const _getChosenDateInfoFromWeekInfo = (date, { timeEntries }) =>
+	timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
 
 class Edit extends React.Component {
 	constructor(props) {
@@ -82,10 +86,11 @@ class Edit extends React.Component {
 		}
 
 		if (this.props.weekEntriesQuery.loading && !weekEntriesQuery.loading) {
-			this._getTimesForChosenDate(this.state.controlDate, nextProps.weekEntriesQuery);
+			this._getTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
+			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
 		}
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
-			this._afterFetchingFromServer(nextProps.projectPhasesQuery.phases);
+			this._afterFetchingFromServer(projectPhasesQuery.phases);
 		}
 
 	}
@@ -104,6 +109,7 @@ class Edit extends React.Component {
 		}
 
 		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
+		this._setPhaseAndActivityForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
 	onTimeSet(groupIndex) {
@@ -201,9 +207,9 @@ class Edit extends React.Component {
 			const id = parseInt(value, 10);
 			const activity = activities.find(option => option.id === id);
 
-			this.setState({
-				activity
-			});
+			if (activity) {
+				this.setState({	activity });
+			}
 		};
 	}
 
@@ -232,7 +238,7 @@ class Edit extends React.Component {
 		});
 	}
 
-	_getTimesForChosenDate(date, weekEntriesQuery) {
+	_getTimesForChosenDate(chosenDate, weekEntriesQuery) {
 		const {
 			loading,
 			error,
@@ -244,28 +250,25 @@ class Edit extends React.Component {
 		}
 
 		// Now check whether the times are already on server or not
-		const { timeEntries } = weekEntries;
-		const timeEntry = timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
+		const dayEntries = _getChosenDateInfoFromWeekInfo(chosenDate, weekEntries);
 
-		if (timeEntry) {
-			const startTime = moment(timeEntry.startTime, 'H:mm');
-			const endTime = moment(timeEntry.endTime, 'H:mm');
-			const labouredHoursOnDay = timeEntry.total;
+		if (dayEntries) {
+			const startTime = moment(dayEntries.startTime, 'H:mm');
+			const endTime = moment(dayEntries.endTime, 'H:mm');
+			const labouredHoursOnDay = dayEntries.total;
 
-			const isToday = areTheSameDay(moment(timeEntry.date), moment());
+			const isToday = areTheSameDay(moment(dayEntries.date), moment());
 
 			// If data is on server
 			if (startTime.isValid() && endTime.isValid()) {
 				const timesAsString = [
-					timeEntry.startTime,
-					timeEntry.startBreakTime,
-					timeEntry.endBreakTime,
-					timeEntry.endTime
+					dayEntries.startTime,
+					dayEntries.startBreakTime,
+					dayEntries.endBreakTime,
+					dayEntries.endTime
 				];
 				const storedTimes = timesAsString.map(timeString =>
 					dismemberTimeString(timeString));
-
-				console.log(storedTimes);
 
 				// If today was fetched
 				if (isToday) {
@@ -299,6 +302,27 @@ class Edit extends React.Component {
 		}
 	}
 
+	_setPhaseAndActivityForChosenDate(chosenDate, weekEntriesQuery) {
+		const { weekEntries } = weekEntriesQuery;
+
+		const dayInfo = _getChosenDateInfoFromWeekInfo(chosenDate, weekEntries);
+		const activityFromDayData = dayInfo && dayInfo.activity;
+
+		if (this.state.phase.activities.options) {
+			const chosenActivity = this.state.phase.activities.options.find(activity =>
+				activity.name === activityFromDayData);
+
+			let activity = {};
+			if (chosenActivity) {
+				activity = chosenActivity;
+			} else if (activityFromDayData === SPECIAL_ACTIVITY_HOLIDAY.name) {
+				activity = SPECIAL_ACTIVITY_HOLIDAY;
+			}
+			this.setState({ activity });
+		}
+
+	}
+
 	_getNextField() {
 		const { focusedField } = this.state;
 		if (focusedField.fieldMode === 'hours') {
@@ -317,16 +341,12 @@ class Edit extends React.Component {
 		};
 	}
 
-	_getWeekEntriesQuerySafe(object = 'weekEntries') {
-		return (this.props.weekEntriesQuery && this.props.weekEntriesQuery[object]) || {};
-	}
-
 	_getHighlightedDates() {
 		const highlights = [
 			{ 'calendar-checked': [] },
 			{ 'calendar-unchecked': [] }
 		];
-		const weekEntriesQuery = this._getWeekEntriesQuerySafe();
+		const weekEntriesQuery = this.props.weekEntriesQuery || {};
 		if (!weekEntriesQuery.timeEntries) {
 			return highlights;
 		}
@@ -370,7 +390,11 @@ class Edit extends React.Component {
 		const showProjectPhaseAsText = projectPhases.options &&
 			projectPhases.options.length === 1 ? projectPhases.options[0].name : null;
 
-		console.log(activity)
+		const activityOptions = phase.activities.options ? phase.activities.options : [];
+
+		const shouldDisableFields = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
+		const shouldHideTimeGroup = index => shouldDisableFields &&
+			(index === 1 || index === 2);
 
 		return (
 			<div className="page-wrapper">
@@ -431,10 +455,11 @@ class Edit extends React.Component {
 							<SelectGroup
 								name="activity"
 								label={strings.activity}
-								options={phase.activities.options}
+								options={activityOptions}
 								selected={activity.id}
 								onChange={this._setActivity(phase.activities.options)}
-								showTextInstead={null}
+								showTextInstead={shouldDisableFields ?
+									SPECIAL_ACTIVITY_HOLIDAY.name : null}
 							/>
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
@@ -447,6 +472,8 @@ class Edit extends React.Component {
 									shouldHaveFocus={this._shouldHaveFocus(index)}
 									onSet={this.onTimeSet(index)}
 									onFocus={this.onFieldFocus(index)}
+									hidden={shouldHideTimeGroup(index)}
+									disabled={shouldDisableFields}
 								/>
 							))}
 							<button

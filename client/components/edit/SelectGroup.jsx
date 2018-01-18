@@ -39,7 +39,10 @@ const SelectGroup = ({
 SelectGroup.propTypes = {
 	name: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
-	options: PropTypes.arrayOf(PropTypes.object),
+	options: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.number,
+		name: PropTypes.string
+	})),
 	selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	onChange: PropTypes.func,
 	showTextInstead: PropTypes.string
