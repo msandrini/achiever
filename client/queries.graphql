@@ -1,0 +1,72 @@
+mutation signIn($user: String!, $password: String!) {
+    signIn(user: $user, password: $password) {
+        token
+    }
+}
+
+query userDetails {
+    userDetails {
+        name
+        dailyContractedHours
+        balance
+    }
+}
+
+mutation addTimeEntry($timeEntry: TimeEntryInput!) {
+    addTimeEntry(timeEntry: $timeEntry) {
+        date
+        startTime
+        startBreakTime
+        endBreakTime
+        endTime
+        total
+    }
+}
+
+query dayEntry($date: String!) {
+    dayEntry(date: $date) {
+        timeEntry {
+            date
+            phase
+            activity
+            startTime
+            startBreakTime
+            endBreakTime
+            endTime
+            total
+        }
+    }
+}
+
+query weekEntries($date: String!) {
+    weekEntries(date: $date) {
+        timeEntries {
+            date
+            phase
+            activity
+            startTime
+            startBreakTime
+            endBreakTime
+            endTime
+            total
+        }
+        total
+    }
+}
+
+query projectPhases {
+    phases {
+        default
+        options {
+            id
+            name
+            activities {
+                default
+                options {
+                    id
+                    name
+                }
+            }
+        }
+    }
+}

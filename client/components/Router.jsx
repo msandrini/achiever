@@ -1,23 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import * as queries from '../queries.graphql';
 import * as history from './router/history';
 import { routeDefinitions, defaultPages } from './router/pages';
 import PageNotFound from './genericPages/PageNotFound';
 import PageLoading from './genericPages/PageLoading';
 import { getAuthToken, removeAuthToken } from './authentication/token';
-
-const USER_DETAILS_QUERY = gql`
-	query userDetails {
-		userDetails {
-			name
-			dailyContractedHours
-			balance
-		}
-	}
-`;
 
 const PATH_ROOT = '/';
 
@@ -100,4 +90,4 @@ ShowComponentOnRoute.propTypes = {
 	userDetailsQuery: PropTypes.object.isRequired
 };
 
-export default graphql(USER_DETAILS_QUERY, { name: 'userDetailsQuery' })(ShowComponentOnRoute);
+export default graphql(queries.userDetails, { name: 'userDetailsQuery' })(ShowComponentOnRoute);

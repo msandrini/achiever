@@ -3,21 +3,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import * as queries from '../queries.graphql';
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 import { setAuthToken } from './authentication/token';
 
 import '../styles/login.styl';
-
-const SIGN_IN_MUTATION = gql`
-  mutation signIn($user: String!, $password: String!) {
-	signIn(user: $user, password: $password) {
-	  token
-	}
-  }
-`;
 
 class Login extends React.Component {
 	constructor(props) {
@@ -114,7 +106,7 @@ class Login extends React.Component {
 	}
 }
 
-export default graphql(SIGN_IN_MUTATION, { name: 'signIn' })(Login);
+export default graphql(queries.signIn, { name: 'signIn' })(Login);
 
 Login.propTypes = {
 	signIn: PropTypes.func.isRequired

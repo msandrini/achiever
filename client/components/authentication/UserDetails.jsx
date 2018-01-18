@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import Link from '../router/Link';
 
+import * as queries from '../../queries.graphql';
+import Link from '../router/Link';
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
-import { clearTodayStorage } from '../shared/utils';
+import { clearTodayStorage } from '../../utils';
 import '../../styles/userDetails.styl';
-
-const USER_DETAILS_QUERY = gql`
-	query userDetails {
-		userDetails {
-			name
-			dailyContractedHours
-			balance
-		}
-	}
-`;
 
 const _logout = (event) => {
 	event.preventDefault();
@@ -81,7 +71,7 @@ class UserDetails extends Component {
 	}
 }
 
-export default graphql(USER_DETAILS_QUERY, { name: 'userDetailsQuery' })(UserDetails);
+export default graphql(queries.userDetails, { name: 'userDetailsQuery' })(UserDetails);
 
 UserDetails.propTypes = {
 	userDetailsQuery: PropTypes.object.isRequired

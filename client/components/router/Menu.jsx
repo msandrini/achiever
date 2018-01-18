@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Link from './Link';
 import { onChangeLocation } from './history';
@@ -26,12 +25,11 @@ class Menu extends React.Component {
 		return Object.keys(routeDefinitions).map((key) => {
 
 			const isPrivateWithAuth = this.authenticated && routeDefinitions[key].private;
-			const notPrivateWithoutAuth = !this.authenticated &&
-				routeDefinitions[key].private === false;
 
-			if (isPrivateWithAuth || notPrivateWithoutAuth) {
+			if (isPrivateWithAuth) {
 				return (
 					<Link
+						key={key}
 						to={key}
 						isActive={this.state.path === key}
 					>
@@ -42,7 +40,6 @@ class Menu extends React.Component {
 			return null;
 		});
 	}
-};
-
+}
 
 export default Menu;

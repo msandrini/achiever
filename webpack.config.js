@@ -35,6 +35,11 @@ module.exports = {
 					{ loader: 'css-loader' },
 					{ loader: 'stylus-loader' }
 				]
+			},
+			{
+				test: /\.(graphql|gql)$/,
+				exclude: /node_modules/,
+				loader: 'graphql-tag/loader'
 			}
 		]
 	},

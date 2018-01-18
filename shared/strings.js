@@ -56,6 +56,7 @@ const strings = {
 	cancel: 'Cancelar',
 	yes: 'Sim',
 	no: 'Não',
+	loading: 'Carregando...',
 	noTimesProvided: 'nenhuma hora foi fornecida',
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
@@ -86,7 +87,7 @@ const strings = {
 	helloName: 'Olá ',
 	warning: 'Atenção',
 	confirmation: 'Confirmação',
-	projectPhase: 'Projeto / Fase',
+	projectPhase: 'Projeto/fase',
 	activity: 'Atividade'
 };
 

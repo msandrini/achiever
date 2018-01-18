@@ -25,7 +25,17 @@ export default class TimeGroup extends React.Component {
 	}
 
 	render() {
-		const { referenceHour, time, label } = this.props;
+		const {
+			referenceHour,
+			time,
+			label,
+			hidden,
+			disabled
+		} = this.props;
+
+		if (hidden) {
+			return null;
+		}
 		return (
 			<div className={getClassName(this.props)}>
 				<label htmlFor={`${randomId}_h`}>{label}</label>
@@ -37,6 +47,7 @@ export default class TimeGroup extends React.Component {
 					onChange={this.onChangeTime('hours')}
 					onFocus={this.props.onFocus}
 					tabIndex={this.props.tabIndexes}
+					disabled={disabled}
 				/>
 				<span className="separator">:</span>
 				<TimeField
@@ -46,6 +57,7 @@ export default class TimeGroup extends React.Component {
 					onChange={this.onChangeTime('minutes')}
 					onFocus={this.props.onFocus}
 					tabIndex={this.props.tabIndexes + 1}
+					disabled={disabled}
 				/>
 			</div>
 		);
@@ -62,7 +74,9 @@ TimeGroup.propTypes = {
 		PropTypes.bool
 	]),
 	onFocus: PropTypes.func.isRequired,
-	tabIndexes: PropTypes.number
+	tabIndexes: PropTypes.number,
+	hidden: PropTypes.bool,
+	disabled: PropTypes.bool
 };
 
 TimeGroup.defaultProps = {
@@ -70,5 +84,8 @@ TimeGroup.defaultProps = {
 	referenceHour: 9,
 	label: '',
 	shouldHaveFocus: false,
-	time: { hours: 0, minutes: 0 }
+	time: { hours: 0, minutes: 0 },
+	tabIndexes: 0,
+	hidden: false,
+	disabled: false
 };

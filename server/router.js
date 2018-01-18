@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const api = require('./api');
-const { tokenFactory } = require('./api/middleware');
+const { tokenFactory } = require('./api/utils');
 const logger = require('./logger');
 
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);

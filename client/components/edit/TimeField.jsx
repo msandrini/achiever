@@ -88,14 +88,23 @@ export default class TimeField extends React.Component {
 	}
 
 	render() {
-		const { mode, referenceHour, value, tabIndex } = this.props;
+		const {
+			mode,
+			referenceHour,
+			value,
+			tabIndex,
+			disabled
+		} = this.props;
+
 		const { isFocused } = this.state;
+
 		return (
 			<div className="field">
 				<input
 					type="number"
 					value={value || '00'}
 					min={0}
+					disabled={disabled}
 					max={this._getMaxValue()}
 					tabIndex={tabIndex + 1}
 					placeholder={this._getPlaceholder()}
@@ -127,7 +136,8 @@ TimeField.propTypes = {
 	onChange: PropTypes.func,
 	referenceHour: PropTypes.number,
 	onFocus: PropTypes.func.isRequired,
-	tabIndex: PropTypes.number
+	tabIndex: PropTypes.number,
+	disabled: PropTypes.bool
 };
 
 TimeField.defaultProps = {
@@ -135,5 +145,6 @@ TimeField.defaultProps = {
 	onChange: () => {},
 	value: '',
 	shouldHaveFocus: false,
-	tabIndex: 0
+	tabIndex: 0,
+	disabled: false
 };
