@@ -1,70 +1,2069 @@
 HTTP/1.1 200 OK
 Content-Type: text/html
 
+
+
+
 <div class="separator">&nbsp;</div>
-<h4> JOHN DOE </h4>
-<h4> Admission: 2016-02-01 
-</h3>
-<br/>
-</table>
-<br/>
-<br/>
-<div id="all_records">
-    <h2>Hours Survey </h2>
-    <table style="font-size: 10px;">
+
+	
+	<h4> JOHN DOE  </h4>
+	<h4> Admission: 2017-08-04 </h3>
+	
+	<br/>
+	<div> *It assumes a 1 hour lunch for days with more than 6 hours worked that do not contain the record break.</div>
+	<div>&nbsp;&nbsp;&nbsp;&nbsp;- 4 to 6 hours a day, requires 15 min break</div>
+	<div>&nbsp;&nbsp;&nbsp;&nbsp;- More than 6 hours, requires 1 hour break</div>
+	<div>&nbsp;&nbsp;&nbsp;&nbsp;- Less than 4 hours, no break is required </div>
+	
+	<br/>
+	
+		</table>
+	
+		
+	        <br/>
+        <br/>
+
+        <div id="all_records">
+
+	<h2>Hours Survey </h2>
+	
+	<table style="font-size: 10px;">
         <tr>
-            <th>Date</th>
-            <th>Contracted</th>
-            <th>Entry</th>
-            <th>Working Time</th>
-            <th>Breaks</th>
-            <th>End time</th>
-            <th>Daily Compensation</th>
-            <th>Daily Overtime</th>
-            <th>Balance</th>
-            <th>Remarks</th>
+        	<th>Date</th>
+        	<th>Contracted</th>
+        	<th>Entry</th>
+        	<th>Working Time</th>
+        	<th>Breaks</th>
+        	<th>End time</th>
+        	<th>Daily Compensation</th>
+        	<th>Daily Overtime</th>
+        	<th>Balance</th>
+		<th>Remarks</th>
         </tr>
-        <tr>
-            <td>2017-12-14 Thu 
-                <b></b>
-            </td>
-            <td>8:00</td>
-            <td>9:10</td>
-            <td>8:30</td>
-            <td>
-                <div> Break from 11:30:00 to 12:30:00 </div>
+        
+	
+        
+		
+        	<tr>
+                <td>2018-01-17 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
                 	         
                 	                	
                 	&nbsp;
-            </td>
-            <td>&nbsp;18:40 </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;2:30</td>
-            <td>
-                <div>  </div>
-            </td>
-        </tr>
-        <tr>
-            <td>2017-12-13 Thu 
-                <b></b>
-            </td>
-            <td>8:00</td>
-            <td>9:30</td>
-            <td>8:00</td>
-            <td>
-                <div> Break from 11:30:00 to 12:30:00 </div>
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:15</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-16 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
                 	         
                 	                	
                 	&nbsp;
-            </td>
-            <td>&nbsp;18:30 </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;2:00</td>
-            <td>
-                <div>  </div>
-            </td>
-        </tr>
-    </table>
-</div>
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:15</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-15 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:35</td>
+                <td>8:15</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:50 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:15</td>
+                <td>&nbsp;0:15</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-12 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-11 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-10 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:45</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:45 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-09 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-08 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-05 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:40</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:10 </td>
+                <td>&nbsp;0:20</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-04 Thu <b></b></td>
+                <td>8:00</td>
+                <td>8:05</td>
+                <td>7:50</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:25 </td>
+                <td>&nbsp;0:10</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:20</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-03 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:50</td>
+                <td>8:10</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:10</td>
+                <td>&nbsp;0:30</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-02 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:20</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:20</td>
+                <td>&nbsp;0:20</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2018-01-01 Mon <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Confraternização Universal </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-29 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:45</td>
+                <td>7:20</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:05 </td>
+                <td>&nbsp;0:40</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-28 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:10</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:10</td>
+                <td>&nbsp;0:40</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-12-27 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:26</td>
+                <td>8:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:56 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;0:30</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-26 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:25</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:30:00 to 14:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:55 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-25 Mon <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Natal </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-22 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:20</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;15:50 </td>
+                <td>&nbsp;0:40</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-21 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:20</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:20</td>
+                <td>&nbsp;0:40</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-20 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:10</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:10 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:20</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-19 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:40</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;0:20</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:20</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-18 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:10</td>
+                <td>8:40</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:50 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:40</td>
+                <td>&nbsp;0:40</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-15 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-14 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-13 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:45</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:45 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-12 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:45</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:45 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-11 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:39</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:39 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-08 Fri <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Nossa Senhora da Conceição </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-07 Thu <b></b></td>
+                <td>8:00</td>
+                <td>8:30</td>
+                <td>7:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-12-06 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;1:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-05 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:10 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;0:30</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-04 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:35</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:35 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-12-01 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-30 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:25</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:25 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-29 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-28 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-27 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-24 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:45</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:15 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:45</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-23 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-0:45</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-22 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-0:45</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-21 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:15</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 13:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:45 </td>
+                <td>&nbsp;0:45</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-0:45</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-20 Mon <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Consciência Negra </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-17 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:45</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:15 </td>
+                <td>&nbsp;0:15</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-16 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:15</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:45 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:15</td>
+                <td>&nbsp;0:15</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-11-15 Wed <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Proclamação da República </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-14 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:27</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:27 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-13 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:35</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:35 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-10 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-09 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-08 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-07 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-06 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:40</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:40 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-03 Fri <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 13:00:00 to 14:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-02 Thu <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div> Finados </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-11-01 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-31 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-30 Mon <b></b></td>
+                <td>8:00</td>
+                <td>8:30</td>
+                <td>7:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-0:30</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-27 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>7:30</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-26 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:30</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;0:30</td>
+                <td>&nbsp;0:30</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-10-25 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-24 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-23 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-20 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-1:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-19 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-1:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-18 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-1:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-17 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 13:00:00 to 14:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-2:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-16 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-3:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-13 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;18:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-3:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-12 Thu <b> Holiday</b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>11:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;19:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;3:00</td>
+                <td>&nbsp;-5:00</td>
+		<td>                                                                        <div> Nossa Senhora Aparecida </div>
+                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-11 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;18:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-8:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-10 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;18:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-10:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-09 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;18:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-12:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-06 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-14:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-05 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-15:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-10-04 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:00</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-16:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-03 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-17:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-10-02 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-18:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-29 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;16:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-19:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-28 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-19:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-27 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-20:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-26 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-21:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-25 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-22:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-22 Fri <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-23:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-21 Thu <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-24:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-20 Wed <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-25:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-19 Tue <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-26:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-18 Mon <b></b></td>
+                <td>8:00</td>
+                <td>7:30</td>
+                <td>9:00</td>
+                <td> 
+                		                                	                	<div> Break from 11:30:00 to 12:30:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:30 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;1:00</td>
+                <td>&nbsp;-27:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-15 Fri <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-28:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-14 Thu <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;19:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-28:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        	
+                <tr>
+                	<th>Date</th>
+                	<th>Contracted</th>
+                	<th>Entry</th>
+                	<th>Working Time</th>
+                	<th>Breaks</th>
+                	<th>End time</th>
+                	<th>Daily Compensation</th>
+                	<th>Daily Overtime</th>
+                	<th>Balance</th>
+			<th>Remarks</th>
+                </tr>
+                
+        	        
+		
+        	<tr>
+                <td>2017-09-13 Wed <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-30:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-12 Tue <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>10:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;19:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;2:00</td>
+                <td>&nbsp;-30:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-11 Mon <b></b></td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td>8:00</td>
+                <td> 
+                		                                	                	<div> Break from 12:00:00 to 13:00:00 </div>
+                	         
+                	                	
+                	&nbsp;
+                </td>
+                <td>&nbsp;17:00 </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-32:00</td>
+		<td>                                                                        <div>  </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-08 Fri <b></b></td>
+                <td>8:00</td>
+                <td></td>
+                <td>0:00</td>
+                <td> 
+                	Abscence                	
+                	&nbsp;
+                </td>
+                <td>&nbsp; </td>
+                <td>&nbsp;8:00</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-32:00</td>
+		<td>                </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-07 Thu <b> Holiday</b></td>
+                <td>8:00</td>
+                <td></td>
+                <td>8:00</td>
+                <td> 
+                	No record found. Assuming a break of 60 minutes                	
+                	&nbsp;
+                </td>
+                <td>&nbsp; </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-24:00</td>
+		<td>                                                                        <div> Holiday </div>
+                                                                        </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-06 Wed <b></b></td>
+                <td>8:00</td>
+                <td></td>
+                <td>0:00</td>
+                <td> 
+                	Abscence                	
+                	&nbsp;
+                </td>
+                <td>&nbsp; </td>
+                <td>&nbsp;8:00</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-24:00</td>
+		<td>                </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-05 Tue <b></b></td>
+                <td>8:00</td>
+                <td></td>
+                <td>0:00</td>
+                <td> 
+                	Abscence                	
+                	&nbsp;
+                </td>
+                <td>&nbsp; </td>
+                <td>&nbsp;8:00</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-16:00</td>
+		<td>                </td>
+        	</tr>
+        	        
+		
+        	<tr>
+                <td>2017-09-04 Mon <b></b></td>
+                <td>8:00</td>
+                <td></td>
+                <td>0:00</td>
+                <td> 
+                	Abscence                	
+                	&nbsp;
+                </td>
+                <td>&nbsp; </td>
+                <td>&nbsp;8:00</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;-8:00</td>
+		<td>                </td>
+        	</tr>
+        	        
+	</table>
+
+	</div>
