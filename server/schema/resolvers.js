@@ -1,6 +1,4 @@
 require('dotenv').config();
-const jwt = require('jwt-simple');
-const moment = require('moment');
 const {
 	login,
 	logout,
@@ -12,109 +10,59 @@ const {
 	phases,
 	userDetails
 } = require('../api/middleware');
+const { tokenFactory } = require('../api/utils');
 
 const notAuthorizedMessage = 'Not authorized!!!';
 
+const callWithAuth = async (callback, token) => {
+	if (!token) {
+		throw notAuthorizedMessage;
+	}
+
+	let result;
+
+	try {
+		await login(token);
+		result = await callback(token);
+	} finally {
+		await logout(token);
+	}
+
+	return result;
+};
+
 const resolvers = {
 	Query: {
-		weekEntries: async (_, { date }, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			let result;
-
-			try {
-				await login(token);
-				result = await weekEntriesByDate(token, date);
-			} finally {
-				await logout(token);
-			}
-
-			return result;
-		},
-		dayEntry: async (_, { date }, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			let result;
-
-			try {
-				await login(token);
-				result = await dailyEntries(token, date);
-			} finally {
-				await logout(token);
-			}
-
-			return { timeEntry: result };
-		},
-		phases: async (_, __, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			let result;
-
-			try {
-				await login(token);
-				result = await phases(token);
-			} finally {
-				await logout(token);
-			}
-
-			return result;
-		},
-		userDetails: async (_, __, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			let result;
-
-			try {
-				await login(token);
-				result = await userDetails(token);
-			} finally {
-				await logout(token);
-			}
-
-			if (!result) {
-				throw notAuthorizedMessage;
-			}
-
-			return result;
-		}
+		weekEntries: async (_, { date }, { token }) => (
+			callWithAuth(weekEntriesByDate(date), token)
+		),
+		dayEntry: async (_, { date }, { token }) => (
+			{ timeEntry: callWithAuth(dailyEntries(date), token) }
+		),
+		phases: async (_, __, { token }) => (
+			callWithAuth(phases(), token)
+		),
+		userDetails: async (_, __, { token }) => (
+			callWithAuth(userDetails(), token)
+		)
 	},
 	Mutation: {
 		signIn: async (_, { user, password }) => {
-			const jwtSecret = process.env.JWT_SECRET;
-			const token = jwt.encode({
-				user,
-				password,
-				iat: moment().valueOf()
-			}, jwtSecret);
-
-			await login(token);
-
-			return { token };
-		},
-		addTimeEntry: async (_, { timeEntry }, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			let result;
+			const token = tokenFactory(user, password);
 
 			try {
 				await login(token);
-				result = await addTimeEntry(token, timeEntry);
+			} catch (error) {
+				console.error('Login: ', error);
 			} finally {
 				await logout(token);
 			}
 
-			return result;
+			return { token };
 		},
+		addTimeEntry: async (_, { timeEntry }, { token }) => (
+			callWithAuth(addTimeEntry(timeEntry), token)
+		),
 		delTimeEntry: async (_, { date }, { token }) => {
 			if (!token) {
 				throw notAuthorizedMessage;
@@ -122,7 +70,7 @@ const resolvers = {
 
 			try {
 				await login(token);
-				const timeEntry = await dailyEntries(token, date);
+				const timeEntry = await dailyEntries(date)(token);
 
 				if (!timeEntry || !timeEntry.id) {
 					await logout(token);
@@ -147,18 +95,9 @@ const resolvers = {
 		}
 	},
 	Phase: {
-		activities: async ({ id }, _, { token }) => {
-			let result;
-
-			try {
-				await login(token);
-				result = await activities(token, id);
-			} finally {
-				await logout(token);
-			}
-
-			return result;
-		}
+		activities: async ({ id }, _, { token }) => (
+			callWithAuth(activities(id), token)
+		)
 	}
 };
 
