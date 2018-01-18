@@ -46,7 +46,7 @@ Modal.propTypes = {
 	content: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.element
-	]).isRequired,
+	]),
 	hasButtons: PropTypes.bool,
 	buttons: PropTypes.arrayOf(PropTypes.shape({
 		action: PropTypes.func,
@@ -57,6 +57,7 @@ Modal.propTypes = {
 Modal.defaultProps = {
 	active: false,
 	title: '',
+	content: '',
 	hasButtons: true,
 	buttons: [{ action: () => {}, label: strings.ok }]
 };

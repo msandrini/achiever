@@ -55,7 +55,16 @@
 		color: successPanelColour
 
 .calendar-unchecked
-	color: darkBlueColour
 	&:after
 		content: '✗'
+		color: errorPanelColour
+
+.calendar-locked
+	position: relative
+	&:before
+		content: '🔒'
+		position: absolute
+		left: -2px
+		font-size: 9px
+		top: -9px
 		color: errorPanelColour

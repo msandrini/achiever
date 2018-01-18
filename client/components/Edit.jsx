@@ -11,6 +11,7 @@ import LabouredHoursGauge from './edit/LabouredHoursGauge';
 import SelectGroup from './edit/SelectGroup';
 import WeeklyCalendar from './edit/WeeklyCalendar';
 import Panel from './ui/Panel';
+import AlertModal from './ui/modals/AlertModal';
 import PageLoading from './genericPages/PageLoading';
 
 import {
@@ -45,6 +46,7 @@ class Edit extends React.Component {
 		this.state = {
 			controlDate: moment(),
 			controlDateIsValid: true,
+			calendarDayStyles: [],
 			labouredHoursOnDay: null,
 			remainingHoursOnWeek: {},
 			storedTimes: [{}, {}, {}, {}],
@@ -63,12 +65,14 @@ class Edit extends React.Component {
 			shouldHaveFocus: null,
 			sentToday: false,
 			errorMessage: '',
-			successMessage: ''
+			successMessage: '',
+			alertMessage: null
 		};
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.imReligious = this.imReligious.bind(this);
+		this.onAlertClose = this.onAlertClose.bind(this);
 
 		this.submitButton = null;
 	}
@@ -78,7 +82,6 @@ class Edit extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// If finished (was loading and stopped) loading from server and no errors
 		const {
 			weekEntriesQuery,
 			projectPhasesQuery
@@ -93,6 +96,7 @@ class Edit extends React.Component {
 		if (this.props.weekEntriesQuery.loading && !weekEntriesQuery.loading) {
 			this._getTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
+			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
@@ -101,6 +105,15 @@ class Edit extends React.Component {
 	}
 
 	onDateChange(date) {
+		if (isDayInFuture(date)) {
+			this.setState({ alertMessage: strings.cannotSelectFutureTime });
+			return;
+		}
+		const {
+			weekEntriesQuery,
+			projectPhasesQuery
+		} = this.props;
+
 		const oldSelectedDate = this.state.controlDate;
 		const sameWeek = oldSelectedDate.week() === date.week();
 		const controlDateIsValid = !isDayBlockedInPast(date) && !isDayInFuture(date);
@@ -115,9 +128,10 @@ class Edit extends React.Component {
 			this._fetchWeekEntries(date);
 		}
 
-		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
-		if (this.props.weekEntriesQuery.weekEntries) {
-			this._populateProjectPhaseAndActivity(this.props.projectPhasesQuery.phases);
+		this._getTimesForChosenDate(date, weekEntriesQuery);
+		if (weekEntriesQuery.weekEntries) {
+			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
+			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
 	}
 
@@ -179,6 +193,10 @@ class Edit extends React.Component {
 		return (fieldMode) => {
 			this.setState({ focusedField: { index, fieldMode } });
 		};
+	}
+
+	onAlertClose() {
+		this.setState({ alertMessage: null });
 	}
 
 	onSubmit(callback) {
@@ -354,25 +372,31 @@ class Edit extends React.Component {
 		};
 	}
 
-	_getHighlightedDates() {
-		const highlights = [
+	_getStyleClassForCalendarDays(weekEntries = {}) {
+		const dayStyles = [
 			{ 'calendar-checked': [] },
-			{ 'calendar-unchecked': [] }
+			{ 'calendar-unchecked': [] },
+			{ 'calendar-locked': [] }
 		];
-		const weekEntries = this.props.weekEntriesQuery.weekEntries || {};
-		if (!weekEntries.timeEntries) {
-			return highlights;
-		}
-		const weekDayNumbers = [1, 2, 3, 4, 5];
-		weekDayNumbers.forEach((day) => {
-			const dayInfo = weekEntries.timeEntries[day];
-			const elementToPush = dayInfo.total ?
-				highlights[0]['calendar-checked'] :
-				highlights[1]['calendar-unchecked'];
+		if (weekEntries.timeEntries) {
+			const weekDayNumbers = [1, 2, 3, 4, 5];
+			weekDayNumbers.forEach((day) => {
+				const dayEntries = weekEntries.timeEntries[day];
+				const elementToPush = dayEntries.total ?
+					dayStyles[0]['calendar-checked'] :
+					dayStyles[1]['calendar-unchecked'];
 
-			elementToPush.push(moment(dayInfo.date));
-		});
-		return highlights;
+				const dayMoment = moment(dayEntries.date);
+
+				elementToPush.push(dayMoment);
+
+				if (isDayBlockedInPast(dayMoment) || isDayInFuture(dayMoment)) {
+					dayStyles[2]['calendar-locked'].push(dayMoment);
+				}
+
+			});
+		}
+		this.setState({ calendarDayStyles: dayStyles });
 	}
 
 	_shouldHaveFocus(index) {
@@ -395,7 +419,9 @@ class Edit extends React.Component {
 			storedTimes,
 			phase,
 			activity,
-			controlDateIsValid
+			controlDateIsValid,
+			calendarDayStyles,
+			alertMessage
 		} = this.state;
 
 		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
@@ -430,7 +456,7 @@ class Edit extends React.Component {
 						<div className="time-management-content">
 							<DatePicker
 								inline
-								highlightDates={this._getHighlightedDates()}
+								highlightDates={calendarDayStyles}
 								selected={this.state.controlDate}
 								onChange={this.onDateChange}
 							/>
@@ -522,6 +548,11 @@ class Edit extends React.Component {
 				<WeeklyCalendar
 					controlDate={this.state.controlDate}
 					weekEntries={this.props.weekEntriesQuery.weekEntries}
+				/>
+				<AlertModal
+					active={Boolean(alertMessage)}
+					content={alertMessage}
+					onClose={this.onAlertClose}
 				/>
 			</div>
 		);

@@ -61,6 +61,7 @@ const strings = {
 	otherTimesIgnored: 'as outras horas fornecidas foram ignoradas',
 	timesFlushed: 'As entradas de tempo foram apagadas',
 	cannotInsertDisconnectedTime: ' não pode ser inserida sem o(s) horário(s) anterior(es)',
+	cannotSelectFutureTime: 'Uma data futura não pode ser selecionada',
 	markConfirm: 'Quer marcar agora a',
 	markNow: 'Marcar agora a',
 	timeSentToday: 'As horas de hoje já foram enviadas',
