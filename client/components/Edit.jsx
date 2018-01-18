@@ -401,14 +401,20 @@ class Edit extends React.Component {
 		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
 		const projectPhases = this.props.projectPhasesQuery.phases || {};
 
-		const showProjectPhaseAsText = projectPhases.options &&
-			projectPhases.options.length === 1 ? projectPhases.options[0].name : null;
-
 		const activityOptions = phase.activities.options ? phase.activities.options : [];
 
 		const isHoliday = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
 		const shouldHideTimeGroup = index => isHoliday && (index === 1 || index === 2);
 		const isEditionDisabled = isHoliday || !controlDateIsValid;
+
+		let alternativeTextForProjectPhase = projectPhases.options ? null : strings.loading;
+		if (projectPhases.options && projectPhases.options.length === 1) {
+			alternativeTextForProjectPhase = projectPhases.options[0].name;
+		}
+		let alternativeTextForActivity = projectPhases.options ? null : strings.loading;
+		if (isHoliday) {
+			alternativeTextForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
+		}
 
 		return (
 			<div className="page-wrapper">
@@ -464,7 +470,7 @@ class Edit extends React.Component {
 								options={projectPhases.options}
 								selected={phase.id}
 								onChange={this._setProjectPhase(projectPhases.options)}
-								showTextInstead={showProjectPhaseAsText}
+								showTextInstead={alternativeTextForProjectPhase}
 								tabIndex={START_TABINDEX}
 								disabled={isEditionDisabled}
 							/>
@@ -474,8 +480,7 @@ class Edit extends React.Component {
 								options={activityOptions}
 								selected={activity.id}
 								onChange={this._setActivity(phase.activities.options)}
-								showTextInstead={isHoliday ?
-									SPECIAL_ACTIVITY_HOLIDAY.name : null}
+								showTextInstead={alternativeTextForActivity}
 								tabIndex={START_TABINDEX + 1}
 								disabled={isEditionDisabled}
 							/>
