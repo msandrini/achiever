@@ -17,37 +17,52 @@ a, button
 
 input
 	box-style()
-	transition: background linear .2s, border linear .2s;
+	transition: background linear .2s, border linear .2s
 	&:focus
-		outline: none;
-		background-color: focusInputColour;
-		box-shadow: none;
-		border-color: transitionColour2;
+		outline: none
+		background-color: focusInputColour
+		box-shadow: none
+		border-color: transitionColour2
 
 .column
-	width: calc(50% - 20px);
-	float: left;
-	padding: 0 10px;
+	width: calc(50% - 20px)
+	float: left
+	padding: 0 10px
 
 .projection
-	color: secondaryTextColour;
-	font-size: 12px;
+	color: secondaryTextColour
+	font-size: 12px
 
 	strong
-		color: secondaryTextColour;
+		color: secondaryTextColour
 
 .send[disabled]
-	opacity: 0.5;
+	opacity: 0.5
 
 .time-management-container
-	padding-bottom: 40px;
+	padding-bottom: 40px
 
 .time-management-content:first-of-type
-	padding-right: 80px;
+	padding-right: 80px
 
 .send
-	cta-style();
+	font-size: 24px
+	display: block
+	font-weight: bold
+	margin: 10px 0 0 70px
+	width: 230px
+	height: 64px
+	background-color: darkBlueColour
+	color: #fff
+	border-radius: 5px
+	cursor: pointer
+	&:focus
+		outline: none
+		border: transitionColour1 solid 2px;
+		text-shadow: 0 0 10px rgba(255,255,255, .6)
+	&:hover
+		background-color: transitionColour1
 
 .page-not-found
 	.send
-		margin: 30px 0 0 0;
+		margin: 30px 0 0 0

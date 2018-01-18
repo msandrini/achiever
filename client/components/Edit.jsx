@@ -30,6 +30,7 @@ import strings from '../../shared/strings';
 import '../styles/calendar.styl';
 
 const referenceHours = [9, 12, 13, 17];
+const CTA_TABINDEX = 9;
 const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
 
 const _getChosenDateInfoFromWeekInfo = (date, { timeEntries }) =>
@@ -70,6 +71,9 @@ class Edit extends React.Component {
 
 	componentWillMount() {
 		this._getTimesForChosenDate(this.state.controlDate, this.props.weekEntriesQuery);
+		if (this.props.weekEntriesQuery.weekEntries) {
+			this._populateProjectPhaseAndActivity(this.props.projectPhasesQuery.phases);
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -90,7 +94,7 @@ class Edit extends React.Component {
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
 		}
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
-			this._afterFetchingFromServer(projectPhasesQuery.phases);
+			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 		}
 
 	}
@@ -226,7 +230,7 @@ class Edit extends React.Component {
 		this.onTimeSet(3)(16, 30);
 	}
 
-	_afterFetchingFromServer(projectPhases) {
+	_populateProjectPhaseAndActivity(projectPhases) {
 		// Set queried project phases and activities from server
 		const phase = projectPhases.options.find(option => option.id === projectPhases.default);
 		const { activities } = phase;
@@ -312,13 +316,17 @@ class Edit extends React.Component {
 			const chosenActivity = this.state.phase.activities.options.find(activity =>
 				activity.name === activityFromDayData);
 
-			let activity = {};
+			let activityToSend = {};
 			if (chosenActivity) {
-				activity = chosenActivity;
+				activityToSend = chosenActivity;
 			} else if (activityFromDayData === SPECIAL_ACTIVITY_HOLIDAY.name) {
-				activity = SPECIAL_ACTIVITY_HOLIDAY;
+				activityToSend = SPECIAL_ACTIVITY_HOLIDAY;
+			} else {
+				const defaultActivity = this.state.phase.activities.default;
+				activityToSend = this.state.phase.activities.options.find(activity =>
+					activity.id === defaultActivity);
 			}
-			this.setState({ activity });
+			this.setState({ activity: activityToSend });
 		}
 
 	}
@@ -481,6 +489,7 @@ class Edit extends React.Component {
 								className="send"
 								ref={(button) => { this.submitButton = button; }}
 								disabled={!this._shouldSendBeAvailable()}
+								tabIndex={CTA_TABINDEX}
 							>
 								{strings.send}
 							</button>
