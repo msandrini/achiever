@@ -15,14 +15,12 @@ body
 a, button
 	transition linear all .2s
 
-input
+input, select
 	box-style()
 	transition: background linear .2s, border linear .2s
 	&:focus
 		outline: none
-		background-color: focusInputColour
-		box-shadow: none
-		border-color: transitionColour2
+		border-color: focusInputColour
 
 .column
 	width: calc(50% - 20px)
@@ -58,7 +56,7 @@ input
 	cursor: pointer
 	&:focus
 		outline: none
-		border: transitionColour1 solid 2px;
+		border: focusInputColour solid 2px;
 		text-shadow: 0 0 10px rgba(255,255,255, .6)
 	&:hover
 		background-color: transitionColour1

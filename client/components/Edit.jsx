@@ -30,7 +30,8 @@ import strings from '../../shared/strings';
 import '../styles/calendar.styl';
 
 const referenceHours = [9, 12, 13, 17];
-const CTA_TABINDEX = 9;
+const START_TABINDEX = 0;
+const CTA_TABINDEX = 10;
 const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
 
 const _getChosenDateInfoFromWeekInfo = (date, { timeEntries }) =>
@@ -459,6 +460,7 @@ class Edit extends React.Component {
 								selected={phase.id}
 								onChange={this._setProjectPhase(projectPhases.options)}
 								showTextInstead={showProjectPhaseAsText}
+								tabIndex={START_TABINDEX}
 							/>
 							<SelectGroup
 								name="activity"
@@ -468,13 +470,14 @@ class Edit extends React.Component {
 								onChange={this._setActivity(phase.activities.options)}
 								showTextInstead={shouldDisableFields ?
 									SPECIAL_ACTIVITY_HOLIDAY.name : null}
+								tabIndex={START_TABINDEX + 1}
 							/>
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
 									key={refHour}
 									label={strings.times[index].label}
 									emphasis={index === 0 || index === 3}
-									tabIndexes={index * 2}
+									tabIndexes={START_TABINDEX + 2 + (index * 2)}
 									referenceHour={refHour}
 									time={storedTimes[index] || '00'}
 									shouldHaveFocus={this._shouldHaveFocus(index)}
