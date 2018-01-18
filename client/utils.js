@@ -244,3 +244,19 @@ export const dismemberTimeString = (timeString) => {
 	const minutes = (parseInt(minutesRaw < 10, 10)) ? `0${minutesRaw}` : minutesRaw;
 	return { hours, minutes };
 };
+
+export const isDayBlockedInPast = (day) => {
+	const today = moment();
+	if (day.isSameOrAfter(today, 'day')) {
+		return false;
+	}
+	const MONDAY = 1;
+	const todayIsMonday = today.day() === MONDAY;
+	// if it is monday then last week is still valid
+	if (!todayIsMonday) {
+		return day.isBefore(today.subtract(2, 'days'), 'week');
+	}
+	return day.isBefore(today, 'week');
+};
+
+export const isDayInFuture = day => day.isAfter(moment(), 'day');

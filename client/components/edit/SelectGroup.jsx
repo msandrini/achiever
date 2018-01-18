@@ -17,7 +17,8 @@ const SelectGroup = ({
 	selected,
 	onChange,
 	showTextInstead,
-	tabIndex
+	tabIndex,
+	disabled
 }) => (
 	<div className="select-group">
 		<label htmlFor={name}>{label}</label>
@@ -31,6 +32,7 @@ const SelectGroup = ({
 				value={selected || ''}
 				onChange={event => onChange(event.target.value)}
 				tabIndex={tabIndex}
+				disabled={disabled}
 			>
 				{ renderOptions(options, selected) }
 			</select>
@@ -48,7 +50,8 @@ SelectGroup.propTypes = {
 	selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	onChange: PropTypes.func,
 	showTextInstead: PropTypes.string,
-	tabIndex: PropTypes.number
+	tabIndex: PropTypes.number,
+	disabled: PropTypes.bool
 };
 
 SelectGroup.defaultProps = {
@@ -56,7 +59,8 @@ SelectGroup.defaultProps = {
 	options: [],
 	onChange: null,
 	showTextInstead: null,
-	tabIndex: 0
+	tabIndex: 0,
+	disabled: false
 };
 
 export default SelectGroup;

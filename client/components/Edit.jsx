@@ -22,7 +22,9 @@ import {
 	calculateLabouredHours,
 	calculateRemainingHoursOnWeek,
 	timesAreValid,
-	dismemberTimeString
+	dismemberTimeString,
+	isDayBlockedInPast,
+	isDayInFuture
 } from '../utils';
 
 import strings from '../../shared/strings';
@@ -42,6 +44,7 @@ class Edit extends React.Component {
 		super(props);
 		this.state = {
 			controlDate: moment(),
+			controlDateIsValid: true,
 			labouredHoursOnDay: null,
 			remainingHoursOnWeek: {},
 			storedTimes: [{}, {}, {}, {}],
@@ -71,10 +74,7 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this._getTimesForChosenDate(this.state.controlDate, this.props.weekEntriesQuery);
-		if (this.props.weekEntriesQuery.weekEntries) {
-			this._populateProjectPhaseAndActivity(this.props.projectPhasesQuery.phases);
-		}
+		this.onDateChange(this.state.controlDate);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -103,8 +103,10 @@ class Edit extends React.Component {
 	onDateChange(date) {
 		const oldSelectedDate = this.state.controlDate;
 		const sameWeek = oldSelectedDate.week() === date.week();
+		const controlDateIsValid = !isDayBlockedInPast(date) && !isDayInFuture(date);
 		this.setState({
 			controlDate: date,
+			controlDateIsValid,
 			errorMessage: '',
 			successMessage: ''
 		});
@@ -114,7 +116,9 @@ class Edit extends React.Component {
 		}
 
 		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
-		this._setPhaseAndActivityForChosenDate(date, this.props.weekEntriesQuery);
+		if (this.props.weekEntriesQuery.weekEntries) {
+			this._populateProjectPhaseAndActivity(this.props.projectPhasesQuery.phases);
+		}
 	}
 
 	onTimeSet(groupIndex) {
@@ -390,7 +394,8 @@ class Edit extends React.Component {
 			remainingHoursOnWeek,
 			storedTimes,
 			phase,
-			activity
+			activity,
+			controlDateIsValid
 		} = this.state;
 
 		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
@@ -401,9 +406,9 @@ class Edit extends React.Component {
 
 		const activityOptions = phase.activities.options ? phase.activities.options : [];
 
-		const shouldDisableFields = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
-		const shouldHideTimeGroup = index => shouldDisableFields &&
-			(index === 1 || index === 2);
+		const isHoliday = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
+		const shouldHideTimeGroup = index => isHoliday && (index === 1 || index === 2);
+		const isEditionDisabled = isHoliday || !controlDateIsValid;
 
 		return (
 			<div className="page-wrapper">
@@ -461,6 +466,7 @@ class Edit extends React.Component {
 								onChange={this._setProjectPhase(projectPhases.options)}
 								showTextInstead={showProjectPhaseAsText}
 								tabIndex={START_TABINDEX}
+								disabled={isEditionDisabled}
 							/>
 							<SelectGroup
 								name="activity"
@@ -468,9 +474,10 @@ class Edit extends React.Component {
 								options={activityOptions}
 								selected={activity.id}
 								onChange={this._setActivity(phase.activities.options)}
-								showTextInstead={shouldDisableFields ?
+								showTextInstead={isHoliday ?
 									SPECIAL_ACTIVITY_HOLIDAY.name : null}
 								tabIndex={START_TABINDEX + 1}
+								disabled={isEditionDisabled}
 							/>
 							{referenceHours.map((refHour, index) => (
 								<TimeGroup
@@ -484,7 +491,7 @@ class Edit extends React.Component {
 									onSet={this.onTimeSet(index)}
 									onFocus={this.onFieldFocus(index)}
 									hidden={shouldHideTimeGroup(index)}
-									disabled={shouldDisableFields}
+									disabled={isEditionDisabled}
 								/>
 							))}
 							<button
