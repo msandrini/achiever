@@ -146,7 +146,8 @@ class Edit extends React.Component {
 					composedTime
 				);
 
-				const labouredHoursOnDay = (timesAreValid(storedTimes) && calculateLabouredHours(storedTimes)) || '';
+				const labouredHoursOnDay = (timesAreValid(storedTimes) &&
+					calculateLabouredHours(storedTimes)) || '';
 				const remainingHoursOnWeek = calculateRemainingHoursOnWeek(
 					prevState.controlDate,
 					labouredHoursOnDay,

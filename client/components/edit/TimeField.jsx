@@ -66,8 +66,11 @@ export default class TimeField extends React.Component {
 	}
 
 	_isInputValid(value) {
-		const modeString = this._isHoursInput() ? 'hours' : 'minutes';
-		return checkValidity(modeString, value);
+		if (value) {
+			const modeString = this._isHoursInput() ? 'hours' : 'minutes';
+			return checkValidity(modeString, value);
+		}
+		return true;
 	}
 
 	_changeTime(valueRaw) {
@@ -102,7 +105,7 @@ export default class TimeField extends React.Component {
 			<div className="field">
 				<input
 					type="number"
-					value={value || '00'}
+					value={value}
 					min={0}
 					disabled={disabled}
 					max={this._getMaxValue()}
