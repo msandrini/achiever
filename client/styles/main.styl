@@ -29,24 +29,24 @@ input, select
 	display: flex
 	width: 80%;
 	margin: 0 auto;
+	@media (max-width: 775px)
+		flex-direction: column
 
 	.column
 		padding-bottom: 30px;
 		&-half
 			width: 50%;
+			@media (max-width: 775px)
+				width: 100%;
 		&-right-aligned
 			display: flex
 			flex-direction: column
 			justify-content: flex-start
 			align-items: flex-end
 			padding-right: 40px
-
-.projection
-	color: secondaryTextColour
-	font-size: 12px
-
-	strong
-		color: secondaryTextColour
+			@media (max-width: 775px)
+				display:block
+		
 
 .send[disabled]
 	opacity: 0.5
