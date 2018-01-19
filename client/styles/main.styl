@@ -25,10 +25,21 @@ input, select
 		background: white
 		opacity: .6
 
-.column
-	width: calc(50% - 20px)
-	float: left
-	padding: 0 10px
+.columns
+	display: flex
+	width: 80%;
+	margin: 0 auto;
+
+	.column
+		padding-bottom: 30px;
+		&-half
+			width: 50%;
+		&-right-aligned
+			display: flex
+			flex-direction: column
+			justify-content: flex-start
+			align-items: flex-end
+			padding-right: 40px
 
 .projection
 	color: secondaryTextColour
@@ -39,12 +50,6 @@ input, select
 
 .send[disabled]
 	opacity: 0.5
-
-.time-management-container
-	padding-bottom: 40px
-
-.time-management-content:first-of-type
-	padding-right: 80px
 
 .send
 	font-size: 24px
@@ -64,6 +69,22 @@ input, select
 	&:hover
 		background-color: transitionColour1
 
+button.send-today
+	height: 100px;
+	span
+		color: transitionColour1
+		display: block;
+		padding: 20px;
+		strong
+			color: white
+
 .page-not-found
 	.send
 		margin: 30px 0 0 0
+
+button.send-login
+	padding: 11px;
+	width: 100%;
+	margin: 0;
+	font-size: 19px;
+	height: 45px;

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import '../../styles/staticTime.styl';
+
 const formatTime = value => (
 	String(value).length === 1 ? `0${String(value)}` : String(value)
 );
@@ -14,7 +16,7 @@ const StaticTime = ({ time, label, emphasis }) => (
 		<label>
 			{label}
 		</label>
-		<span>
+		<span className="time">
 			{displayTime(time.hours)}:{displayTime(time.minutes)}
 		</span>
 	</div>

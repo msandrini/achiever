@@ -3,7 +3,7 @@
 .react-datepicker
 	border: 2px solid transitionColour3
 	border-radius: 7px
-	float: right;
+	width: 240px;
 
 	&__header
 		background: transitionColour3
@@ -19,17 +19,20 @@
 		transition: background .3s, color .3s
 
 		&--weekend
+			opacity: .6
+
+		&--disabled
 			color: transitionColour3
 
 		&.active
 			color: darkBlueColour
 
 		&--selected
-			background: transitionColour2
+			background: transitionColour3
 			color: white
 
-			&--selected:hover
-				background: transitionColour1
+		&--selected:hover
+			background: transitionColour2
 
 		&--outside-month
 			opacity: .5
@@ -67,4 +70,5 @@
 		left: -2px
 		font-size: 9px
 		top: -9px
-		color: errorPanelColour
+		color: #000
+		

@@ -70,9 +70,9 @@ class Login extends React.Component {
 					<h2 className="current-date">
 						<strong>{strings.login}</strong>
 					</h2>
-					<div className="column">&nbsp;</div>
-					<div className="column">
-						<div className="login-content">
+					<div className="columns">
+						<div className="column column-half" />
+						<div className="column column-half">
 							<Panel type="error" message={this.state.errorMessage} />
 							<div className="login-field">
 								<input
@@ -92,7 +92,7 @@ class Login extends React.Component {
 							</div>
 							<button
 								type="submit"
-								className="send"
+								className="send send-login"
 								ref={(button) => { this.submitButton = button; }}
 								disabled={!this._shouldSubmitBeAvailable()}
 							>

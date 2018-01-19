@@ -15,48 +15,16 @@ import {
 	getTodayStorage,
 	submitToServer
 } from '../utils';
-import { timeIsValid } from '../../shared/utils';
-
-import '../styles/today.styl';
+import {
+	isValidTimeObject,
+	getNextEmptyObjectOnArray,
+	timeSetIsValid,
+	allTheTimesAreFilled,
+	goBack
+} from './today/utils';
 
 const MODAL_ALERT = 'alert';
 const MODAL_CONFIRM = 'confirm';
-
-
-const isEmptyObject = obj => (
-	Object.keys(obj).length === 0
-);
-
-const getNextEmptyObjectOnArray = arr => (
-	arr.findIndex((element => (
-		isEmptyObject(element) || !('hours' in element) || !('minutes' in element)
-	)))
-);
-
-const timeSetIsValid = (times) => {
-	let comparisonTerm = 0;
-	const isSequentialTime = (time) => {
-		if (isEmptyObject(time)) {
-			return true;
-		}
-		if (time && timeIsValid(time)) {
-			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-			const isLaterThanComparison = date > comparisonTerm;
-			comparisonTerm = Number(date);
-			return isLaterThanComparison;
-		}
-		return false;
-	};
-	return times.every(isSequentialTime);
-};
-
-const allTheTimesAreFilled = times => (
-	getNextEmptyObjectOnArray(times) === -1
-);
-
-const goBack = () => {
-	window.history.back();
-};
 
 class Today extends React.Component {
 	constructor() {
@@ -258,33 +226,29 @@ class Today extends React.Component {
 				<PageLoading
 					active={dayEntryQuery.loading}
 				/>
-				<form onSubmit={e => this.onMark(e)}>
-					<h2 className="current-date">
-						{strings.todayDate}:{' '}
-						<strong>{moment().format('L')}</strong>
-					</h2>
-					<div className="column">
-						<div className="time-show-content">
-							{[0, 1, 2, 3].map(index => (
-								<StaticTime
-									key={index}
-									time={this._getTime(index)}
-									label={strings.times[index].label}
-									emphasis={index < this.state.storedTimes.length}
-								/>
-							))}
-						</div>
+				<h2 className="current-date">
+					{strings.todayDate}:{' '}
+					<strong>{moment().format('L')}</strong>
+				</h2>
+				<form onSubmit={e => this.onMark(e)} className="columns">
+					<div className="column column-half">
+						{[0, 1, 2, 3].map(index => (
+							<StaticTime
+								key={index}
+								time={this._getTime(index)}
+								label={strings.times[index].label}
+								emphasis={isValidTimeObject(this.state.storedTimes[index])}
+							/>
+						))}
 					</div>
-					<div className="column">
-						<div className="time-management-content">
-							{this._shouldButtonBeAvailable() ?
-								<button type="submit" className="send send-today">
-									{this._getButtonString()}
-								</button>
-								:
-								<span className="time-sent">{strings.timeSentToday}</span>
-							}
-						</div>
+					<div className="column column-half">
+						{this._shouldButtonBeAvailable() ?
+							<button type="submit" className="send send-today">
+								{this._getButtonString()}
+							</button>
+							:
+							<span className="time-sent">{strings.timeSentToday}</span>
+						}
 					</div>
 				</form>
 				<AlertModal

@@ -376,7 +376,8 @@ class Edit extends React.Component {
 		const dayStyles = [
 			{ 'calendar-checked': [] },
 			{ 'calendar-unchecked': [] },
-			{ 'calendar-locked': [] }
+			{ 'calendar-locked': [] },
+			{ 'calendar-future-day': [] }
 		];
 		if (weekEntries.timeEntries) {
 			const weekDayNumbers = [1, 2, 3, 4, 5];
@@ -390,8 +391,11 @@ class Edit extends React.Component {
 
 				elementToPush.push(dayMoment);
 
-				if (isDayBlockedInPast(dayMoment) || isDayInFuture(dayMoment)) {
+				if (isDayBlockedInPast(dayMoment)) {
 					dayStyles[2]['calendar-locked'].push(dayMoment);
+				}
+				if (isDayInFuture(dayMoment)) {
+					dayStyles[3]['calendar-future-day'].push(dayMoment);
 				}
 
 			});
@@ -451,98 +455,96 @@ class Edit extends React.Component {
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
 				</h2>
-				<form onSubmit={this.onSubmit(this.props.addTimeEntry)}>
-					<div className="column">
-						<div className="time-management-content">
-							<DatePicker
-								inline
-								highlightDates={calendarDayStyles}
-								selected={this.state.controlDate}
-								onChange={this.onDateChange}
-							/>
-							{ labouredHoursOnDay ?
-								(
-									<LabouredHoursGauge
-										entitledHours={dailyContractedHours}
-										labouredHours={labouredHoursOnDay}
-									>
-										{strings.hoursLabouredOnThisDay}
-										{' '}
-										<strong>{labouredHoursOnDay}</strong>
-									</LabouredHoursGauge>
-								) : ''
-							}
-							{ remainingHoursOnWeek.remainingTime ?
-								(
-									<LabouredHoursGauge
-										entitledDuration={remainingHoursOnWeek.entitledDuration}
-										labouredHours={labouredHoursOnDay}
-									>
-										{strings.remainingHoursOnWeek}
-										{' '}
-										<strong>{remainingHoursOnWeek.remainingTime}</strong>
-									</LabouredHoursGauge>
-								) : ''
-							}
-						</div>
+				<form onSubmit={this.onSubmit(this.props.addTimeEntry)} className="columns">
+					<div className="column column-half column-right-aligned">
+						<DatePicker
+							inline
+							highlightDates={calendarDayStyles}
+							selected={this.state.controlDate}
+							onChange={this.onDateChange}
+							filterDate={date => date.isSameOrBefore(moment(), 'day')}
+							maxTime={moment()}
+						/>
+						{ labouredHoursOnDay ?
+							(
+								<LabouredHoursGauge
+									entitledHours={dailyContractedHours}
+									labouredHours={labouredHoursOnDay}
+								>
+									{strings.hoursLabouredOnThisDay}
+									{' '}
+									<strong>{labouredHoursOnDay}</strong>
+								</LabouredHoursGauge>
+							) : ''
+						}
+						{ remainingHoursOnWeek.remainingTime ?
+							(
+								<LabouredHoursGauge
+									entitledDuration={remainingHoursOnWeek.entitledDuration}
+									labouredHours={labouredHoursOnDay}
+								>
+									{strings.remainingHoursOnWeek}
+									{' '}
+									<strong>{remainingHoursOnWeek.remainingTime}</strong>
+								</LabouredHoursGauge>
+							) : ''
+						}
 					</div>
-					<div className="column">
-						<div className="time-management-content">
-							<Panel message={this.state.successMessage} type="success" />
-							<Panel message={this.state.errorMessage} type="error" />
-							<SelectGroup
-								name="projectPhase"
-								label={strings.projectPhase}
-								options={projectPhases.options}
-								selected={phase.id}
-								onChange={this._setProjectPhase(projectPhases.options)}
-								showTextInstead={alternativeTextForProjectPhase}
-								tabIndex={START_TABINDEX}
+					<div className="column column-half">
+						<Panel message={this.state.successMessage} type="success" />
+						<Panel message={this.state.errorMessage} type="error" />
+						<SelectGroup
+							name="projectPhase"
+							label={strings.projectPhase}
+							options={projectPhases.options}
+							selected={phase.id}
+							onChange={this._setProjectPhase(projectPhases.options)}
+							showTextInstead={alternativeTextForProjectPhase}
+							tabIndex={START_TABINDEX}
+							disabled={isEditionDisabled}
+						/>
+						<SelectGroup
+							name="activity"
+							label={strings.activity}
+							options={activityOptions}
+							selected={activity.id}
+							onChange={this._setActivity(phase.activities.options)}
+							showTextInstead={alternativeTextForActivity}
+							tabIndex={START_TABINDEX + 1}
+							disabled={isEditionDisabled}
+						/>
+						{referenceHours.map((refHour, index) => (
+							<TimeGroup
+								key={refHour}
+								label={strings.times[index].label}
+								emphasis={index === 0 || index === 3}
+								tabIndexes={START_TABINDEX + 2 + (index * 2)}
+								referenceHour={refHour}
+								time={storedTimes[index] || '00'}
+								shouldHaveFocus={this._shouldHaveFocus(index)}
+								onSet={this.onTimeSet(index)}
+								onFocus={this.onFieldFocus(index)}
+								hidden={shouldHideTimeGroup(index)}
 								disabled={isEditionDisabled}
 							/>
-							<SelectGroup
-								name="activity"
-								label={strings.activity}
-								options={activityOptions}
-								selected={activity.id}
-								onChange={this._setActivity(phase.activities.options)}
-								showTextInstead={alternativeTextForActivity}
-								tabIndex={START_TABINDEX + 1}
-								disabled={isEditionDisabled}
-							/>
-							{referenceHours.map((refHour, index) => (
-								<TimeGroup
-									key={refHour}
-									label={strings.times[index].label}
-									emphasis={index === 0 || index === 3}
-									tabIndexes={START_TABINDEX + 2 + (index * 2)}
-									referenceHour={refHour}
-									time={storedTimes[index] || '00'}
-									shouldHaveFocus={this._shouldHaveFocus(index)}
-									onSet={this.onTimeSet(index)}
-									onFocus={this.onFieldFocus(index)}
-									hidden={shouldHideTimeGroup(index)}
-									disabled={isEditionDisabled}
-								/>
-							))}
-							<button
-								type="submit"
-								className="send"
-								ref={(button) => { this.submitButton = button; }}
-								disabled={!this._shouldSendBeAvailable()}
-								tabIndex={CTA_TABINDEX}
-							>
-								{strings.send}
-							</button>
-							<button
-								type="button"
-								onClick={this.imReligious}
-								className="test"
-								style={{ fontSize: '11px' }}
-							>
-							Test
-							</button>
-						</div>
+						))}
+						<button
+							type="submit"
+							className="send"
+							ref={(button) => { this.submitButton = button; }}
+							disabled={!this._shouldSendBeAvailable()}
+							tabIndex={CTA_TABINDEX}
+						>
+							{strings.send}
+						</button>
+						<button
+							type="button"
+							onClick={this.imReligious}
+							className="test"
+							style={{ fontSize: '11px' }}
+						>
+						Test
+						</button>
 					</div>
 				</form>
 				<WeeklyCalendar
