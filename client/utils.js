@@ -1,5 +1,6 @@
 /* global window */
 import moment from 'moment';
+import TimeDuration from 'time-duration';
 
 import strings from '../shared/strings';
 import { timeIsValid } from '../shared/utils';
@@ -162,65 +163,49 @@ export const calculateLabouredHours = (storedTimes) => {
 	return labouredHoursOnDay.format('H:mm');
 };
 
-export const stringifyTime = (hours, minutes) => {
-	let timeAsString = '';
-	let hoursAsString = hours;
-	let minutesAsString = minutes;
-	let balanceSign;
+const getContractedHoursUpToDate = (contractedHours, businessDaysUpToDate) =>
+	new TimeDuration(contractedHours).multiplyBy(businessDaysUpToDate);
 
-	if (hours > 0 || minutes > 0) {
-		balanceSign = '-';
-	} else if (hours < 0 || minutes < 0) {
-		balanceSign = '+';
-	} else {
-		balanceSign = '';
-	}
+const getLabouredHoursUpToDate = (controlDate, timeEntries, labouredHoursOnDay = false) => {
+	const timeEntriesUpToDate = timeEntries
+		.filter(dayEntry => moment(dayEntry.date).isSameOrBefore(controlDate, 'day'));
+	const minutesUpToDateWithActiveDay = timeEntriesUpToDate
+		.map((dayEntry) => {
+			const hasActiveDay = moment(dayEntry.date).isSame(controlDate, 'day') &&
+				labouredHoursOnDay;
+			return new TimeDuration(hasActiveDay ?
+				labouredHoursOnDay : dayEntry.total).toMinutes();
+		});
 
-	if (hours < 0) {
-		hoursAsString *= -1;
-	}
+	const minutesLabouredUpToDate = minutesUpToDateWithActiveDay
+		.reduce((totalUpToNow, dayTotal) => totalUpToNow + dayTotal, 0);
 
-	if (minutes < 0) {
-		minutesAsString *= -1;
-	}
-
-	if (minutesAsString < 10) {
-		minutesAsString = `0${minutesAsString}`;
-	}
-
-	timeAsString += `${balanceSign}${hoursAsString}:${minutesAsString}`;
-
-	return timeAsString;
+	return new TimeDuration(minutesLabouredUpToDate);
 };
 
-export const calculateRemainingHoursOnWeek = (date, workedTime, contractedHours, totalWeek) => {
-	const businessDay = date.day() > 5 ? 5 : date.day();
+export const calculateHoursBalanceUpToDate = (controlDate, params) => {
+	const {
+		labouredHoursOnDay,
+		contractedHoursForADay,
+		timeEntries
+	} = params;
 
-	const dailyContractedDuration = moment.duration(contractedHours);
+	const businessDaysUpToDate = controlDate.day() > 5 ? 5 : controlDate.day();
 
-	const expectedDuration = moment.duration().add({
-		hours: dailyContractedDuration.hours() * businessDay,
-		minutes: dailyContractedDuration.minutes() * businessDay
-	});
+	const contractedHoursUpToDate = getContractedHoursUpToDate(
+		contractedHoursForADay,
+		businessDaysUpToDate
+	);
 
-	expectedDuration.subtract({
-		hours: totalWeek.split(':')[0],
-		minutes: totalWeek.split(':')[1]
-	});
-
-	const labouredHoursDuration = moment.duration(workedTime);
-	expectedDuration.subtract({
-		hours: labouredHoursDuration.hours(),
-		minutes: labouredHoursDuration.minutes()
-	});
-
-	const totalHours = (expectedDuration.days() * 24) + expectedDuration.hours();
-	const totalMinutes = expectedDuration.minutes();
+	const labouredHoursUpToDate = getLabouredHoursUpToDate(
+		controlDate,
+		timeEntries,
+		labouredHoursOnDay
+	);
 
 	return {
-		remainingTime: stringifyTime(totalHours, totalMinutes),
-		entitledDuration: expectedDuration,
-		labouredDuration: labouredHoursDuration
+		contractedHoursUpToDate,
+		labouredHoursUpToDate
 	};
 };
 

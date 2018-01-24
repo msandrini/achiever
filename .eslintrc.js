@@ -21,6 +21,7 @@ module.exports = {
             "LabeledStatement",
             "WithStatement"
         ],
+        "no-confusing-arrow": "off",
         /* comma-dangle enforces things like [1, 2, 3,] 
             which are pretty strange, so we invert the default */
         "comma-dangle": ["error", "never"],

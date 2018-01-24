@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
-import LabouredHoursGauge from './edit/LabouredHoursGauge';
+import LabourStatistics from './edit/LabourStatistics';
 import SelectGroup from './edit/SelectGroup';
 import WeeklyCalendar from './edit/WeeklyCalendar';
 import Panel from './ui/Panel';
@@ -21,7 +21,7 @@ import {
 	setTodayStorage,
 	submitToServer,
 	calculateLabouredHours,
-	calculateRemainingHoursOnWeek,
+	calculateHoursBalanceUpToDate,
 	timesAreValid,
 	dismemberTimeString,
 	isDayBlockedInPast,
@@ -48,7 +48,7 @@ class Edit extends React.Component {
 			controlDateIsValid: true,
 			calendarDayStyles: [],
 			labouredHoursOnDay: null,
-			remainingHoursOnWeek: {},
+			hoursBalanceUpToDate: {},
 			storedTimes: [{}, {}, {}, {}],
 			phase: {
 				id: null,
@@ -148,18 +148,21 @@ class Edit extends React.Component {
 
 				const labouredHoursOnDay = (timesAreValid(storedTimes) &&
 					calculateLabouredHours(storedTimes)) || '';
-				const remainingHoursOnWeek = calculateRemainingHoursOnWeek(
-					prevState.controlDate,
+				const paramsToSend = {
+					contractedHoursForADay: this.props.userDetailsQuery.userDetails.dailyContractedHours,
 					labouredHoursOnDay,
-					this.props.userDetailsQuery.dailyContractedHours,
-					this.props.weekEntriesQuery.weekEntries.total
+					timeEntries: this.props.weekEntriesQuery.weekEntries.timeEntries
+				};
+				const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
+					prevState.controlDate,
+					paramsToSend
 				);
 
 				const newState = {
 					...prevState,
 					storedTimes,
 					labouredHoursOnDay,
-					remainingHoursOnWeek
+					hoursBalanceUpToDate
 				};
 
 				if (areTheSameDay(prevState.controlDate, moment())) {
@@ -420,7 +423,7 @@ class Edit extends React.Component {
 		const {
 			controlDate,
 			labouredHoursOnDay,
-			remainingHoursOnWeek,
+			hoursBalanceUpToDate,
 			storedTimes,
 			phase,
 			activity,
@@ -466,30 +469,13 @@ class Edit extends React.Component {
 							filterDate={date => date.isSameOrBefore(moment(), 'day')}
 							maxTime={moment()}
 						/>
-						{ labouredHoursOnDay ?
-							(
-								<LabouredHoursGauge
-									entitledHours={dailyContractedHours}
-									labouredHours={labouredHoursOnDay}
-								>
-									{strings.hoursLabouredOnThisDay}
-									{' '}
-									<strong>{labouredHoursOnDay}</strong>
-								</LabouredHoursGauge>
-							) : ''
-						}
-						{ remainingHoursOnWeek.remainingTime ?
-							(
-								<LabouredHoursGauge
-									entitledDuration={remainingHoursOnWeek.entitledDuration}
-									labouredHours={labouredHoursOnDay}
-								>
-									{strings.remainingHoursOnWeek}
-									{' '}
-									<strong>{remainingHoursOnWeek.remainingTime}</strong>
-								</LabouredHoursGauge>
-							) : ''
-						}
+						<LabourStatistics
+							dayHoursLaboured={labouredHoursOnDay}
+							dayHoursEntitled={dailyContractedHours}
+							weekHoursLaboured={hoursBalanceUpToDate.labouredHoursUpToDate}
+							weekHoursEntitled={hoursBalanceUpToDate.contractedHoursUpToDate}
+							hoursBalance="00:00"
+						/>
 					</div>
 					<div className="column column-half">
 						<Panel message={this.state.successMessage} type="success" />

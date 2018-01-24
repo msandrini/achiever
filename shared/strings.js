@@ -45,8 +45,11 @@ const strings = {
 		success: 'Api call para inserir horas executada com sucesso!'
 	},
 	thisTime: 'esta hora',
-	hoursLabouredOnThisDay: 'Horas trabalhadas no dia: ',
-	remainingHoursOnWeek: 'Saldo de horas na semana:',
+	hoursLabouredOnThisDay: 'Horas trabalhadas no dia:',
+	hoursBalanceOnWeekUpToNow: 'Balanço de horas na semana até esse dia:',
+	hoursBalanceOnWeekUpToNowSurplus: 'sobrando',
+	hoursBalanceOnWeekUpToNowDebt: 'devendo',
+	hoursBalanceForToday: 'Balanço de horas de hoje:',
 	storedSuccessfully: 'gravada com sucesso',
 	morningPeriod: 'Período da manhã',
 	afternoonPeriod: 'Período da tarde',
