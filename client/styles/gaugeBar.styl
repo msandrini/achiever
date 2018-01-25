@@ -3,18 +3,20 @@
 max-bar-width = 155px
     
 .gauge-bar
-    height: 10px
-    background: transitionColour3
-    width: max-bar-width
+    background: linear-gradient(to bottom, transitionColour3 0, white 30%)
+    .wrapper
+        height: 10px
+        background: transitionColour3
+        width: max-bar-width
 
-.gauge-marks
-    border: 2px solid darkBlueColour
-    border-top: none
-    border-bottom: none
-    height: 10px
-    margin-right: 50px
-    position: absolute
-    width: max-bar-width - 4px
+    .marks
+        border: 2px solid darkBlueColour
+        border-top: none
+        border-bottom: none
+        height: 10px
+        margin-right: 50px
+        position: absolute
+        width: max-bar-width - 4px
 
     .bar
         height: 10px
@@ -22,7 +24,7 @@ max-bar-width = 155px
         border-radius: 2px
         transition: ease-in width .3s
 
-        &.less-hours
+        &.debt
             background: errorLightColour
-        &.more-hours
+        &.surplus
             background: successLightColour

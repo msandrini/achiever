@@ -74,7 +74,7 @@
     "react-router-dom": "^4.2.2",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "time-duration": "^1.0.4",
+    "time-duration": "^1.0.5",
     "tough-cookie": "^2.3.3",
     "webpack": "^3.8.1",
     "webpack-dev-middleware": "^2.0.4",

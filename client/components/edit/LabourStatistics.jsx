@@ -2,7 +2,7 @@ import React from 'react';
 import TimeDuration from 'time-duration';
 import PropTypes from 'prop-types';
 
-import '../../styles/labour-statistics.styl';
+import '../../styles/labourStatistics.styl';
 import GaugeBar from '../ui/GaugeBar';
 
 import strings from '../../../shared/strings';
@@ -19,6 +19,8 @@ const LabourStatistics = (props) => {
 	const weekHoursBalance = new TimeDuration(weekHoursEntitled - weekHoursLaboured);
 	const weekHoursBalanceIndicatorString = (weekHoursBalance > 0) ?
 		strings.hoursBalanceOnWeekUpToNowDebt : strings.hoursBalanceOnWeekUpToNowSurplus;
+	const weekHoursBalanceString = weekHoursBalanceIndicatorString
+		.replace('{0}', weekHoursBalance.toString());
 
 	return (
 		<div className="gauges">
@@ -41,12 +43,14 @@ const LabourStatistics = (props) => {
 				/>
 				<span>
 					{strings.hoursBalanceOnWeekUpToNow}
-					<small>{weekHoursBalanceIndicatorString}</small>
-					<strong>{weekHoursBalance.toString()}</strong>
+					<strong>{weekHoursBalanceString}</strong>
 				</span>
 			</div>
 			<div className="hour-bank">
-				<span>{`${strings.hoursBalanceForToday} ${hoursBalance}`}</span>
+				<span>
+					{strings.hoursBalanceForToday}
+					<strong>{hoursBalance}</strong>
+				</span>
 			</div>
 		</div>
 	);
