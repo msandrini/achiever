@@ -4,6 +4,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import 'react-datepicker/dist/react-datepicker.css';
+import TimeDuration from 'time-duration';
 
 import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
@@ -49,7 +50,6 @@ class Edit extends React.Component {
 			calendarDayStyles: [],
 			labouredHoursOnDay: null,
 			hoursBalanceUpToDate: {},
-			totalHoursBalance: '',
 			storedTimes: [{}, {}, {}, {}],
 			phase: {
 				id: null,
@@ -75,7 +75,8 @@ class Edit extends React.Component {
 		this.onSubmit = this.onSubmit.bind(this);
 		this.imReligious = this.imReligious.bind(this);
 		this.onAlertClose = this.onAlertClose.bind(this);
-		this._setHoursBalanceValues = this._setHoursBalanceValues.bind(this);
+		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
+		this._calculateTotalHoursBalance = this._calculateTotalHoursBalance.bind(this);
 
 		this.submitButton = null;
 	}
@@ -100,7 +101,6 @@ class Edit extends React.Component {
 			this._setTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
-			this._setHoursBalanceValues(weekEntriesQuery);
 		}
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
@@ -135,8 +135,7 @@ class Edit extends React.Component {
 		this._setTimesForChosenDate(date, weekEntriesQuery);
 		if (weekEntriesQuery.weekEntries) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
-			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);;
-			this._setHoursBalanceValues(weekEntriesQuery);
+			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
 	}
 
@@ -225,24 +224,6 @@ class Edit extends React.Component {
 		};
 	}
 
-	/**
-	 * Set state hoursBalanceUpToDate based on weekentries props
-	 * @param {Object} weekEntriesQuery
-	 */
-	_setHoursBalanceValues(weekEntriesQuery) {
-		const _this = this;
-		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-			this.state.controlDate,
-			{
-				contractedHoursForADay: this.props.userDetailsQuery.userDetails.dailyContractedHours,
-				labouredHoursOnDay: _this.state.labouredHoursOnDay,
-				timeEntries: weekEntriesQuery.weekEntries.timeEntries
-			}
-		);
-
-		this.setState({ hoursBalanceUpToDate });
-	}
-
 	_setProjectPhase(phases) {
 		return (value) => {
 			const phase = phases.find(option => option.id === value.id);
@@ -311,8 +292,11 @@ class Edit extends React.Component {
 			const startTime = moment(dayEntries.startTime, 'H:mm');
 			const endTime = moment(dayEntries.endTime, 'H:mm');
 			const labouredHoursOnDay = dayEntries.total;
-
 			const isToday = areTheSameDay(moment(dayEntries.date), moment());
+			const hoursBalanceUpToDate = this._getHoursBalanceValues(
+				labouredHoursOnDay,
+				weekEntriesQuery
+			);
 
 			// If data is on server
 			if (startTime.isValid() && endTime.isValid()) {
@@ -335,7 +319,8 @@ class Edit extends React.Component {
 				this.setState({
 					storedTimes,
 					sentToday: true,
-					labouredHoursOnDay
+					labouredHoursOnDay,
+					hoursBalanceUpToDate
 				});
 			} else if (isToday) {
 				// If today and not in server, use localStorage
@@ -344,13 +329,15 @@ class Edit extends React.Component {
 					storedTimes: localStoredTimes,
 					sentToday,
 					labouredHoursOnDay: (timesAreValid(localStoredTimes) &&
-						calculateLabouredHours(localStoredTimes)) || ''
+						calculateLabouredHours(localStoredTimes)) || '',
+					hoursBalanceUpToDate
 				});
 			} else {
 				// If not today should do something... for now, just set state empty
 				this.setState({
 					storedTimes: [{}, {}, {}, {}],
-					labouredHoursOnDay
+					labouredHoursOnDay,
+					hoursBalanceUpToDate
 				});
 			}
 
@@ -443,12 +430,48 @@ class Edit extends React.Component {
 		return timesAreValid(this.state.storedTimes);
 	}
 
+	/**
+	 * Set state hoursBalanceUpToDate based on weekentries props
+	 * @param {Object} weekEntriesQuery is the fecthed query return
+	 */
+	_getHoursBalanceValues(labouredHoursOnDay, weekEntriesQuery) {
+		const _this = this;
+		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
+			this.state.controlDate,
+			{
+				labouredHoursOnDay,
+				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
+				timeEntries: weekEntriesQuery.weekEntries.timeEntries
+			}
+		);
+		return hoursBalanceUpToDate;
+	}
+
+	/**
+	 * Calculate the total hours balance follwing the rule:
+	 * totalHoursBalance = hours balance (fetched from server) + local_balance (from the edit day)
+	 * local balace = select day laboured hours - contract day laboured hours
+	 * @param {Object[]} timeEntries is an array of {hours, minutes} as state.storedTimes
+	 */
+	_calculateTotalHoursBalance(timeEntries) {
+		const { balance, dailyContractedHours } = this.props.userDetailsQuery.userDetails;
+		const hoursBalanceDuration = new TimeDuration(balance);
+		const selectedDayHoursBalance = (timesAreValid(timeEntries) &&
+			new TimeDuration(calculateLabouredHours(timeEntries))) || new TimeDuration();
+
+		return (
+			hoursBalanceDuration
+				.add(selectedDayHoursBalance
+					.subtract(dailyContractedHours))
+				.toString()
+		);
+	}
+
 	render() {
 		const {
 			controlDate,
 			labouredHoursOnDay,
 			hoursBalanceUpToDate,
-			totalHoursBalance,
 			storedTimes,
 			phase,
 			activity,
@@ -492,14 +515,14 @@ class Edit extends React.Component {
 							selected={this.state.controlDate}
 							onChange={this.onDateChange}
 							filterDate={date => date.isSameOrBefore(moment(), 'day')}
-							maxTime={moment()}
+							maxTime={moment()}l
 						/>
 						<LabourStatistics
 							dayHoursLaboured={labouredHoursOnDay}
 							dayHoursEntitled={dailyContractedHours}
 							weekHoursLaboured={hoursBalanceUpToDate.labouredHoursUpToDate}
 							weekHoursEntitled={hoursBalanceUpToDate.contractedHoursUpToDate}
-							hoursBalance={totalHoursBalance}
+							hoursBalance={this._calculateTotalHoursBalance(storedTimes)}
 						/>
 					</div>
 					<div className="column column-half">
