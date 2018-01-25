@@ -4,6 +4,9 @@ import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+import strings from '../../../shared/strings';
+
 import '../../styles/weeklyCalendar.styl';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
@@ -53,7 +56,8 @@ const _convertweekEntriesToEvents = (weekEntries) => {
 };
 
 const WeeklyCalendar = ({ weekEntries, controlDate }) => (
-	<div className="weekly-calendar">
+	<details className="weekly-calendar">
+		<summary>{strings.weeklyCalendar}</summary>
 		<BigCalendar
 			view="week"
 			onView={noOp}
@@ -64,7 +68,7 @@ const WeeklyCalendar = ({ weekEntries, controlDate }) => (
 			selectable={false}
 			events={_convertweekEntriesToEvents(weekEntries)}
 		/>
-	</div>
+	</details>
 );
 
 WeeklyCalendar.propTypes = {
