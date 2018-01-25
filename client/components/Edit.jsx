@@ -515,7 +515,7 @@ class Edit extends React.Component {
 							selected={this.state.controlDate}
 							onChange={this.onDateChange}
 							filterDate={date => date.isSameOrBefore(moment(), 'day')}
-							maxTime={moment()}l
+							maxTime={moment()}
 						/>
 						<LabourStatistics
 							dayHoursLaboured={labouredHoursOnDay}
