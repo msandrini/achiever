@@ -4,6 +4,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import 'react-datepicker/dist/react-datepicker.css';
+import TimeDuration from 'time-duration';
 
 import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
@@ -25,7 +26,7 @@ import {
 	timesAreValid,
 	dismemberTimeString,
 	isDayBlockedInPast,
-	isDayInFuture
+	isDayAfterToday
 } from '../utils';
 
 import strings from '../../shared/strings';
@@ -68,11 +69,14 @@ class Edit extends React.Component {
 			successMessage: '',
 			alertMessage: null
 		};
+
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onTimeSet = this.onTimeSet.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.imReligious = this.imReligious.bind(this);
 		this.onAlertClose = this.onAlertClose.bind(this);
+		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
+		this._calculateTotalHoursBalance = this._calculateTotalHoursBalance.bind(this);
 
 		this.submitButton = null;
 	}
@@ -94,7 +98,7 @@ class Edit extends React.Component {
 		}
 
 		if (this.props.weekEntriesQuery.loading && !weekEntriesQuery.loading) {
-			this._getTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
+			this._setTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
@@ -105,7 +109,7 @@ class Edit extends React.Component {
 	}
 
 	onDateChange(date) {
-		if (isDayInFuture(date)) {
+		if (isDayAfterToday(date)) {
 			this.setState({ alertMessage: strings.cannotSelectFutureTime });
 			return;
 		}
@@ -116,7 +120,7 @@ class Edit extends React.Component {
 
 		const oldSelectedDate = this.state.controlDate;
 		const sameWeek = oldSelectedDate.week() === date.week();
-		const controlDateIsValid = !isDayBlockedInPast(date) && !isDayInFuture(date);
+		const controlDateIsValid = !isDayBlockedInPast(date) && !isDayAfterToday(date);
 		this.setState({
 			controlDate: date,
 			controlDateIsValid,
@@ -128,7 +132,7 @@ class Edit extends React.Component {
 			this._fetchWeekEntries(date);
 		}
 
-		this._getTimesForChosenDate(date, weekEntriesQuery);
+		this._setTimesForChosenDate(date, weekEntriesQuery);
 		if (weekEntriesQuery.weekEntries) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
@@ -148,6 +152,7 @@ class Edit extends React.Component {
 
 				const labouredHoursOnDay = (timesAreValid(storedTimes) &&
 					calculateLabouredHours(storedTimes)) || '';
+
 				const paramsToSend = {
 					contractedHoursForADay: this.props.userDetailsQuery.userDetails.dailyContractedHours,
 					labouredHoursOnDay,
@@ -247,7 +252,7 @@ class Edit extends React.Component {
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
-		this._getTimesForChosenDate(date, this.props.weekEntriesQuery);
+		this._setTimesForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
 	imReligious() {
@@ -269,7 +274,7 @@ class Edit extends React.Component {
 		});
 	}
 
-	_getTimesForChosenDate(chosenDate, weekEntriesQuery) {
+	_setTimesForChosenDate(chosenDate, weekEntriesQuery) {
 		const {
 			loading,
 			error,
@@ -287,8 +292,11 @@ class Edit extends React.Component {
 			const startTime = moment(dayEntries.startTime, 'H:mm');
 			const endTime = moment(dayEntries.endTime, 'H:mm');
 			const labouredHoursOnDay = dayEntries.total;
-
 			const isToday = areTheSameDay(moment(dayEntries.date), moment());
+			const hoursBalanceUpToDate = this._getHoursBalanceValues(
+				labouredHoursOnDay,
+				weekEntriesQuery
+			);
 
 			// If data is on server
 			if (startTime.isValid() && endTime.isValid()) {
@@ -311,7 +319,8 @@ class Edit extends React.Component {
 				this.setState({
 					storedTimes,
 					sentToday: true,
-					labouredHoursOnDay
+					labouredHoursOnDay,
+					hoursBalanceUpToDate
 				});
 			} else if (isToday) {
 				// If today and not in server, use localStorage
@@ -320,13 +329,15 @@ class Edit extends React.Component {
 					storedTimes: localStoredTimes,
 					sentToday,
 					labouredHoursOnDay: (timesAreValid(localStoredTimes) &&
-						calculateLabouredHours(localStoredTimes)) || ''
+						calculateLabouredHours(localStoredTimes)) || '',
+					hoursBalanceUpToDate
 				});
 			} else {
 				// If not today should do something... for now, just set state empty
 				this.setState({
 					storedTimes: [{}, {}, {}, {}],
-					labouredHoursOnDay
+					labouredHoursOnDay,
+					hoursBalanceUpToDate
 				});
 			}
 
@@ -398,7 +409,7 @@ class Edit extends React.Component {
 				if (isDayBlockedInPast(dayMoment)) {
 					dayStyles[2]['calendar-locked'].push(dayMoment);
 				}
-				if (isDayInFuture(dayMoment)) {
+				if (isDayAfterToday(dayMoment)) {
 					dayStyles[3]['calendar-future-day'].push(dayMoment);
 				}
 
@@ -417,6 +428,43 @@ class Edit extends React.Component {
 
 	_shouldSendBeAvailable() {
 		return timesAreValid(this.state.storedTimes);
+	}
+
+	/**
+	 * Set state hoursBalanceUpToDate based on weekentries props
+	 * @param {Object} weekEntriesQuery is the fecthed query return
+	 */
+	_getHoursBalanceValues(labouredHoursOnDay, weekEntriesQuery) {
+		const _this = this;
+		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
+			this.state.controlDate,
+			{
+				labouredHoursOnDay,
+				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
+				timeEntries: weekEntriesQuery.weekEntries.timeEntries
+			}
+		);
+		return hoursBalanceUpToDate;
+	}
+
+	/**
+	 * Calculate the total hours balance follwing the rule:
+	 * totalHoursBalance = hours balance (fetched from server) + local_balance (from the edit day)
+	 * local balace = select day laboured hours - contract day laboured hours
+	 * @param {Object[]} timeEntries is an array of {hours, minutes} as state.storedTimes
+	 */
+	_calculateTotalHoursBalance(timeEntries) {
+		const { balance, dailyContractedHours } = this.props.userDetailsQuery.userDetails;
+		const hoursBalanceDuration = new TimeDuration(balance);
+		const selectedDayHoursBalance = (timesAreValid(timeEntries) &&
+			new TimeDuration(calculateLabouredHours(timeEntries))) || new TimeDuration();
+
+		return (
+			hoursBalanceDuration
+				.add(selectedDayHoursBalance
+					.subtract(dailyContractedHours))
+				.toString()
+		);
 	}
 
 	render() {
@@ -474,7 +522,7 @@ class Edit extends React.Component {
 							dayHoursEntitled={dailyContractedHours}
 							weekHoursLaboured={hoursBalanceUpToDate.labouredHoursUpToDate}
 							weekHoursEntitled={hoursBalanceUpToDate.contractedHoursUpToDate}
-							hoursBalance="00:00"
+							hoursBalance={this._calculateTotalHoursBalance(storedTimes)}
 						/>
 					</div>
 					<div className="column column-half">

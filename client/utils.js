@@ -29,7 +29,7 @@ export const areTheSameDay = (date1, date2) => (
 
 /**
  * Replace the value of array[index] to be newValue
- * @param {Array} array to be replaced
+ * @param {[]} array to be replaced
  * @param {*} index of the element to be replaced
  * @param {*} newValue new value ot array[index]
  */
@@ -136,31 +136,24 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
 	return _addTimeEntry(timeEntryInput, addTimeEntry);
 };
 
+/**
+ * Given and array of times *(entry, lunch_out, lunch_in, exit), calculate the total laboured hours
+ * @param {Object[]} storedTimes is an array of obj {hours, minutes}
+ * @return {string} the total duration as HH:mm
+ */
 export const calculateLabouredHours = (storedTimes) => {
 	const startTime = storedTimes[storedTimesIndex.startTime];
 	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
 	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
 	const endTime = storedTimes[storedTimesIndex.endTime];
 
-	const labouredHoursOnDay = moment().startOf('day');
-	labouredHoursOnDay.add({
-		hours: endTime.hours,
-		minutes: endTime.minutes
-	});
-	labouredHoursOnDay.subtract({
-		hours: startTime.hours,
-		minutes: startTime.minutes
-	});
-	labouredHoursOnDay.add({
-		hours: startBreakTime.hours,
-		minutes: startBreakTime.minutes
-	});
-	labouredHoursOnDay.subtract({
-		hours: endBreakTime.hours,
-		minutes: endBreakTime.minutes
-	});
+	const labouredHoursOnDay = new TimeDuration();
+	labouredHoursOnDay.add(endTime);
+	labouredHoursOnDay.subtract(endBreakTime);
+	labouredHoursOnDay.add(startBreakTime);
+	labouredHoursOnDay.subtract(startTime);
 
-	return labouredHoursOnDay.format('H:mm');
+	return labouredHoursOnDay.toString();
 };
 
 const getContractedHoursUpToDate = (contractedHours, businessDaysUpToDate) =>
@@ -209,6 +202,11 @@ export const calculateHoursBalanceUpToDate = (controlDate, params) => {
 	};
 };
 
+/**
+ * Given and array of times, check if it's completed and if hours are increasing
+ * @param {Object[]} times is an array of obj {hours, minutes}
+ * @return {bool} if it is a valid array
+ */
 export const timesAreValid = (times) => {
 	let comparisonTerm = 0;
 	const isSequentialTime = (time) => {
@@ -244,4 +242,4 @@ export const isDayBlockedInPast = (day) => {
 	return day.isBefore(today, 'week');
 };
 
-export const isDayInFuture = day => day.isAfter(moment(), 'day');
+export const isDayAfterToday = day => day.isAfter(moment(), 'day');
