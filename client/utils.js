@@ -244,4 +244,4 @@ export const isDayBlockedInPast = (day) => {
 	return day.isBefore(today, 'week');
 };
 
-export const isDayInFuture = day => day.isAfter(moment(), 'day');
+export const isDayAfterToday = day => day.isAfter(moment(), 'day');
