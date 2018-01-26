@@ -7,14 +7,28 @@
     "prebuild": "npm run check",
     "prestart": "npm run check",
     "prewatch": "npm run check",
-    "check": "check-node-version --print --node $(cat .nvmrc) --npm 5",
+    "check": "npx check-node-version --print --node 8 --npm 5",
     "start": "node server/index.js",
     "watch": "nodemon server/index.js",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --format=node_modules/eslint-formatter-pretty ./**/*.js ./**/*.jsx"
+    "lint": "eslint --format=node_modules/eslint-formatter-pretty ./**/*.js ./**/*.jsx",
+    "docker:build": "docker build -t achiever:latest ."
   },
-  "author": "Marcos Sandrini",
+  "author": {
+    "name": "Marcos Sandrini",
+    "email": "msandrinidesign@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Everton Nikolas de Oliveira",
+      "email": "enikolas.oliveira@gmail.com"
+    },
+    {
+      "name": "Henrique Noronha Facioli",
+      "email": "henrique.facioli@students.ic.unicamp.br"
+    }
+  ],
   "license": "ISC",
   "precommit": [
     "lint"
@@ -25,7 +39,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "check-node-version": "^3.2.0",
     "css-loader": "^0.28.7",
     "eslint": "^4.12.1",
     "eslint-config-airbnb": "^16.1.0",

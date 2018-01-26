@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    image: achiever:latest
+    environment:
+      - PORT=3001
+      - SERVICE_URL=http://192.168.99.100:9001
+    ports:
+      - "3001:3001"
+      - "9001:9001"

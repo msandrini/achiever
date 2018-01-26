@@ -9,9 +9,9 @@ const logger = require('./logger');
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 
 module.exports = (app) => {
-	app.use('/api', bodyParser.json(), api);
+	app.use('/graphql', bodyParser.json(), api);
 	app.use('/graphiql', graphiqlExpress({
-		endpointURL: '/api',
+		endpointURL: '/graphql',
 		passHeader: `'Authorization': 'Bearer ${tokenFactory()}'`
 	}));
 

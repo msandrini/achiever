@@ -9,29 +9,51 @@ A tool built to... _Achieve!_
 
 ## Install
 
-    npm install
+```
+npm install
+```
 
 ## Run
 
-    npm run build && npm run serve
-
-or
-
-    npm start
+```
+npm start
+```
 
 ## Watch
 
-In a terminal window:
-
-    npm run watch
-
-And in another:
-
-    npm run serve
+```
+npm run watch
+```
 
 ## Open
 
 Go to [localhost:3000](http://localhost:3000).
+
+## Docker
+
+### Build the container
+
+```
+npm run docker:build
+```
+
+### Run
+
+```
+docker-compose up -d
+```
+
+### Stop
+
+```
+docker-compose down
+```
+
+### Logs
+
+```
+docker logs -ft achiever_app_1
+```
 
 ## Contributing
 
