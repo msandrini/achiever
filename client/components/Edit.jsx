@@ -139,7 +139,7 @@ class Edit extends React.Component {
 	}
 
 	onTimeSet(groupIndex) {
-		return (hours, minutes) => {
+		return (hours = 0, minutes = 0) => {
 			const composedTime = { hours, minutes };
 
 			this.setState((prevState) => {
