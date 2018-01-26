@@ -1,11 +1,11 @@
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
-import { createHttpLink } from 'apollo-link-http';
+import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { getAuthToken } from './components/authentication/token';
 
-const httpLink = createHttpLink({ uri: 'http://localhost:3000/api' });
+const httpLink = new HttpLink();
 
 const middlewareAuthLink = new ApolloLink((operation, forward) => {
 	const token = getAuthToken();

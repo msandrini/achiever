@@ -179,11 +179,22 @@ const dailyEntries = date => async (token) => {
 
 	let endTime = '';
 
-	const isValid = Boolean(startTime);
+	let isValid = Boolean(startTime);
+	const isDebug = Boolean(process.env.DEBUG);
+	const randomTotalWorked = () => `${parseInt(Math.random() * 5, 10) + 7}:00`;
+	let newTotal = total;
+
+	if (isDebug) {
+		const isBeforeThanToday = !moment(date).isSameOrAfter(moment().startOf('day'));
+		const isSameWeek = moment(date).isBetween(moment().startOf('week'), moment().subtract(1, 'day'), null, '[)');
+		const randomness = isSameWeek ? parseInt(Math.random() * 10, 10) % 2 === 0 : true;
+		isValid = isBeforeThanToday && randomness;
+		newTotal = randomTotalWorked();
+	}
 
 	if (isValid) {
 		endTime = moment(startTime, 'hh:mm');
-		const totalWorked = moment(total, 'hh:mm');
+		const totalWorked = moment(newTotal, 'hh:mm');
 		const durantion = moment(breakTimeDuration, 'hh:mm');
 		endTime.add({ hours: totalWorked.hours(), minutes: totalWorked.minutes() });
 		endTime.add({ hours: durantion.hours(), minutes: durantion.minutes() });
@@ -199,7 +210,7 @@ const dailyEntries = date => async (token) => {
 		endTime: (isValid && endTime) || '',
 		startBreakTime: (isValid && startBreakTime) || '',
 		endBreakTime: (isValid && endBreakTime) || '',
-		total: (isValid && total) || ''
+		total: (isValid && newTotal) || ''
 	};
 
 	return timeEntry;
