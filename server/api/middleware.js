@@ -186,9 +186,11 @@ const dailyEntries = date => async (token) => {
 
 	if (isDebug) {
 		const isBeforeThanToday = !moment(date).isSameOrAfter(moment().startOf('day'));
+		const dayName = moment(date).format('dddd');
+		const isWeekDay = !(dayName === 'Sunday' || dayName === 'Saturday');
 		const isSameWeek = moment(date).isBetween(moment().startOf('week'), moment().subtract(1, 'day'), null, '[)');
 		const randomness = isSameWeek ? parseInt(Math.random() * 10, 10) % 2 === 0 : true;
-		isValid = isBeforeThanToday && randomness;
+		isValid = isBeforeThanToday && isWeekDay && randomness;
 		newTotal = randomTotalWorked();
 	}
 
