@@ -7,7 +7,7 @@
     "prebuild": "npm run check",
     "prestart": "npm run check",
     "prewatch": "npm run check",
-    "check": "npx check-node-version --print --node 8 --npm 5",
+    "check": "npx check-node-version --print --node 8 --npm 5 && npx check-dependencies",
     "start": "node server/index.js",
     "start:debug": "DEBUG=true npm start",
     "start:debug-win": "set DEBUG=true && npm start",
