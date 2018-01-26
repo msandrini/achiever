@@ -105,7 +105,6 @@ class Edit extends React.Component {
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 		}
-
 	}
 
 	onDateChange(date) {
@@ -294,6 +293,7 @@ class Edit extends React.Component {
 			const labouredHoursOnDay = dayEntries.total;
 			const isToday = areTheSameDay(moment(dayEntries.date), moment());
 			const hoursBalanceUpToDate = this._getHoursBalanceValues(
+				chosenDate,
 				labouredHoursOnDay,
 				weekEntriesQuery
 			);
@@ -431,13 +431,15 @@ class Edit extends React.Component {
 	}
 
 	/**
-	 * Set state hoursBalanceUpToDate based on weekentries props
-	 * @param {Object} weekEntriesQuery is the fecthed query return
+	 * Return state hoursBalanceUpToDate based on weekentries
+	 * @param {Object} controlDate is a Moment() of the selected day.
+	 * @param {Object} weekEntriesQuery is the fecthed query return.
+	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
 	 */
-	_getHoursBalanceValues(labouredHoursOnDay, weekEntriesQuery) {
+	_getHoursBalanceValues(controlDate, labouredHoursOnDay, weekEntriesQuery) {
 		const _this = this;
 		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-			this.state.controlDate,
+			controlDate,
 			{
 				labouredHoursOnDay,
 				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
