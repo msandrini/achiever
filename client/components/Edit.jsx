@@ -480,7 +480,14 @@ class Edit extends React.Component {
 			alertMessage
 		} = this.state;
 
-		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
+		const {
+			dailyContractedHours
+		} = this.props.userDetailsQuery.userDetails || {};
+
+		const {
+			weekEntries
+		} = this.props.weekEntriesQuery;
+
 		const projectPhases = this.props.projectPhasesQuery.phases || {};
 
 		const activityOptions = phase.activities.options ? phase.activities.options : [];
@@ -583,8 +590,9 @@ class Edit extends React.Component {
 					</div>
 				</form>
 				<WeeklyCalendar
-					controlDate={this.state.controlDate}
-					weekEntries={this.props.weekEntriesQuery.weekEntries}
+					controlDate={controlDate}
+					weekEntries={weekEntries}
+					storedTimes={storedTimes}
 				/>
 				<AlertModal
 					active={Boolean(alertMessage)}
