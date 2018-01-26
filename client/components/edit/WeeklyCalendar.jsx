@@ -25,12 +25,15 @@ const _getDateFromComposedObj = (dateObj, entryType) => {
  * @param {Object[]} storedTimes is an array of stored times
  */
 const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
+	const _isEmptyObj = obj => (
+		Object.keys(obj).length === 0 ? 0 : obj
+	);
 	const dayEntry = {
 		...timeEntryAtIndex,
-		startTime: new TimeDuration(storedTimes[0]).toString(),
-		startBreakTime: new TimeDuration(storedTimes[1]).toString(),
-		endBreakTime: new TimeDuration(storedTimes[2]).toString(),
-		endTime: new TimeDuration(storedTimes[3]).toString()
+		startTime: new TimeDuration(_isEmptyObj(storedTimes[0])).toString(),
+		startBreakTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
+		endBreakTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
+		endTime: new TimeDuration(_isEmptyObj(storedTimes[3])).toString()
 	};
 	return dayEntry;
 };
