@@ -105,7 +105,6 @@ class Edit extends React.Component {
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 		}
-
 	}
 
 	onDateChange(date) {
@@ -140,7 +139,7 @@ class Edit extends React.Component {
 	}
 
 	onTimeSet(groupIndex) {
-		return (hours, minutes) => {
+		return (hours = 0, minutes = 0) => {
 			const composedTime = { hours, minutes };
 
 			this.setState((prevState) => {
@@ -294,6 +293,7 @@ class Edit extends React.Component {
 			const labouredHoursOnDay = dayEntries.total;
 			const isToday = areTheSameDay(moment(dayEntries.date), moment());
 			const hoursBalanceUpToDate = this._getHoursBalanceValues(
+				chosenDate,
 				labouredHoursOnDay,
 				weekEntriesQuery
 			);
@@ -431,13 +431,15 @@ class Edit extends React.Component {
 	}
 
 	/**
-	 * Set state hoursBalanceUpToDate based on weekentries props
-	 * @param {Object} weekEntriesQuery is the fecthed query return
+	 * Return state hoursBalanceUpToDate based on weekentries
+	 * @param {Object} controlDate is a Moment() of the selected day.
+	 * @param {Object} weekEntriesQuery is the fecthed query return.
+	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
 	 */
-	_getHoursBalanceValues(labouredHoursOnDay, weekEntriesQuery) {
+	_getHoursBalanceValues(controlDate, labouredHoursOnDay, weekEntriesQuery) {
 		const _this = this;
 		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-			this.state.controlDate,
+			controlDate,
 			{
 				labouredHoursOnDay,
 				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
@@ -480,7 +482,14 @@ class Edit extends React.Component {
 			alertMessage
 		} = this.state;
 
-		const { dailyContractedHours } = this.props.userDetailsQuery.userDetails || {};
+		const {
+			dailyContractedHours
+		} = this.props.userDetailsQuery.userDetails || {};
+
+		const {
+			weekEntries
+		} = this.props.weekEntriesQuery;
+
 		const projectPhases = this.props.projectPhasesQuery.phases || {};
 
 		const activityOptions = phase.activities.options ? phase.activities.options : [];
@@ -583,8 +592,9 @@ class Edit extends React.Component {
 					</div>
 				</form>
 				<WeeklyCalendar
-					controlDate={this.state.controlDate}
-					weekEntries={this.props.weekEntriesQuery.weekEntries}
+					controlDate={controlDate}
+					weekEntries={weekEntries}
+					storedTimes={storedTimes}
 				/>
 				<AlertModal
 					active={Boolean(alertMessage)}

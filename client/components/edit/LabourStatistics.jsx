@@ -20,7 +20,7 @@ const LabourStatistics = (props) => {
 	const weekHoursBalanceIndicatorString = (weekHoursBalance > 0) ?
 		strings.hoursBalanceOnWeekUpToNowDebt : strings.hoursBalanceOnWeekUpToNowSurplus;
 	const weekHoursBalanceString = weekHoursBalanceIndicatorString
-		.replace('{0}', weekHoursBalance.toString());
+		.replace('{0}', (weekHoursBalance.toString()).replace('-', ''));
 
 	return (
 		<div className="gauges">
