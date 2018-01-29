@@ -4,7 +4,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimeDuration from 'time-duration';
+// import TimeDuration from 'time-duration';
 
 import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
@@ -76,7 +76,6 @@ class Edit extends React.Component {
 		this.imReligious = this.imReligious.bind(this);
 		this.onAlertClose = this.onAlertClose.bind(this);
 		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
-		this._calculateTotalHoursBalance = this._calculateTotalHoursBalance.bind(this);
 		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
 
 		this.submitButton = null;
@@ -463,26 +462,6 @@ class Edit extends React.Component {
 		return hoursBalanceUpToDate;
 	}
 
-	/**
-	 * Calculate the total hours balance follwing the rule:
-	 * totalHoursBalance = hours balance (fetched from server) + local_balance (from the edit day)
-	 * local balace = select day laboured hours - contract day laboured hours
-	 * @param {Object[]} timeEntries is an array of {hours, minutes} as state.storedTimes
-	 */
-	_calculateTotalHoursBalance(timeEntries) {
-		const { balance, dailyContractedHours } = this.props.userDetailsQuery.userDetails;
-		const hoursBalanceDuration = new TimeDuration(balance);
-		const selectedDayHoursBalance = (timesAreValid(timeEntries) &&
-			new TimeDuration(calculateLabouredHours(timeEntries))) || new TimeDuration();
-
-		return (
-			hoursBalanceDuration
-				.add(selectedDayHoursBalance
-					.subtract(dailyContractedHours))
-				.toString()
-		);
-	}
-
 	render() {
 		const {
 			controlDate,
@@ -497,6 +476,7 @@ class Edit extends React.Component {
 		} = this.state;
 
 		const {
+			balance,
 			dailyContractedHours
 		} = this.props.userDetailsQuery.userDetails || {};
 
@@ -550,7 +530,7 @@ class Edit extends React.Component {
 							dayHoursEntitled={dailyContractedHours}
 							weekHoursLaboured={hoursBalanceUpToDate.labouredHoursUpToDate}
 							weekHoursEntitled={hoursBalanceUpToDate.contractedHoursUpToDate}
-							hoursBalance={this._calculateTotalHoursBalance(storedTimes)}
+							rawBalance={balance}
 						/>
 					</div>
 					<div className="column column-half">
