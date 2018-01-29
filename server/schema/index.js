@@ -66,7 +66,7 @@ const typeDefs = `
 	type UserDetails {
 		name: String!
 		dailyContractedHours: String!
-		balance: String!
+		lastFridayBalance: String!
 	}
 
 	type Query {
