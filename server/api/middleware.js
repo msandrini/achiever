@@ -255,11 +255,11 @@ const addTimeEntry = timeEntry => async (token) => {
 	const cookieJar = cookieJarFactory(token);
 	let { phaseId, activityId } = timeEntry;
 	if (!timeEntry.phaseId || !timeEntry.activityId) {
-		const phaseOptions = await phases(token);
+		const phaseOptions = await phases()(token);
 		const defaultPhaseId = phaseOptions.default;
 		phaseId = phaseId || defaultPhaseId;
 
-		const activityOptions = await activities(token, phaseId);
+		const activityOptions = await activities(phaseId)(token);
 		const defaultActivityId = activityOptions.default;
 		activityId = activityId || defaultActivityId;
 	}
