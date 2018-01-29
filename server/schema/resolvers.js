@@ -63,18 +63,11 @@ const resolvers = {
 		addTimeEntry: async (_, { timeEntry }, { token }) => (
 			callWithAuth(addTimeEntry(timeEntry), token)
 		),
-		delTimeEntry: async (_, { date }, { token }) => {
-			if (!token) {
-				throw notAuthorizedMessage;
-			}
-
-			try {
-				await login(token);
+		delTimeEntry: async (_, { date }, { token }) => (
+			callWithAuth(async () => {
 				const timeEntry = await dailyEntries(date)(token);
 
 				if (!timeEntry || !timeEntry.id) {
-					await logout(token);
-
 					return false;
 				}
 
@@ -87,12 +80,27 @@ const resolvers = {
 				if (breakTimeId) {
 					await delTimeEntry(token, breakTimeId);
 				}
-			} finally {
-				await logout(token);
-			}
 
-			return true;
-		}
+				return true;
+			}, token)
+		),
+		updateTimeEntry: async (_, { timeEntry }, { token }) => (
+			callWithAuth(async () => {
+				const persistedTimeEntry = await dailyEntries(timeEntry.date)(token);
+
+				const { workTimeId, breakTimeId } = persistedTimeEntry.id;
+
+				if (workTimeId) {
+					await delTimeEntry(token, workTimeId);
+				}
+
+				if (breakTimeId) {
+					await delTimeEntry(token, breakTimeId);
+				}
+
+				return addTimeEntry(timeEntry)(token);
+			}, token)
+		)
 	},
 	Phase: {
 		activities: async ({ id }, _, { token }) => (

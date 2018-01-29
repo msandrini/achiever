@@ -80,6 +80,7 @@ const typeDefs = `
 		signIn(user: String!, password: String!): Token
 		addTimeEntry(timeEntry: TimeEntryInput!): TimeEntry
 		delTimeEntry(date: String!): Boolean
+		updateTimeEntry(timeEntry: TimeEntryInput!): TimeEntry
 	}
 `;
 
