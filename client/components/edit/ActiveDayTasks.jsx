@@ -10,7 +10,7 @@ import {
 
 import strings from '../../../shared/strings';
 
-const SuggestionBox = (props) => {
+const ActiveDayTasks = (props) => {
 	const {
 		selectedActivity,
 		selectedPhase,
@@ -36,13 +36,13 @@ const SuggestionBox = (props) => {
 	}
 
 	return (
-		<div className="active=day-tasks">
+		<div className="active-day-tasks">
 			<SelectGroup
 				name="projectPhase"
 				label={strings.projectPhase}
 				options={projectPhases.options}
 				selected={selectedPhase.id}
-				onChange={onPhaseSelect(projectPhases.options)}		// _setProjectPhase
+				onChange={onPhaseSelect(projectPhases.options)}
 				showTextInstead={alternativeTextForProjectPhase}
 				tabIndex={tabIndex}
 				disabled={disable}
@@ -52,7 +52,7 @@ const SuggestionBox = (props) => {
 				label={strings.activity}
 				options={activityOptions}
 				selected={selectedActivity.id}
-				onChange={onActivitySelect(selectedPhase.activities.options)}	// _setActivity
+				onChange={onActivitySelect(selectedPhase.activities.options)}
 				showTextInstead={alternativeTextForActivity}
 				tabIndex={tabIndex + 1}
 				disabled={disable}
@@ -61,9 +61,9 @@ const SuggestionBox = (props) => {
 	);
 };
 
-export default SuggestionBox;
+export default ActiveDayTasks;
 
-SuggestionBox.propTypes = {
+ActiveDayTasks.propTypes = {
 	disable: PropTypes.bool,
 	isHoliday: PropTypes.bool,
 	onPhaseSelect: PropTypes.func.isRequired,
@@ -74,7 +74,7 @@ SuggestionBox.propTypes = {
 	tabIndex: PropTypes.number
 };
 
-SuggestionBox.defaultProps = {
+ActiveDayTasks.defaultProps = {
 	disable: false,
 	isHoliday: false,
 	tabIndex: 0

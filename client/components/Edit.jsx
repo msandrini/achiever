@@ -77,7 +77,11 @@ class Edit extends React.Component {
 		this.onAlertClose = this.onAlertClose.bind(this);
 		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
 		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
-		this._setActivity = this._setActivity.bind(this);
+		// For phases
+		this.onSetActivity = this.onSetActivity.bind(this);
+		this.onSetProjectPhase = this.onSetProjectPhase.bind(this);
+		this._populateProjectPhaseAndActivity =	this._populateProjectPhaseAndActivity.bind(this);
+		this._setPhaseAndActivityForChosenDate = this._setPhaseAndActivityForChosenDate.bind(this);
 
 		this.submitButton = null;
 	}
@@ -225,7 +229,7 @@ class Edit extends React.Component {
 		};
 	}
 
-	_setProjectPhase(phases) {
+	onSetProjectPhase(phases) {
 		return (value) => {
 			const phase = phases.find(option => option.id === value.id);
 
@@ -239,7 +243,7 @@ class Edit extends React.Component {
 		};
 	}
 
-	_setActivity(activities) {
+	onSetActivity(activities) {
 		return (value) => {
 			const id = parseInt(value, 10);
 			const activity = activities.find(option => option.id === id);
@@ -528,8 +532,8 @@ class Edit extends React.Component {
 						<ActiveDayTasks
 							disable={isHoliday}
 							isHoliday={isHoliday}
-							onPhaseSelect={this._setProjectPhase}
-							onActivitySelect={this._setActivity}
+							onPhaseSelect={this.onSetProjectPhase}
+							onActivitySelect={this.onSetActivity}
 							projectPhasesQuery={this.props.projectPhasesQuery}
 							selectedActivity={activity}
 							selectedPhase={phase}
