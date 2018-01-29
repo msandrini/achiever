@@ -2,5 +2,8 @@ HTTP/1.1 200 OK
 Content-Type: text/html
 
 <form id="timereg_delete" method="post">
+	<select name="person" id="person" style="display: none">
+		<option value="123"></option>
+	</select>
 	<input type="hidden" value="8055c698c8a1e1f00a71b35ccfd46427" name="form_key" />
 </form>
