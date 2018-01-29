@@ -9,11 +9,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as queries from '../queries.graphql';
 import TimeGroup from './edit/TimeGroup';
 import LabourStatistics from './edit/LabourStatistics';
-import SelectGroup from './edit/SelectGroup';
 import WeeklyCalendar from './edit/WeeklyCalendar';
 import Panel from './ui/Panel';
 import AlertModal from './ui/modals/AlertModal';
 import PageLoading from './genericPages/PageLoading';
+import ActiveDayTasks from './edit/ActiveDayTasks';
 
 import {
 	areTheSameDay,
@@ -26,7 +26,8 @@ import {
 	timesAreValid,
 	dismemberTimeString,
 	isDayBlockedInPast,
-	isDayAfterToday
+	isDayAfterToday,
+	SPECIAL_ACTIVITY_HOLIDAY
 } from '../utils';
 
 import strings from '../../shared/strings';
@@ -36,7 +37,6 @@ import '../styles/calendar.styl';
 const referenceHours = [9, 12, 13, 17];
 const START_TABINDEX = 0;
 const CTA_TABINDEX = 10;
-const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
 
 const _getChosenDateInfoFromWeekInfo = (date, { timeEntries }) =>
 	timeEntries.find(item => item.date === date.format('YYYY-MM-DD'));
@@ -77,6 +77,7 @@ class Edit extends React.Component {
 		this.onAlertClose = this.onAlertClose.bind(this);
 		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
 		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
+		this._setActivity = this._setActivity.bind(this);
 
 		this.submitButton = null;
 	}
@@ -102,6 +103,7 @@ class Edit extends React.Component {
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
+
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 		}
@@ -484,22 +486,9 @@ class Edit extends React.Component {
 			weekEntries
 		} = this.props.weekEntriesQuery;
 
-		const projectPhases = this.props.projectPhasesQuery.phases || {};
-
-		const activityOptions = phase.activities.options ? phase.activities.options : [];
-
 		const isHoliday = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
 		const shouldHideTimeGroup = index => isHoliday && (index === 1 || index === 2);
 		const isEditionDisabled = isHoliday || !controlDateIsValid;
-
-		let alternativeTextForProjectPhase = projectPhases.options ? null : strings.loading;
-		if (projectPhases.options && projectPhases.options.length === 1) {
-			alternativeTextForProjectPhase = projectPhases.options[0].name;
-		}
-		let alternativeTextForActivity = projectPhases.options ? null : strings.loading;
-		if (isHoliday) {
-			alternativeTextForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
-		}
 
 		const isTimeEntryPersisted = this._isControlDatePersisted();
 		const submitAction = isTimeEntryPersisted ?
@@ -536,25 +525,15 @@ class Edit extends React.Component {
 					<div className="column column-half">
 						<Panel message={this.state.successMessage} type="success" />
 						<Panel message={this.state.errorMessage} type="error" />
-						<SelectGroup
-							name="projectPhase"
-							label={strings.projectPhase}
-							options={projectPhases.options}
-							selected={phase.id}
-							onChange={this._setProjectPhase(projectPhases.options)}
-							showTextInstead={alternativeTextForProjectPhase}
+						<ActiveDayTasks
+							disable={isHoliday}
+							isHoliday={isHoliday}
+							onPhaseSelect={this._setProjectPhase}
+							onActivitySelect={this._setActivity}
+							projectPhasesQuery={this.props.projectPhasesQuery}
+							selectedActivity={activity}
+							selectedPhase={phase}
 							tabIndex={START_TABINDEX}
-							disabled={isEditionDisabled}
-						/>
-						<SelectGroup
-							name="activity"
-							label={strings.activity}
-							options={activityOptions}
-							selected={activity.id}
-							onChange={this._setActivity(phase.activities.options)}
-							showTextInstead={alternativeTextForActivity}
-							tabIndex={START_TABINDEX + 1}
-							disabled={isEditionDisabled}
 						/>
 						{referenceHours.map((refHour, index) => (
 							<TimeGroup
