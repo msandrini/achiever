@@ -8,12 +8,23 @@ query userDetails {
     userDetails {
         name
         dailyContractedHours
-        balance
+        lastFridayBalance
     }
 }
 
 mutation addTimeEntry($timeEntry: TimeEntryInput!) {
     addTimeEntry(timeEntry: $timeEntry) {
+        date
+        startTime
+        startBreakTime
+        endBreakTime
+        endTime
+        total
+    }
+}
+
+mutation updateTimeEntry($timeEntry: TimeEntryInput!) {
+    updateTimeEntry(timeEntry: $timeEntry) {
         date
         startTime
         startBreakTime
