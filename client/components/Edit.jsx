@@ -476,7 +476,7 @@ class Edit extends React.Component {
 		} = this.state;
 
 		const {
-			balance,
+			lastFridayBalance,
 			dailyContractedHours
 		} = this.props.userDetailsQuery.userDetails || {};
 
@@ -530,7 +530,7 @@ class Edit extends React.Component {
 							dayHoursEntitled={dailyContractedHours}
 							weekHoursLaboured={hoursBalanceUpToDate.labouredHoursUpToDate}
 							weekHoursEntitled={hoursBalanceUpToDate.contractedHoursUpToDate}
-							rawBalance={balance}
+							rawBalance={lastFridayBalance}
 						/>
 					</div>
 					<div className="column column-half">

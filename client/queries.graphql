@@ -8,7 +8,7 @@ query userDetails {
     userDetails {
         name
         dailyContractedHours
-        balance
+        lastFridayBalance
     }
 }
 

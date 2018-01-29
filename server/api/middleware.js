@@ -147,12 +147,15 @@ const userDetails = () => async (token) => {
 	const $ = cheerio.load(responseHtml);
 	const name = $('h4').eq(0).text().trim();
 	const dailyContractedHours = $('table tr td').eq(1).text();
-	const balance = $('table tr td').eq(8).text();
+	const date = moment($('table tr td').eq(0).text().split(' ')[0]);
+	const dayOfWeek = date.day();
+	const targetFriday = dayOfWeek === 5 ? 0 : dayOfWeek + 1;
+	const lastFridayBalance = $('table tr td').eq((targetFriday * 10) + 8).text();
 
 	return {
 		name,
 		dailyContractedHours,
-		balance
+		lastFridayBalance
 	};
 };
 
