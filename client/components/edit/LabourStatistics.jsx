@@ -13,14 +13,16 @@ const LabourStatistics = (props) => {
 		dayHoursEntitled,
 		weekHoursLaboured,
 		weekHoursEntitled,
-		hoursBalance
+		rawBalance
 	} = props;
 
 	const weekHoursBalance = new TimeDuration(weekHoursEntitled - weekHoursLaboured);
 	const weekHoursBalanceIndicatorString = (weekHoursBalance > 0) ?
 		strings.hoursBalanceOnWeekUpToNowDebt : strings.hoursBalanceOnWeekUpToNowSurplus;
 	const weekHoursBalanceString = weekHoursBalanceIndicatorString
-		.replace('{0}', (weekHoursBalance.toString()).replace('-', ''));
+		.replace('{0}', weekHoursBalance.toString());
+	const rawBalanceDuration = new TimeDuration(rawBalance);
+	const totalBalance = new TimeDuration(rawBalanceDuration + weekHoursBalance);
 
 	return (
 		<div className="gauges">
@@ -49,7 +51,7 @@ const LabourStatistics = (props) => {
 			<div className="hour-bank">
 				<span>
 					{strings.hoursBalanceForToday}
-					<strong>{hoursBalance}</strong>
+					<strong>{totalBalance.toString()}</strong>
 				</span>
 			</div>
 		</div>
@@ -61,7 +63,7 @@ LabourStatistics.propTypes = {
 	dayHoursEntitled: PropTypes.string,
 	weekHoursLaboured: PropTypes.object,
 	weekHoursEntitled: PropTypes.object,
-	hoursBalance: PropTypes.string
+	rawBalance: PropTypes.string
 };
 
 LabourStatistics.defaultProps = {
@@ -69,7 +71,7 @@ LabourStatistics.defaultProps = {
 	dayHoursEntitled: '8:00',
 	weekHoursLaboured: new TimeDuration(),
 	weekHoursEntitled: new TimeDuration('40:00'),
-	hoursBalance: '0:00'
+	rawBalance: '0:00'
 };
 
 export default LabourStatistics;
