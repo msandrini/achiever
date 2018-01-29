@@ -19,10 +19,11 @@ const LabourStatistics = (props) => {
 	const weekHoursBalance = new TimeDuration(weekHoursEntitled - weekHoursLaboured);
 	const weekHoursBalanceIndicatorString = (weekHoursBalance > 0) ?
 		strings.hoursBalanceOnWeekUpToNowDebt : strings.hoursBalanceOnWeekUpToNowSurplus;
+	const weekHoursBalanceNormalised = new TimeDuration(Math.abs(weekHoursBalance));
 	const weekHoursBalanceString = weekHoursBalanceIndicatorString
-		.replace('{0}', weekHoursBalance.toString());
+		.replace('{0}', weekHoursBalanceNormalised.toString());
 	const rawBalanceDuration = new TimeDuration(rawBalance);
-	const totalBalance = new TimeDuration(rawBalanceDuration + weekHoursBalance);
+	const totalBalance = new TimeDuration(rawBalanceDuration - weekHoursBalance);
 
 	return (
 		<div className="gauges">
