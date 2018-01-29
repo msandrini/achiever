@@ -77,6 +77,7 @@ class Edit extends React.Component {
 		this.onAlertClose = this.onAlertClose.bind(this);
 		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
 		this._calculateTotalHoursBalance = this._calculateTotalHoursBalance.bind(this);
+		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
 
 		this.submitButton = null;
 	}
@@ -387,6 +388,19 @@ class Edit extends React.Component {
 		};
 	}
 
+	_isControlDatePersisted() {
+		const { controlDate } = this.state;
+		const { loading, error, weekEntries } = this.props.weekEntriesQuery;
+
+		if (!loading && !error && weekEntries) {
+			const persisted = weekEntries.timeEntries
+				.find(entry => entry.date === controlDate.format('YYYY-MM-DD'));
+			return Boolean(persisted && persisted.total);
+		}
+
+		return false;
+	}
+
 	_getStyleClassForCalendarDays(weekEntries = {}) {
 		const dayStyles = [
 			{ 'calendar-checked': [] },
@@ -507,6 +521,11 @@ class Edit extends React.Component {
 			alternativeTextForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
 		}
 
+		const isTimeEntryPersisted = this._isControlDatePersisted();
+		const submitAction = isTimeEntryPersisted ?
+			this.props.updateTimeEntry :
+			this.props.addTimeEntry;
+
 		return (
 			<div className="page-wrapper">
 				<PageLoading
@@ -516,7 +535,7 @@ class Edit extends React.Component {
 					{strings.dateBeingEdited}:{' '}
 					<strong>{controlDate.format('L')}</strong>
 				</h2>
-				<form onSubmit={this.onSubmit(this.props.addTimeEntry)} className="columns">
+				<form onSubmit={this.onSubmit(submitAction)} className="columns">
 					<div className="column column-half column-right-aligned">
 						<DatePicker
 							inline
@@ -579,7 +598,7 @@ class Edit extends React.Component {
 							disabled={!this._shouldSendBeAvailable()}
 							tabIndex={CTA_TABINDEX}
 						>
-							{strings.send}
+							{isTimeEntryPersisted ? strings.update : strings.send}
 						</button>
 						<button
 							type="button"
@@ -608,6 +627,7 @@ class Edit extends React.Component {
 
 export default compose(
 	graphql(queries.addTimeEntry, { name: 'addTimeEntry' }),
+	graphql(queries.updateTimeEntry, { name: 'updateTimeEntry' }),
 	graphql(queries.projectPhases, { name: 'projectPhasesQuery' }),
 	graphql(queries.userDetails, { name: 'userDetailsQuery' }),
 	graphql(queries.weekEntries, {
@@ -622,6 +642,7 @@ export default compose(
 
 Edit.propTypes = {
 	addTimeEntry: PropTypes.func.isRequired,
+	updateTimeEntry: PropTypes.func.isRequired,
 	weekEntriesQuery: PropTypes.object.isRequired,
 	projectPhasesQuery: PropTypes.object.isRequired,
 	userDetailsQuery: PropTypes.object.isRequired

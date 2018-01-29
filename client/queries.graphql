@@ -23,6 +23,17 @@ mutation addTimeEntry($timeEntry: TimeEntryInput!) {
     }
 }
 
+mutation updateTimeEntry($timeEntry: TimeEntryInput!) {
+    updateTimeEntry(timeEntry: $timeEntry) {
+        date
+        startTime
+        startBreakTime
+        endBreakTime
+        endTime
+        total
+    }
+}
+
 query dayEntry($date: String!) {
     dayEntry(date: $date) {
         timeEntry {

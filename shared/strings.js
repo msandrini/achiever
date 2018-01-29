@@ -56,6 +56,7 @@ const strings = {
 	weeklyCalendar: 'Calendário da semana',
 	total: 'Total',
 	send: 'Enviar',
+	update: 'Atualizar',
 	ok: 'OK',
 	cancel: 'Cancelar',
 	yes: 'Sim',
