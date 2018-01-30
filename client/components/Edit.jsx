@@ -1,5 +1,4 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
@@ -14,6 +13,7 @@ import Panel from './ui/Panel';
 import AlertModal from './ui/modals/AlertModal';
 import PageLoading from './genericPages/PageLoading';
 import ActiveDayTasks from './edit/ActiveDayTasks';
+import MonthlyCalendar from './edit/MonthlyCalendar';
 
 import {
 	areTheSameDay,
@@ -47,7 +47,6 @@ class Edit extends React.Component {
 		this.state = {
 			controlDate: moment(),
 			controlDateIsValid: true,
-			calendarDayStyles: [],
 			labouredHoursOnDay: null,
 			hoursBalanceUpToDate: {},
 			storedTimes: [{}, {}, {}, {}],
@@ -87,7 +86,7 @@ class Edit extends React.Component {
 	}
 
 	componentWillMount() {
-		this.onDateChange(this.state.controlDate);
+		this.onDateChange()(this.state.controlDate);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -105,7 +104,6 @@ class Edit extends React.Component {
 		if (this.props.weekEntriesQuery.loading && !weekEntriesQuery.loading) {
 			this._setTimesForChosenDate(this.state.controlDate, weekEntriesQuery);
 			this._setPhaseAndActivityForChosenDate(this.state.controlDate, weekEntriesQuery);
-			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
 		}
 
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
@@ -113,35 +111,39 @@ class Edit extends React.Component {
 		}
 	}
 
-	onDateChange(date) {
-		if (isDayAfterToday(date)) {
-			this.setState({ alertMessage: strings.cannotSelectFutureTime });
-			return;
-		}
-		const {
-			weekEntriesQuery,
-			projectPhasesQuery
-		} = this.props;
+	/**
+	 * returns a function that changes controlDate (selected day) and fetch new infos from server
+	 */
+	onDateChange() {
+		return (date) => {
+			if (isDayAfterToday(date)) {
+				this.setState({ alertMessage: strings.cannotSelectFutureTime });
+				return;
+			}
+			const {
+				weekEntriesQuery,
+				projectPhasesQuery
+			} = this.props;
+			const oldSelectedDate = this.state.controlDate;
+			const sameWeek = oldSelectedDate.week() === date.week();
+			const controlDateIsValid = !isDayBlockedInPast(date) && !isDayAfterToday(date);
 
-		const oldSelectedDate = this.state.controlDate;
-		const sameWeek = oldSelectedDate.week() === date.week();
-		const controlDateIsValid = !isDayBlockedInPast(date) && !isDayAfterToday(date);
-		this.setState({
-			controlDate: date,
-			controlDateIsValid,
-			errorMessage: '',
-			successMessage: ''
-		});
+			this.setState({
+				controlDate: date,
+				controlDateIsValid,
+				errorMessage: '',
+				successMessage: ''
+			});
 
-		if (!sameWeek) {
-			this._fetchWeekEntries(date);
-		}
+			if (!sameWeek) {
+				this._fetchWeekEntries(date);
+			}
 
-		this._setTimesForChosenDate(date, weekEntriesQuery);
-		if (weekEntriesQuery.weekEntries) {
-			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
-			this._getStyleClassForCalendarDays(weekEntriesQuery.weekEntries);
-		}
+			this._setTimesForChosenDate(date, weekEntriesQuery);
+			if (weekEntriesQuery.weekEntries) {
+				this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
+			}
+		};
 	}
 
 	onTimeSet(groupIndex) {
@@ -406,37 +408,6 @@ class Edit extends React.Component {
 		return false;
 	}
 
-	_getStyleClassForCalendarDays(weekEntries = {}) {
-		const dayStyles = [
-			{ 'calendar-checked': [] },
-			{ 'calendar-unchecked': [] },
-			{ 'calendar-locked': [] },
-			{ 'calendar-future-day': [] }
-		];
-		if (weekEntries.timeEntries) {
-			const weekDayNumbers = [1, 2, 3, 4, 5];
-			weekDayNumbers.forEach((day) => {
-				const dayEntries = weekEntries.timeEntries[day];
-				const elementToPush = dayEntries.total ?
-					dayStyles[0]['calendar-checked'] :
-					dayStyles[1]['calendar-unchecked'];
-
-				const dayMoment = moment(dayEntries.date);
-
-				elementToPush.push(dayMoment);
-
-				if (isDayBlockedInPast(dayMoment)) {
-					dayStyles[2]['calendar-locked'].push(dayMoment);
-				}
-				if (isDayAfterToday(dayMoment)) {
-					dayStyles[3]['calendar-future-day'].push(dayMoment);
-				}
-
-			});
-		}
-		this.setState({ calendarDayStyles: dayStyles });
-	}
-
 	_shouldHaveFocus(index) {
 		const { shouldHaveFocus } = this.state;
 		if (shouldHaveFocus && shouldHaveFocus.index === index) {
@@ -477,7 +448,6 @@ class Edit extends React.Component {
 			phase,
 			activity,
 			controlDateIsValid,
-			calendarDayStyles,
 			alertMessage
 		} = this.state;
 
@@ -510,13 +480,10 @@ class Edit extends React.Component {
 				</h2>
 				<form onSubmit={this.onSubmit(submitAction)} className="columns">
 					<div className="column column-half column-right-aligned">
-						<DatePicker
-							inline
-							highlightDates={calendarDayStyles}
-							selected={this.state.controlDate}
-							onChange={this.onDateChange}
-							filterDate={date => date.isSameOrBefore(moment(), 'day')}
-							maxTime={moment()}
+						<MonthlyCalendar
+							controlDate={controlDate}
+							onDateChange={this.onDateChange()}
+							weekEntries={weekEntries}
 						/>
 						<LabourStatistics
 							dayHoursLaboured={labouredHoursOnDay}
