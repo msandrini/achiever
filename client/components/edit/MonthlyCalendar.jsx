@@ -8,6 +8,8 @@ import {
 	isDayAfterToday
 } from '../../utils';
 
+import '../../styles/calendar.styl';
+
 const _getStyleClassForCalendarDays = (weekEntries = {}) => {
 	const dayStyles = [
 		{ 'calendar-checked': [] },
