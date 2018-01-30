@@ -3,38 +3,33 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import 'react-datepicker/dist/react-datepicker.css';
-// import TimeDuration from 'time-duration';
 
-import * as queries from '../queries.graphql';
-import TimeGroup from './edit/TimeGroup';
-import LabourStatistics from './edit/LabourStatistics';
-import WeeklyCalendar from './edit/WeeklyCalendar';
-import Panel from './ui/Panel';
-import AlertModal from './ui/modals/AlertModal';
-import PageLoading from './genericPages/PageLoading';
 import ActiveDayTasks from './edit/ActiveDayTasks';
+import ActiveDayTimes from './edit/ActiveDayTimes';
+import AlertModal from './ui/modals/AlertModal';
+import LabourStatistics from './edit/LabourStatistics';
 import MonthlyCalendar from './edit/MonthlyCalendar';
+import Panel from './ui/Panel';
+import PageLoading from './genericPages/PageLoading';
+import WeeklyCalendar from './edit/WeeklyCalendar';
 
+import strings from '../../shared/strings';
+import * as queries from '../queries.graphql';
 import {
 	areTheSameDay,
+	calculateHoursBalanceUpToDate,
+	calculateLabouredHours,
+	dismemberTimeString,
 	getTodayStorage,
+	isDayBlockedInPast,
+	isDayAfterToday,
 	replacingValueInsideArray,
 	setTodayStorage,
 	submitToServer,
-	calculateLabouredHours,
-	calculateHoursBalanceUpToDate,
 	timesAreValid,
-	dismemberTimeString,
-	isDayBlockedInPast,
-	isDayAfterToday,
 	SPECIAL_ACTIVITY_HOLIDAY
 } from '../utils';
 
-import strings from '../../shared/strings';
-
-import '../styles/calendar.styl';
-
-const referenceHours = [9, 12, 13, 17];
 const START_TABINDEX = 0;
 const CTA_TABINDEX = 10;
 
@@ -61,26 +56,24 @@ class Edit extends React.Component {
 				name: '',
 				default: null
 			},
-			focusedField: null,
-			shouldHaveFocus: null,
 			sentToday: false,
 			errorMessage: '',
 			successMessage: '',
 			alertMessage: null
 		};
 
-		this.onDateChange = this.onDateChange.bind(this);
-		this.onTimeSet = this.onTimeSet.bind(this);
-		this.onSubmit = this.onSubmit.bind(this);
-		this.imReligious = this.imReligious.bind(this);
 		this.onAlertClose = this.onAlertClose.bind(this);
-		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
-		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
-		// For phases
+		this.onDateChange = this.onDateChange.bind(this);
+		this.onTimeChange = this.onTimeChange.bind(this);
 		this.onSetActivity = this.onSetActivity.bind(this);
 		this.onSetProjectPhase = this.onSetProjectPhase.bind(this);
-		this._populateProjectPhaseAndActivity =	this._populateProjectPhaseAndActivity.bind(this);
+		this.onSubmit = this.onSubmit.bind(this);
+		this.focusOnSubmit = this.focusOnSubmit.bind(this);
+		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
+		this._imReligious = this._imReligious.bind(this);
+		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
 		this._setPhaseAndActivityForChosenDate = this._setPhaseAndActivityForChosenDate.bind(this);
+		this._populateProjectPhaseAndActivity =	this._populateProjectPhaseAndActivity.bind(this);
 
 		this.submitButton = null;
 	}
@@ -109,6 +102,10 @@ class Edit extends React.Component {
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
 			this._populateProjectPhaseAndActivity(projectPhasesQuery.phases);
 		}
+	}
+
+	onAlertClose() {
+		this.setState({ alertMessage: null });
 	}
 
 	/**
@@ -146,10 +143,9 @@ class Edit extends React.Component {
 		};
 	}
 
-	onTimeSet(groupIndex) {
+	onTimeChange(groupIndex) {
 		return (hours = 0, minutes = 0) => {
 			const composedTime = { hours, minutes };
-
 			this.setState((prevState) => {
 				const storedTimes = replacingValueInsideArray(
 					prevState.storedTimes,
@@ -186,33 +182,7 @@ class Edit extends React.Component {
 
 				return newState;
 			});
-
-			if (this.state.focusedField) {
-				const modeBeingChanged = this.state.focusedField.fieldMode;
-				const valueBeingChanged = composedTime[modeBeingChanged];
-
-				if (String(valueBeingChanged).length === 2) {
-					const nextField = this._getNextField();
-					this.setState({
-						shouldHaveFocus: nextField
-					});
-				} else {
-					this.setState({
-						shouldHaveFocus: false
-					});
-				}
-			}
 		};
-	}
-
-	onFieldFocus(index) {
-		return (fieldMode) => {
-			this.setState({ focusedField: { index, fieldMode } });
-		};
-	}
-
-	onAlertClose() {
-		this.setState({ alertMessage: null });
 	}
 
 	onSubmit(callback) {
@@ -256,29 +226,82 @@ class Edit extends React.Component {
 		};
 	}
 
+	focusOnSubmit() {
+		this.submitButton.focus();
+	}
+
+	_imReligious() {
+		this.onTimeChange(0)(7, 30);
+		this.onTimeChange(1)(11, 30);
+		this.onTimeChange(2)(12, 30);
+		this.onTimeChange(3)(16, 30);
+	}
+
+	/**
+	 * Fecth the weekEntries of the given date
+	 * @param {Object} date is a moment() object
+	 */
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
 		this._setTimesForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
-	imReligious() {
-		this.onTimeSet(0)(7, 30);
-		this.onTimeSet(1)(11, 30);
-		this.onTimeSet(2)(12, 30);
-		this.onTimeSet(3)(16, 30);
+	/**
+	 * Return state hoursBalanceUpToDate based on weekentries
+	 * @param {Object} controlDate is a Moment() of the selected day.
+	 * @param {Object} weekEntriesQuery is the fecthed query return.
+	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
+	 */
+	_getHoursBalanceValues(controlDate, labouredHoursOnDay, weekEntriesQuery) {
+		const _this = this;
+		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
+			controlDate,
+			{
+				labouredHoursOnDay,
+				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
+				timeEntries: weekEntriesQuery.weekEntries.timeEntries
+			}
+		);
+		return hoursBalanceUpToDate;
 	}
 
-	_populateProjectPhaseAndActivity(projectPhases) {
-		// Set queried project phases and activities from server
-		const phase = projectPhases.options.find(option => option.id === projectPhases.default);
-		const { activities } = phase;
-		const activity = activities.options.find(option => option.id === activities.default);
+	_isControlDatePersisted() {
+		const { controlDate } = this.state;
+		const { loading, error, weekEntries } = this.props.weekEntriesQuery;
 
-		this.setState({
-			phase,
-			activity
-		});
+		if (!loading && !error && weekEntries) {
+			const persisted = weekEntries.timeEntries
+				.find(entry => entry.date === controlDate.format('YYYY-MM-DD'));
+			return Boolean(persisted && persisted.total);
+		}
+
+		return false;
+	}
+
+	_setPhaseAndActivityForChosenDate(chosenDate, weekEntriesQuery) {
+		const { weekEntries } = weekEntriesQuery;
+
+		const dayInfo = _getChosenDateInfoFromWeekInfo(chosenDate, weekEntries);
+		const activityFromDayData = dayInfo && dayInfo.activity;
+
+		if (this.state.phase.activities.options) {
+			const chosenActivity = this.state.phase.activities.options.find(activity =>
+				activity.name === activityFromDayData);
+
+			let activityToSend = {};
+			if (chosenActivity) {
+				activityToSend = chosenActivity;
+			} else if (activityFromDayData === SPECIAL_ACTIVITY_HOLIDAY.name) {
+				activityToSend = SPECIAL_ACTIVITY_HOLIDAY;
+			} else {
+				const defaultActivity = this.state.phase.activities.default;
+				activityToSend = this.state.phase.activities.options.find(activity =>
+					activity.id === defaultActivity);
+			}
+			this.setState({ activity: activityToSend });
+		}
+
 	}
 
 	_setTimesForChosenDate(chosenDate, weekEntriesQuery) {
@@ -352,91 +375,20 @@ class Edit extends React.Component {
 		}
 	}
 
-	_setPhaseAndActivityForChosenDate(chosenDate, weekEntriesQuery) {
-		const { weekEntries } = weekEntriesQuery;
-
-		const dayInfo = _getChosenDateInfoFromWeekInfo(chosenDate, weekEntries);
-		const activityFromDayData = dayInfo && dayInfo.activity;
-
-		if (this.state.phase.activities.options) {
-			const chosenActivity = this.state.phase.activities.options.find(activity =>
-				activity.name === activityFromDayData);
-
-			let activityToSend = {};
-			if (chosenActivity) {
-				activityToSend = chosenActivity;
-			} else if (activityFromDayData === SPECIAL_ACTIVITY_HOLIDAY.name) {
-				activityToSend = SPECIAL_ACTIVITY_HOLIDAY;
-			} else {
-				const defaultActivity = this.state.phase.activities.default;
-				activityToSend = this.state.phase.activities.options.find(activity =>
-					activity.id === defaultActivity);
-			}
-			this.setState({ activity: activityToSend });
-		}
-
-	}
-
-	_getNextField() {
-		const { focusedField } = this.state;
-		if (focusedField.fieldMode === 'hours') {
-			return {
-				index: focusedField.index,
-				fieldMode: 'minutes'
-			};
-		}
-		if (focusedField.fieldMode === 'minutes' && focusedField.index === 3) {
-			this.submitButton.focus();
-			return false;
-		}
-		return {
-			index: focusedField.index + 1,
-			fieldMode: 'hours'
-		};
-	}
-
-	_isControlDatePersisted() {
-		const { controlDate } = this.state;
-		const { loading, error, weekEntries } = this.props.weekEntriesQuery;
-
-		if (!loading && !error && weekEntries) {
-			const persisted = weekEntries.timeEntries
-				.find(entry => entry.date === controlDate.format('YYYY-MM-DD'));
-			return Boolean(persisted && persisted.total);
-		}
-
-		return false;
-	}
-
-	_shouldHaveFocus(index) {
-		const { shouldHaveFocus } = this.state;
-		if (shouldHaveFocus && shouldHaveFocus.index === index) {
-			return shouldHaveFocus.fieldMode;
-		}
-		return false;
-	}
-
 	_shouldSendBeAvailable() {
 		return timesAreValid(this.state.storedTimes);
 	}
 
-	/**
-	 * Return state hoursBalanceUpToDate based on weekentries
-	 * @param {Object} controlDate is a Moment() of the selected day.
-	 * @param {Object} weekEntriesQuery is the fecthed query return.
-	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
-	 */
-	_getHoursBalanceValues(controlDate, labouredHoursOnDay, weekEntriesQuery) {
-		const _this = this;
-		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-			controlDate,
-			{
-				labouredHoursOnDay,
-				contractedHoursForADay: _this.props.userDetailsQuery.userDetails.dailyContractedHours,
-				timeEntries: weekEntriesQuery.weekEntries.timeEntries
-			}
-		);
-		return hoursBalanceUpToDate;
+	_populateProjectPhaseAndActivity(projectPhases) {
+		// Set queried project phases and activities from server
+		const phase = projectPhases.options.find(option => option.id === projectPhases.default);
+		const { activities } = phase;
+		const activity = activities.options.find(option => option.id === activities.default);
+
+		this.setState({
+			phase,
+			activity
+		});
 	}
 
 	render() {
@@ -461,7 +413,6 @@ class Edit extends React.Component {
 		} = this.props.weekEntriesQuery;
 
 		const isHoliday = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
-		const shouldHideTimeGroup = index => isHoliday && (index === 1 || index === 2);
 		const isEditionDisabled = isHoliday || !controlDateIsValid;
 
 		const isTimeEntryPersisted = this._isControlDatePersisted();
@@ -497,7 +448,7 @@ class Edit extends React.Component {
 						<Panel message={this.state.successMessage} type="success" />
 						<Panel message={this.state.errorMessage} type="error" />
 						<ActiveDayTasks
-							disable={isHoliday}
+							disable={isEditionDisabled}
 							isHoliday={isHoliday}
 							onPhaseSelect={this.onSetProjectPhase}
 							onActivitySelect={this.onSetActivity}
@@ -506,21 +457,14 @@ class Edit extends React.Component {
 							selectedPhase={phase}
 							tabIndex={START_TABINDEX}
 						/>
-						{referenceHours.map((refHour, index) => (
-							<TimeGroup
-								key={refHour}
-								label={strings.times[index].label}
-								emphasis={index === 0 || index === 3}
-								tabIndexes={START_TABINDEX + 2 + (index * 2)}
-								referenceHour={refHour}
-								time={storedTimes[index] || '00'}
-								shouldHaveFocus={this._shouldHaveFocus(index)}
-								onSet={this.onTimeSet(index)}
-								onFocus={this.onFieldFocus(index)}
-								hidden={shouldHideTimeGroup(index)}
-								disabled={isEditionDisabled}
-							/>
-						))}
+						<ActiveDayTimes
+							disabled={isEditionDisabled}
+							focusOnSubmit={this.focusOnSubmit}
+							isHoliday={isHoliday}
+							onTimeChange={this.onTimeChange}
+							storedTimes={storedTimes}
+							tabIndex={START_TABINDEX + 2}
+						/>
 						<button
 							type="submit"
 							className="send"
@@ -532,7 +476,7 @@ class Edit extends React.Component {
 						</button>
 						<button
 							type="button"
-							onClick={this.imReligious}
+							onClick={this._imReligious}
 							className="test"
 							style={{ fontSize: '11px' }}
 						>
