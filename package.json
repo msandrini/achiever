@@ -108,7 +108,8 @@
   },
   "jest": {
     "setupFiles": [
-      "<rootDir>/testSetup.js"
+      "<rootDir>/testSetup.js",
+      "<rootDir>/__mocks__/localStorage.js"
     ],
     "transformIgnorePatterns": [
       "<rootDir>/node_modules/(?!time-duration)"
