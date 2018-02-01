@@ -15,6 +15,7 @@ export const storedTimesIndex = {
 	endBreakTime: 2,
 	endTime: 3
 };
+export const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
 
 /**
  * Check if the date1 === date2 based on day
