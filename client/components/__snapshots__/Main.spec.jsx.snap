@@ -23,8 +23,9 @@ ShallowWrapper {
           className="time-management-container"
         >
           <div>
-            <Apollo(ShowComponentOnRoute)
+            <ShowComponentOnRoute
               path="blank"
+              userDetailsQuery={Object {}}
             />
           </div>
         </div>,
@@ -48,8 +49,9 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <div>
-            <Apollo(ShowComponentOnRoute)
+            <ShowComponentOnRoute
               path="blank"
+              userDetailsQuery={Object {}}
             />
           </div>,
           "className": "time-management-container",
@@ -60,8 +62,9 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "host",
           "props": Object {
-            "children": <Apollo(ShowComponentOnRoute)
+            "children": <ShowComponentOnRoute
               path="blank"
+              userDetailsQuery={Object {}}
             />,
           },
           "ref": null,
@@ -71,6 +74,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "path": "blank",
+              "userDetailsQuery": Object {},
             },
             "ref": null,
             "rendered": null,
@@ -95,8 +99,9 @@ ShallowWrapper {
             className="time-management-container"
           >
             <div>
-              <Apollo(ShowComponentOnRoute)
+              <ShowComponentOnRoute
                 path="blank"
+                userDetailsQuery={Object {}}
               />
             </div>
           </div>,
@@ -120,8 +125,9 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <div>
-              <Apollo(ShowComponentOnRoute)
+              <ShowComponentOnRoute
                 path="blank"
+                userDetailsQuery={Object {}}
               />
             </div>,
             "className": "time-management-container",
@@ -132,8 +138,9 @@ ShallowWrapper {
             "key": undefined,
             "nodeType": "host",
             "props": Object {
-              "children": <Apollo(ShowComponentOnRoute)
+              "children": <ShowComponentOnRoute
                 path="blank"
+                userDetailsQuery={Object {}}
               />,
             },
             "ref": null,
@@ -143,6 +150,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "path": "blank",
+                "userDetailsQuery": Object {},
               },
               "ref": null,
               "rendered": null,
