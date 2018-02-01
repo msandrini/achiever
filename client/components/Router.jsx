@@ -87,7 +87,11 @@ class ShowComponentOnRoute extends React.Component {
 
 ShowComponentOnRoute.propTypes = {
 	path: PropTypes.string.isRequired,
-	userDetailsQuery: PropTypes.object.isRequired
+	userDetailsQuery: PropTypes.object
+};
+
+ShowComponentOnRoute.defaultProps = {
+	userDetailsQuery: {}
 };
 
 export default graphql(queries.userDetails, { name: 'userDetailsQuery' })(ShowComponentOnRoute);
