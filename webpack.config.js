@@ -4,7 +4,7 @@ const appPath = dir => path.resolve(__dirname, dir);
 
 module.exports = {
 	entry: {
-		app: appPath('client/index.jsx')
+		app: ['babel-polyfill', appPath('client/index.jsx')]
 	},
 	output: {
 		path: appPath('client/dist'),
@@ -18,7 +18,7 @@ module.exports = {
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				query: {
-					presets: ['es2015', 'react']
+					presets: ['env', 'react']
 				}
 			},
 			{

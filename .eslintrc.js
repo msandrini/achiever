@@ -1,6 +1,6 @@
 module.exports = {
     "root": true,
-    "extends": "airbnb",
+    "extends": ["airbnb", "plugin:jest/recommended"],
     "rules": {
         /* The default of it is alignment with 4 spaces for code and 2 spaces
             for JSX, we override it all for tabs */
