@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadingModal should render properly without props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <LoadingModal
+    active={false}
+    title={null}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "active": false,
+      "buttons": Array [
+        Object {
+          "action": [Function],
+          "label": "OK",
+        },
+      ],
+      "content": <Spinner
+        class="loadingModal"
+      />,
+      "hasButtons": false,
+      "title": "Carregando...",
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "active": false,
+        "buttons": Array [
+          Object {
+            "action": [Function],
+            "label": "OK",
+          },
+        ],
+        "content": <Spinner
+          class="loadingModal"
+        />,
+        "hasButtons": false,
+        "title": "Carregando...",
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`LoadingModal should render with a new title name 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <LoadingModal
+    active={false}
+    title="this is a loading modal title"
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "active": false,
+      "buttons": Array [
+        Object {
+          "action": [Function],
+          "label": "OK",
+        },
+      ],
+      "content": <Spinner
+        class="loadingModal"
+      />,
+      "hasButtons": false,
+      "title": "this is a loading modal title",
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "active": false,
+        "buttons": Array [
+          Object {
+            "action": [Function],
+            "label": "OK",
+          },
+        ],
+        "content": <Spinner
+          class="loadingModal"
+        />,
+        "hasButtons": false,
+        "title": "this is a loading modal title",
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

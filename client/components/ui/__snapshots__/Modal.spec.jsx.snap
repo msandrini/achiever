@@ -1,0 +1,762 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Modal shoudnt render buttons if hasbutton false 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Modal
+    active={false}
+    buttons={
+      Array [
+        Object {
+          "action": [Function],
+          "label": "OK",
+        },
+      ]
+    }
+    content=""
+    hasButtons={false}
+    title=""
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <div
+        className="modal"
+      >
+        <div
+          className="title"
+        >
+          
+        </div>
+        <div
+          className="content"
+        >
+          
+        </div>
+        
+      </div>,
+      "className": "modal-layer ",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div
+            className="title"
+          >
+            
+          </div>,
+          <div
+            className="content"
+          >
+            
+          </div>,
+          "",
+        ],
+        "className": "modal",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "title",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "content",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        "",
+      ],
+      "type": "div",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <div
+          className="modal"
+        >
+          <div
+            className="title"
+          >
+            
+          </div>
+          <div
+            className="content"
+          >
+            
+          </div>
+          
+        </div>,
+        "className": "modal-layer ",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="title"
+            >
+              
+            </div>,
+            <div
+              className="content"
+            >
+              
+            </div>,
+            "",
+          ],
+          "className": "modal",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "title",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "content",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          "",
+        ],
+        "type": "div",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`Modal should render properly without any props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Modal
+    active={false}
+    buttons={
+      Array [
+        Object {
+          "action": [Function],
+          "label": "OK",
+        },
+      ]
+    }
+    content=""
+    hasButtons={true}
+    title=""
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <div
+        className="modal"
+      >
+        <div
+          className="title"
+        >
+          
+        </div>
+        <div
+          className="content"
+        >
+          
+        </div>
+        <div
+          className="buttons"
+        >
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            OK
+          </button>
+        </div>
+      </div>,
+      "className": "modal-layer ",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div
+            className="title"
+          >
+            
+          </div>,
+          <div
+            className="content"
+          >
+            
+          </div>,
+          <div
+            className="buttons"
+          >
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              OK
+            </button>
+          </div>,
+        ],
+        "className": "modal",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "title",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "content",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <button
+                onClick={[Function]}
+                type="button"
+              >
+                OK
+              </button>,
+            ],
+            "className": "buttons",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": "OK",
+              "nodeType": "host",
+              "props": Object {
+                "children": "OK",
+                "onClick": [Function],
+                "type": "button",
+              },
+              "ref": null,
+              "rendered": "OK",
+              "type": "button",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <div
+          className="modal"
+        >
+          <div
+            className="title"
+          >
+            
+          </div>
+          <div
+            className="content"
+          >
+            
+          </div>
+          <div
+            className="buttons"
+          >
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              OK
+            </button>
+          </div>
+        </div>,
+        "className": "modal-layer ",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="title"
+            >
+              
+            </div>,
+            <div
+              className="content"
+            >
+              
+            </div>,
+            <div
+              className="buttons"
+            >
+              <button
+                onClick={[Function]}
+                type="button"
+              >
+                OK
+              </button>
+            </div>,
+          ],
+          "className": "modal",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "title",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "content",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <button
+                  onClick={[Function]}
+                  type="button"
+                >
+                  OK
+                </button>,
+              ],
+              "className": "buttons",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": "OK",
+                "nodeType": "host",
+                "props": Object {
+                  "children": "OK",
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                "ref": null,
+                "rendered": "OK",
+                "type": "button",
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`Modal should show modal if props active 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Modal
+    active={true}
+    buttons={
+      Array [
+        Object {
+          "action": [Function],
+          "label": "OK",
+        },
+      ]
+    }
+    content=""
+    hasButtons={true}
+    title=""
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <div
+        className="modal"
+      >
+        <div
+          className="title"
+        >
+          
+        </div>
+        <div
+          className="content"
+        >
+          
+        </div>
+        <div
+          className="buttons"
+        >
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            OK
+          </button>
+        </div>
+      </div>,
+      "className": "modal-layer active",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div
+            className="title"
+          >
+            
+          </div>,
+          <div
+            className="content"
+          >
+            
+          </div>,
+          <div
+            className="buttons"
+          >
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              OK
+            </button>
+          </div>,
+        ],
+        "className": "modal",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "title",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "content",
+          },
+          "ref": null,
+          "rendered": "",
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <button
+                onClick={[Function]}
+                type="button"
+              >
+                OK
+              </button>,
+            ],
+            "className": "buttons",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": "OK",
+              "nodeType": "host",
+              "props": Object {
+                "children": "OK",
+                "onClick": [Function],
+                "type": "button",
+              },
+              "ref": null,
+              "rendered": "OK",
+              "type": "button",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <div
+          className="modal"
+        >
+          <div
+            className="title"
+          >
+            
+          </div>
+          <div
+            className="content"
+          >
+            
+          </div>
+          <div
+            className="buttons"
+          >
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              OK
+            </button>
+          </div>
+        </div>,
+        "className": "modal-layer active",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="title"
+            >
+              
+            </div>,
+            <div
+              className="content"
+            >
+              
+            </div>,
+            <div
+              className="buttons"
+            >
+              <button
+                onClick={[Function]}
+                type="button"
+              >
+                OK
+              </button>
+            </div>,
+          ],
+          "className": "modal",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "title",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "",
+              "className": "content",
+            },
+            "ref": null,
+            "rendered": "",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <button
+                  onClick={[Function]}
+                  type="button"
+                >
+                  OK
+                </button>,
+              ],
+              "className": "buttons",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": "OK",
+                "nodeType": "host",
+                "props": Object {
+                  "children": "OK",
+                  "onClick": [Function],
+                  "type": "button",
+                },
+                "ref": null,
+                "rendered": "OK",
+                "type": "button",
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
