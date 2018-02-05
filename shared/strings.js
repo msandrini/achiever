@@ -94,7 +94,8 @@ const strings = {
 	warning: 'Atenção',
 	confirmation: 'Confirmação',
 	projectPhase: 'Projeto/fase',
-	activity: 'Atividade'
+	activity: 'Atividade',
+	noLunchPause: 'Sem pausa para almoço'
 };
 
 module.exports = strings;

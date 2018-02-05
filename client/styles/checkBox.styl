@@ -1,0 +1,36 @@
+@import "_colours.styl"
+@import "_standards.styl"
+    
+.check-box
+    label
+        font-size 10px
+        line-height 11px
+        display block
+    &:before
+        content ' '
+        display block
+        font-size 16px
+        line-height 18px
+        text-align center
+        background #FFF
+        border-radius 5px
+        width 16px
+        height 16px
+        border 2px solid transitionColour3
+        float left
+        margin-right 8px
+        color darkBlueColour
+    &.checked
+        &:before
+            content '✓'
+    &:focus
+        outline none
+    &.not(.disabled):focus:before
+        border 2px solid focusInputColour
+    &.disabled
+        opacity .5
+
+.no-pause
+    width 100px
+    position absolute
+    margin-left 320px
