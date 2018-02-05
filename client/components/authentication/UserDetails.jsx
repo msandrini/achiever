@@ -74,5 +74,9 @@ class UserDetails extends Component {
 export default graphql(queries.userDetails, { name: 'userDetailsQuery' })(UserDetails);
 
 UserDetails.propTypes = {
-	userDetailsQuery: PropTypes.object.isRequired
+	userDetailsQuery: PropTypes.object
+};
+
+UserDetails.defaultProps = {
+	userDetailsQuery: {}
 };

@@ -33,10 +33,10 @@ class Today extends React.Component {
 			storedTimes: [{}, {}, {}, {}],
 			sentToday: false,
 			showModal: null,
-			alertInfo: {}
+			alertInfo: {},
+			buttonDisabled: false
 		};
 		this.onMark = this.onMark.bind(this);
-		this._avoidDoubleClick = this._avoidDoubleClick.bind(this);
 		this._getButtonString = this._getButtonString.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
@@ -63,34 +63,35 @@ class Today extends React.Component {
 
 	onMark(event) {
 		event.preventDefault();
+		const _this = this;
+		setTimeout(() => {
+			_this.setState({ buttonDisabled: false });
+		}, 60000);
+		this.setState({ buttonDisabled: true });
 
 		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
 		const index = this._getNextTimeEntryPoint();
+		const { storedTimes, sentToday } = this.state;
+		storedTimes[index] = momentTime;
 
-		if (this._avoidDoubleClick(momentTime, index)) {
-			const { storedTimes, sentToday } = this.state;
-			storedTimes[index] = momentTime;
-			if (timeSetIsValid(storedTimes)) {
-				setTodayStorage({ storedTimes, sentToday });
-				this.setState((prevState) => {
-					const newState = { ...prevState, storedTimes, sentToday };
-					if (index === 3) {
-						const date = moment();
-						submitToServer(date, storedTimes, this.props.addTimeEntry);
-					}
-					return newState;
-				});
-			} else {
-				this.setState({
-					alertInfo: {
-						content: strings.invalidAddTime,
-						onClose: this._hideAlert
-					},
-					showModal: MODAL_ALERT
-				});
-			}
+		if (timeSetIsValid(storedTimes)) {
+			setTodayStorage({ storedTimes, sentToday });
+			this.setState((prevState) => {
+				const newState = { ...prevState, storedTimes, sentToday };
+				if (index === 3) {
+					const date = moment();
+					submitToServer(date, storedTimes, this.props.addTimeEntry);
+				}
+				return newState;
+			});
 		} else {
-			// Raise clicked on the same minute
+			this.setState({
+				alertInfo: {
+					content: strings.invalidAddTime,
+					onClose: this._hideAlert
+				},
+				showModal: MODAL_ALERT
+			});
 		}
 	}
 
@@ -98,6 +99,7 @@ class Today extends React.Component {
 		const { storedTimes } = getTodayStorage();
 		const date = moment();
 		const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
+
 		if (ret.successMessage) {
 			this.setState({ storedTimes, sentToday: true });
 			setTodayStorage({ storedTimes, sentToday: true });
@@ -187,10 +189,9 @@ class Today extends React.Component {
 
 	_getButtonString() {
 		const len = this._getNextTimeEntryPoint();
-		const complementString = len === -1 ? strings.send : strings.times[len].label;
 		return (
 			<span>
-				{strings.markNow} <strong>{complementString}</strong>
+				{strings.markNow} <strong>{strings.times[len].label}</strong>
 			</span>
 		);
 	}
@@ -198,15 +199,6 @@ class Today extends React.Component {
 	_getNextTimeEntryPoint() {
 		const storedTimes = [...this.state.storedTimes];
 		return getNextEmptyObjectOnArray(storedTimes);
-	}
-
-	_avoidDoubleClick(time, index) {
-		const storedTimes = [...this.state.storedTimes];
-		if (index === 0) {
-			return true;
-		}
-		const { hours, minutes } = storedTimes[index - 1];
-		return (time.hours !== hours || time.minutes !== minutes);
 	}
 
 	_shouldButtonBeAvailable() {
@@ -243,7 +235,11 @@ class Today extends React.Component {
 					</div>
 					<div className="column column-half">
 						{this._shouldButtonBeAvailable() ?
-							<button type="submit" className="send send-today">
+							<button
+								type="submit"
+								className="send send-today"
+								disabled={this.state.buttonDisabled}
+							>
 								{this._getButtonString()}
 							</button>
 							:

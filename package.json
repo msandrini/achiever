@@ -15,7 +15,7 @@
     "watch:debug": "DEBUG=true npm run watch",
     "watch:debug-win": "set DEBUG=true && npm run watch",
     "build": "webpack",
-    "test": "jest --coverage",
+    "test": "jest",
     "lint": "eslint --format=node_modules/eslint-formatter-pretty ./**/*.js ./**/*.jsx",
     "docker:build": "docker build -t achiever:latest ."
   },
@@ -107,6 +107,8 @@
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
     "setupFiles": [
       "<rootDir>/testSetup.js",
       "<rootDir>/__mocks__/localStorage.js"

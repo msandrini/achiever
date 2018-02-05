@@ -1,0 +1,287 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StaticTime display time should display time if anything comes 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <StaticTime
+    emphasis={false}
+    label="entry"
+    time={
+      Object {
+        "hours": "",
+        "minutes": 10,
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <label>
+          entry
+        </label>,
+        <span
+          className="time"
+        >
+          00
+          :
+          10
+        </span>,
+      ],
+      "className": "static-time ",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "entry",
+        },
+        "ref": null,
+        "rendered": "entry",
+        "type": "label",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "00",
+            ":",
+            "10",
+          ],
+          "className": "time",
+        },
+        "ref": null,
+        "rendered": Array [
+          "00",
+          ":",
+          "10",
+        ],
+        "type": "span",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <label>
+            entry
+          </label>,
+          <span
+            className="time"
+          >
+            00
+            :
+            10
+          </span>,
+        ],
+        "className": "static-time ",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "entry",
+          },
+          "ref": null,
+          "rendered": "entry",
+          "type": "label",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              "00",
+              ":",
+              "10",
+            ],
+            "className": "time",
+          },
+          "ref": null,
+          "rendered": Array [
+            "00",
+            ":",
+            "10",
+          ],
+          "type": "span",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`StaticTime render should render properly with minimum props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <StaticTime
+    emphasis={true}
+    label="entry"
+    time={
+      Object {
+        "hours": 0,
+        "minutes": 0,
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <label>
+          entry
+        </label>,
+        <span
+          className="time"
+        >
+          00
+          :
+          00
+        </span>,
+      ],
+      "className": "static-time emphasis",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "entry",
+        },
+        "ref": null,
+        "rendered": "entry",
+        "type": "label",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "00",
+            ":",
+            "00",
+          ],
+          "className": "time",
+        },
+        "ref": null,
+        "rendered": Array [
+          "00",
+          ":",
+          "00",
+        ],
+        "type": "span",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <label>
+            entry
+          </label>,
+          <span
+            className="time"
+          >
+            00
+            :
+            00
+          </span>,
+        ],
+        "className": "static-time emphasis",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "entry",
+          },
+          "ref": null,
+          "rendered": "entry",
+          "type": "label",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              "00",
+              ":",
+              "00",
+            ],
+            "className": "time",
+          },
+          "ref": null,
+          "rendered": Array [
+            "00",
+            ":",
+            "00",
+          ],
+          "type": "span",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
