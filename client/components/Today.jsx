@@ -99,6 +99,7 @@ class Today extends React.Component {
 		const { storedTimes } = getTodayStorage();
 		const date = moment();
 		const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
+
 		if (ret.successMessage) {
 			this.setState({ storedTimes, sentToday: true });
 			setTodayStorage({ storedTimes, sentToday: true });
