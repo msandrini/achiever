@@ -41,7 +41,7 @@ export const replacingValueInsideArray = (array, index, newValue) => [
 ];
 
 const _setStorage = (key, data) => {
-	window.localStorage.setItem(key, JSON.stringify(data));
+	global.localStorage.setItem(key, JSON.stringify(data));
 };
 
 /**
@@ -57,7 +57,7 @@ export const setTodayStorage = (data, key = STORAGEKEY, dayKey = STORAGEDAYKEY) 
 };
 
 const _getStorage = key => (
-	JSON.parse(window.localStorage.getItem(key))
+	JSON.parse(global.localStorage.getItem(key))
 );
 
 /**
@@ -69,7 +69,7 @@ const _getStorage = key => (
 export const getTodayStorage = (key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
 	const dayOnLocal = moment(_getStorage(dayKey));
 	const today = moment();
-	if (dayKey in window.localStorage) {
+	if (global.localStorage.getItem(dayKey)) {
 		if (areTheSameDay(dayOnLocal, today)) {
 			return _getStorage(key);
 		}
