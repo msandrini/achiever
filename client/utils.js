@@ -52,7 +52,7 @@ const _setStorage = (key, data) => {
  */
 export const setTodayStorage = (data, key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
 	const today = moment();
-	_setStorage(dayKey, today);
+	_setStorage(dayKey, today.valueOf());
 	_setStorage(key, data);
 };
 
@@ -133,6 +133,7 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
 		endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
 		endTime: `${endTime.hours}:${endTime.minutes}`
 	};
+
 
 	return _addTimeEntry(timeEntryInput, addTimeEntry);
 };
@@ -237,8 +238,9 @@ export const isDayBlockedInPast = (day) => {
 	const MONDAY = 1;
 	const todayIsMonday = today.day() === MONDAY;
 	// if it is monday then last week is still valid
-	if (!todayIsMonday) {
-		return day.isBefore(today.subtract(2, 'days'), 'week');
+	if (todayIsMonday) {
+		const lastFriday = today.subtract(3, 'days');
+		return day.isBefore(lastFriday, 'week');
 	}
 	return day.isBefore(today, 'week');
 };
