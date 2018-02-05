@@ -9,17 +9,17 @@ describe('StaticTime', () => {
 			const wrapper = shallow(<StaticTime label="entry" emphasis />);
 			expect(wrapper).toMatchSnapshot();
 		});
-	})
+	});
 	describe('display time', () => {
 		it('should display time if anything comes', () => {
-			const propTime = { hours: "", minutes: 10};
+			const propTime = { hours: '', minutes: 10 };
 			const wrapper = shallow(<StaticTime
 				time={propTime}
 				label="entry"
-				emphasis
+				emphasis={false}
 			/>);
 			expect(wrapper).toMatchSnapshot();
-		})
+		});
 	});
 });
 

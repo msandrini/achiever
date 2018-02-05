@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <StaticTime
-    emphasis={true}
+    emphasis={false}
     label="entry"
     time={
       Object {
@@ -38,7 +38,7 @@ ShallowWrapper {
           10
         </span>,
       ],
-      "className": "static-time emphasis",
+      "className": "static-time ",
     },
     "ref": null,
     "rendered": Array [
@@ -94,7 +94,7 @@ ShallowWrapper {
             10
           </span>,
         ],
-        "className": "static-time emphasis",
+        "className": "static-time ",
       },
       "ref": null,
       "rendered": Array [
