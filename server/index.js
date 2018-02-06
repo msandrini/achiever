@@ -3,23 +3,32 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
 
-const config = require('../webpack.config');
 const router = require('./router');
 
-const app = express();
-const compiler = webpack(config);
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
-app.use(webpackDevMiddleware(compiler, { publicPath: config.output.publicPath }));
+const app = express();
+
+let compiler;
+if (isDevelopment) {
+	/* eslint-disable */
+	const config = require('../webpack.dev');
+	compiler = require('webpack')(config);
+	app.use(require('webpack-dev-middleware')(compiler, {
+		noInfo: true, publicPath: config.output.publicPath
+	}));
+	app.use(require('webpack-hot-middleware')(compiler));
+	/* eslint-enable */
+}
+
 app.use(morgan('combined'));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-router(app);
+router(app, compiler);
 
 const logger = require('./logger');
 
