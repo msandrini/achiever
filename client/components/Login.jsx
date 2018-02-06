@@ -93,7 +93,6 @@ class Login extends React.Component {
 							<button
 								type="submit"
 								className="send send-login"
-								ref={(button) => { this.submitButton = button; }}
 								disabled={!this._shouldSubmitBeAvailable()}
 							>
 								{strings.send}
