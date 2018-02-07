@@ -8,6 +8,8 @@ const Link = (props) => {
 		const aNewTab = e.metaKey || e.ctrlKey;
 		const anExternalLink = props.href.startsWith('http');
 
+		console.log(anExternalLink);
+
 		if (!aNewTab && !anExternalLink) {
 			e.preventDefault();
 			history.push(props.to);
