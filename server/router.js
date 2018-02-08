@@ -1,6 +1,7 @@
 const { graphiqlExpress } = require('apollo-server-express');
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const api = require('./api');
 const { tokenFactory } = require('./api/utils');
@@ -8,7 +9,19 @@ const logger = require('./logger');
 
 const getFromRoot = file => path.resolve(__dirname, `../${file}`);
 
-module.exports = (app) => {
+const serveGzipped = contentType => (req, res) => {
+	const acceptedEncodings = req.acceptsEncodings();
+	if (acceptedEncodings.indexOf('gzip') !== -1
+		&& fs.existsSync(getFromRoot(`client/dist/${req.url}.gz`))) {
+		req.url = `${req.url}.gz`;
+		res.set('Content-Encoding', 'gzip');
+		res.set('Content-Type', contentType);
+	}
+
+	res.sendFile(getFromRoot(`client/dist/${req.url}`));
+};
+
+module.exports = (app, compiler) => {
 	app.use('/graphql', bodyParser.json(), api);
 	app.use('/graphiql', graphiqlExpress({
 		endpointURL: '/graphql',
@@ -26,14 +39,30 @@ module.exports = (app) => {
 	});
 
 	// static
-	app.use('/assets', express.static(getFromRoot('client/assets')));
+	const isDevelopment = process.env.NODE_ENV !== 'production';
 	const pageWhitelist = ['', 'edit', 'today', 'login', 'advanced'];
-	pageWhitelist.forEach((page) => {
-		app.get(`/${page}`, (req, res) => {
-			res.sendFile(getFromRoot('client/index.htm'));
+	const htmlFile = getFromRoot('client/dist/index.html');
+	if (!isDevelopment) {
+		app.use('/assets', express.static(getFromRoot('client/assets')));
+		pageWhitelist.forEach((page) => {
+			app.get(`/${page}`, (req, res) => {
+				res.sendFile(htmlFile);
+			});
 		});
-	});
-	app.get('/app.js', (req, res) => {
-		res.sendFile(getFromRoot('client/dist/app.js'));
-	});
+		app.get('/*.js', serveGzipped('text/javascript'));
+	} else {
+		pageWhitelist.forEach((page) => {
+			app.get(`/${page}`, (req, res, next) => {
+				compiler.outputFileSystem.readFile(htmlFile, (err, result) => {
+					if (err) {
+						return next(err);
+					}
+					res.set('content-type', 'text/html');
+					res.sendFile(result);
+					res.end();
+					return next();
+				});
+			});
+		});
+	}
 };

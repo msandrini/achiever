@@ -1,4 +1,7 @@
 const path = require('path');
+const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const appPath = dir => path.resolve(__dirname, dir);
 
@@ -8,7 +11,6 @@ module.exports = {
 	},
 	output: {
 		path: appPath('client/dist'),
-		filename: 'app.js',
 		publicPath: '/'
 	},
 	module: {
@@ -43,6 +45,23 @@ module.exports = {
 			}
 		]
 	},
+	plugins: [
+		new CleanWebpackPlugin([appPath('client/dist')]),
+		new HtmlWebpackPlugin({
+			title: 'Achiever',
+			template: appPath('client/public/index.html')
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendor',
+			minChunks: function(module){
+				return module.context && module.context.includes("node_modules");
+			}
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'manifest',
+			minChunks: Infinity
+		})
+	],
 	resolve: {
 		extensions: ['.js', '.jsx']
 	}
