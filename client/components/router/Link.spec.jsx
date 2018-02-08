@@ -24,7 +24,7 @@ describe('Link', () => {
 			link.simulate('click', { preventDefault: jest.fn() });
 			expect(history.push).toHaveBeenCalledTimes(1);
 
-			const wrapper2 = shallow(<Link href="http://www.pudim.com.br" />);
+			const wrapper2 = shallow(<Link to="http://www.pudim.com.br" />);
 			link = wrapper2.find('a');
 
 			link.simulate('click', { preventDefault: jest.fn() });

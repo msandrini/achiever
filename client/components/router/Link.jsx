@@ -6,9 +6,7 @@ import * as history from './history';
 const Link = (props) => {
 	const onClick = (e) => {
 		const aNewTab = e.metaKey || e.ctrlKey;
-		const anExternalLink = props.href.startsWith('http');
-
-		console.log(anExternalLink);
+		const anExternalLink = props.to.startsWith('http');
 
 		if (!aNewTab && !anExternalLink) {
 			e.preventDefault();
@@ -35,7 +33,6 @@ Link.propTypes = {
 		PropTypes.element,
 		PropTypes.string
 	]),
-	href: PropTypes.string,
 	className: PropTypes.string,
 	to: PropTypes.string.isRequired,
 	activeClassName: PropTypes.string,
@@ -45,7 +42,6 @@ Link.propTypes = {
 Link.defaultProps = {
 	children: null,
 	className: '',
-	href: '#',
 	activeClassName: 'is-active',
 	isActive: false
 };

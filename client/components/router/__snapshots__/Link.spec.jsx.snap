@@ -7,7 +7,6 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <Link
     activeClassName="is-active"
     className=""
-    href="#"
     isActive={true}
     to="/home"
   />,
@@ -65,7 +64,6 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <Link
     activeClassName="is-active"
     className=""
-    href="#"
     isActive={false}
     to="/home"
   />,
