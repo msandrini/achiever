@@ -17,7 +17,6 @@ ShallowWrapper {
     <Link
       activeClassName="is-active"
       className=""
-      href="#"
       isActive={false}
       to="/today"
     >
@@ -26,7 +25,6 @@ ShallowWrapper {
     <Link
       activeClassName="is-active"
       className=""
-      href="#"
       isActive={false}
       to="/edit"
     >
@@ -39,7 +37,6 @@ ShallowWrapper {
       <Link
         activeClassName="is-active"
         className=""
-        href="#"
         isActive={false}
         to="/today"
       >
@@ -48,7 +45,6 @@ ShallowWrapper {
       <Link
         activeClassName="is-active"
         className=""
-        href="#"
         isActive={false}
         to="/edit"
       >
