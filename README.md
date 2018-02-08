@@ -1,4 +1,8 @@
 [![CircleCI](https://circleci.com/gh/msandrini/achiever/tree/master.svg?style=svg)](https://circleci.com/gh/msandrini/achiever/tree/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/0be6ila7s2cb2dy7/branch/master?svg=true)](https://ci.appveyor.com/project/msandrini/achiever/branch/master)
+[![codecov](https://codecov.io/gh/msandrini/achiever/branch/master/graph/badge.svg)](https://codecov.io/gh/msandrini/achiever)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1fcecced8c9eb95d81bc/maintainability)](https://codeclimate.com/github/msandrini/achiever/maintainability)
+[![Greenkeeper badge](https://badges.greenkeeper.io/msandrini/achiever.svg)](https://greenkeeper.io/)
 
 # Achiever
 

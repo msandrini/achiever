@@ -1,0 +1,25 @@
+environment:
+  CI: true
+  nodejs_version: "8"
+
+cache:
+  - packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - node_modules                        # local npm modules
+  - '%APPDATA%\npm-cache'               # npm cache
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm -g install npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm install
+
+test_script:
+  - node --version
+  - npm --version
+  - npm run lint
+  - npm test
+  - npm run build
+
+build: off
+
+version: '{build}'
