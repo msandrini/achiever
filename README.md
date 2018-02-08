@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/msandrini/achiever/tree/master.svg?style=svg)](https://circleci.com/gh/msandrini/achiever/tree/master)
+
 # Achiever
 
 A tool built to... _Achieve!_
