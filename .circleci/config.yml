@@ -1,16 +1,31 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/repo
+    environment:
+      CC_TEST_REPORTER_ID: de9c5448a78473e457acd8df8781c0e8fbb9b3f1c5710c57acb3a5b4ae176ccf
+      CI: true
     docker:
       - image: circleci/node:8
+    working_directory: ~/repo
     steps:
       - checkout
+
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
+      
+      - run:
+          name: Setup greekeeper-lockfile-update
+          command: |
+            sudo npm install -g npm@latest
+            sudo npm install -g greenkeeper-lockfile@1
 
       - run: npm install
 
@@ -20,5 +35,13 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm run lint
-      - run: npm test
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter before-build
+            greenkeeper-lockfile-update
+            npm test
+            greenkeeper-lockfile-upload
+            ./cc-test-reporter after-build --exit-code $?
       - run: npm run build
+      - run: bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'
