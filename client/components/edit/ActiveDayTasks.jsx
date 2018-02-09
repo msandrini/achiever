@@ -1,5 +1,4 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 
 import SelectGroup from './SelectGroup';
@@ -24,15 +23,15 @@ const ActiveDayTasks = (props) => {
 
 	const projectPhases = projectPhasesQuery.phases || {};
 
-	let alternativeTextForProjectPhase = projectPhases.options ? null : strings.loading;
+	let textForProjectPhase = projectPhases.options ? null : strings.loading;
 	if (projectPhases.options && projectPhases.options.length === 1) {
-		alternativeTextForProjectPhase = projectPhases.options[0].name;
+		textForProjectPhase = projectPhases.options[0].name;
 	}
 
 	const activityOptions = selectedPhase.activities.options ? selectedPhase.activities.options : [];
-	let alternativeTextForActivity = projectPhases.options ? null : strings.loading;
+	let textForActivity = projectPhases.options ? null : strings.loading;
 	if (isHoliday) {
-		alternativeTextForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
+		textForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
 	}
 
 	return (
@@ -42,8 +41,8 @@ const ActiveDayTasks = (props) => {
 				label={strings.projectPhase}
 				options={projectPhases.options}
 				selected={selectedPhase.id}
-				onChange={onPhaseSelect(projectPhases.options)}
-				showTextInstead={alternativeTextForProjectPhase}
+				onChange={onPhaseSelect}
+				showTextInstead={textForProjectPhase}
 				tabIndex={tabIndex}
 				disabled={disable}
 			/>
@@ -52,8 +51,8 @@ const ActiveDayTasks = (props) => {
 				label={strings.activity}
 				options={activityOptions}
 				selected={selectedActivity.id}
-				onChange={onActivitySelect(selectedPhase.activities.options)}
-				showTextInstead={alternativeTextForActivity}
+				onChange={onActivitySelect}
+				showTextInstead={textForActivity}
 				tabIndex={tabIndex + 1}
 				disabled={disable}
 			/>

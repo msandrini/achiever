@@ -201,29 +201,28 @@ class Edit extends React.Component {
 		};
 	}
 
-	onSetProjectPhase(phases) {
-		return (value) => {
-			const phase = phases.find(option => option.id === value.id);
+	onSetProjectPhase(value) {
+		const { phases } = this.props.projectPhasesQuery;
 
-			const { activities } = phase;
-			const activity = activities.options.find(option => option.id === activities.default);
+		const phase = phases.options.find(option => option.id === value.id);
 
-			this.setState({
-				phase,
-				activity
-			});
-		};
+		const { activities } = phase;
+		const activity = activities.options.find(option => option.id === activities.default);
+
+		this.setState({
+			phase,
+			activity
+		});
 	}
 
-	onSetActivity(activities) {
-		return (value) => {
-			const id = parseInt(value, 10);
-			const activity = activities.find(option => option.id === id);
+	onSetActivity(value) {
+		const { activities } = this.state.phase;
+		const id = parseInt(value, 10);
+		const activity = activities.options.find(option => option.id === id);
 
-			if (activity) {
-				this.setState({	activity });
-			}
-		};
+		if (activity) {
+			this.setState({	activity });
+		}
 	}
 
 	focusOnSubmit() {

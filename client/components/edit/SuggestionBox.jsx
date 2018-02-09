@@ -10,7 +10,11 @@ class SuggestionBox extends React.Component {
 		super(props);
 
 		if (props.mode === 'minutes') {
-			this.valueList = [0, 15, 30, 45];
+			this.valueList = [
+				'00',
+				'15',
+				'30',
+				'45'];
 		} else {
 			this.valueList = [];
 			const refHour = props.referenceHour;

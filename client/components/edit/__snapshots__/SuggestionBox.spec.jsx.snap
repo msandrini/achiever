@@ -1,0 +1,794 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SuggestionBox render should render properly with min props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SuggestionBox
+    mode="hours"
+    onChoose={[Function]}
+    referenceHour={9}
+    show={false}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): null,
+  Symbol(enzyme.__nodes__): Array [
+    null,
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`SuggestionBox render should render properly with min props 2`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SuggestionBox
+    mode="hours"
+    onChoose={[Function]}
+    referenceHour={9}
+    show={true}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            07
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            08
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            09
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            10
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            11
+          </button>
+        </li>,
+      ],
+      "className": "suggestion-box hours",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": "7",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            07
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "07",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "07",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "8",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            08
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "08",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "08",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "9",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            09
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "09",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "09",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "10",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            10
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "10",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "10",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "11",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            11
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "11",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "11",
+          "type": "button",
+        },
+        "type": "li",
+      },
+    ],
+    "type": "ul",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              07
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              08
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              09
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              10
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              11
+            </button>
+          </li>,
+        ],
+        "className": "suggestion-box hours",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": "7",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              07
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "07",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "07",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "8",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              08
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "08",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "08",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "9",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              09
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "09",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "09",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "10",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              10
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "10",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "10",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "11",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              11
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "11",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "11",
+            "type": "button",
+          },
+          "type": "li",
+        },
+      ],
+      "type": "ul",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`SuggestionBox render should render properly with min props 3`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SuggestionBox
+    mode="minutes"
+    onChoose={[Function]}
+    referenceHour={9}
+    show={true}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            000
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            15
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            30
+          </button>
+        </li>,
+        <li>
+          <button
+            onClick={[Function]}
+            type="button"
+          >
+            45
+          </button>
+        </li>,
+      ],
+      "className": "suggestion-box minutes",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": "00",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            000
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "000",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "000",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "15",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            15
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "15",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "15",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "30",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            30
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "30",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "30",
+          "type": "button",
+        },
+        "type": "li",
+      },
+      Object {
+        "instance": null,
+        "key": "45",
+        "nodeType": "host",
+        "props": Object {
+          "children": <button
+            onClick={[Function]}
+            type="button"
+          >
+            45
+          </button>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "45",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": "45",
+          "type": "button",
+        },
+        "type": "li",
+      },
+    ],
+    "type": "ul",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              000
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              15
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              30
+            </button>
+          </li>,
+          <li>
+            <button
+              onClick={[Function]}
+              type="button"
+            >
+              45
+            </button>
+          </li>,
+        ],
+        "className": "suggestion-box minutes",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": "00",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              000
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "000",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "000",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "15",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              15
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "15",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "15",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "30",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              30
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "30",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "30",
+            "type": "button",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": "45",
+          "nodeType": "host",
+          "props": Object {
+            "children": <button
+              onClick={[Function]}
+              type="button"
+            >
+              45
+            </button>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "45",
+              "onClick": [Function],
+              "type": "button",
+            },
+            "ref": null,
+            "rendered": "45",
+            "type": "button",
+          },
+          "type": "li",
+        },
+      ],
+      "type": "ul",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
