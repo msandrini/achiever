@@ -1,0 +1,726 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WeeklyCalendar render should render the BigCalendar dealing with the props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <WeeklyCalendar
+    controlDate={"2018-02-14T02:00:00.000Z"}
+    storedTimes={
+      Array [
+        Object {
+          "hours": 7,
+          "minutes": 0,
+        },
+        Object {
+          "hours": 12,
+          "minutes": 0,
+        },
+        Object {},
+        Object {},
+      ]
+    }
+    weekEntries={
+      Object {
+        "timeEntries": Object {
+          "0": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-11",
+            "endBreakTime": "12:35",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "11:35",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "1": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-12",
+            "endBreakTime": "12:35",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "11:35",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "2": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-13",
+            "endBreakTime": "12:35",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "11:35",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "3": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-14",
+            "endBreakTime": "",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "4": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-15",
+            "endBreakTime": "12:35",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "11:35",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "5": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-16",
+            "endBreakTime": "",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+          "6": Object {
+            "__typename": "TimeEntry",
+            "activity": "Code/ Document Reviews",
+            "date": "2018-02-17",
+            "endBreakTime": "12:35",
+            "endTime": "18:28",
+            "phase": "Project Phase Name",
+            "startBreakTime": "11:35",
+            "startTime": "9:28",
+            "total": "8:00",
+          },
+        },
+        "total": "56:00",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <summary>
+          Calendário da semana
+        </summary>,
+        <Uncontrolled(Calendar)
+          date={2018-02-14T02:00:00.000Z}
+          events={
+            Array [
+              Object {
+                "end": 2018-02-11T13:35:00.000Z,
+                "id": 0,
+                "start": 2018-02-11T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-11T20:28:00.000Z,
+                "id": 1,
+                "start": 2018-02-11T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-12T13:35:00.000Z,
+                "id": 2,
+                "start": 2018-02-12T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-12T20:28:00.000Z,
+                "id": 3,
+                "start": 2018-02-12T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-13T13:35:00.000Z,
+                "id": 4,
+                "start": 2018-02-13T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-13T20:28:00.000Z,
+                "id": 5,
+                "start": 2018-02-13T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-14T14:00:00.000Z,
+                "id": 6,
+                "start": 2018-02-14T09:00:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-14T02:00:00.000Z,
+                "id": 7,
+                "start": 2018-02-14T02:00:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-15T13:35:00.000Z,
+                "id": 8,
+                "start": 2018-02-15T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-15T20:28:00.000Z,
+                "id": 9,
+                "start": 2018-02-15T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-16T20:28:00.000Z,
+                "id": 10,
+                "start": 2018-02-16T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-17T13:35:00.000Z,
+                "id": 12,
+                "start": 2018-02-17T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-17T20:28:00.000Z,
+                "id": 13,
+                "start": 2018-02-17T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+            ]
+          }
+          onNavigate={[Function]}
+          onView={[Function]}
+          selectable={false}
+          step={90}
+          toolbar={false}
+          view="week"
+        />,
+      ],
+      "className": "weekly-calendar",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Calendário da semana",
+        },
+        "ref": null,
+        "rendered": "Calendário da semana",
+        "type": "summary",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "date": 2018-02-14T02:00:00.000Z,
+          "events": Array [
+            Object {
+              "end": 2018-02-11T13:35:00.000Z,
+              "id": 0,
+              "start": 2018-02-11T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-11T20:28:00.000Z,
+              "id": 1,
+              "start": 2018-02-11T14:35:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-12T13:35:00.000Z,
+              "id": 2,
+              "start": 2018-02-12T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-12T20:28:00.000Z,
+              "id": 3,
+              "start": 2018-02-12T14:35:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-13T13:35:00.000Z,
+              "id": 4,
+              "start": 2018-02-13T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-13T20:28:00.000Z,
+              "id": 5,
+              "start": 2018-02-13T14:35:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-14T14:00:00.000Z,
+              "id": 6,
+              "start": 2018-02-14T09:00:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-14T02:00:00.000Z,
+              "id": 7,
+              "start": 2018-02-14T02:00:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-15T13:35:00.000Z,
+              "id": 8,
+              "start": 2018-02-15T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-15T20:28:00.000Z,
+              "id": 9,
+              "start": 2018-02-15T14:35:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-16T20:28:00.000Z,
+              "id": 10,
+              "start": 2018-02-16T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-17T13:35:00.000Z,
+              "id": 12,
+              "start": 2018-02-17T11:28:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+            Object {
+              "end": 2018-02-17T20:28:00.000Z,
+              "id": 13,
+              "start": 2018-02-17T14:35:00.000Z,
+              "title": "Project Phase Name - Code/ Document Reviews",
+            },
+          ],
+          "onNavigate": [Function],
+          "onView": [Function],
+          "selectable": false,
+          "step": 90,
+          "toolbar": false,
+          "view": "week",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "details",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <summary>
+            Calendário da semana
+          </summary>,
+          <Uncontrolled(Calendar)
+            date={2018-02-14T02:00:00.000Z}
+            events={
+              Array [
+                Object {
+                  "end": 2018-02-11T13:35:00.000Z,
+                  "id": 0,
+                  "start": 2018-02-11T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-11T20:28:00.000Z,
+                  "id": 1,
+                  "start": 2018-02-11T14:35:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-12T13:35:00.000Z,
+                  "id": 2,
+                  "start": 2018-02-12T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-12T20:28:00.000Z,
+                  "id": 3,
+                  "start": 2018-02-12T14:35:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-13T13:35:00.000Z,
+                  "id": 4,
+                  "start": 2018-02-13T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-13T20:28:00.000Z,
+                  "id": 5,
+                  "start": 2018-02-13T14:35:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-14T14:00:00.000Z,
+                  "id": 6,
+                  "start": 2018-02-14T09:00:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-14T02:00:00.000Z,
+                  "id": 7,
+                  "start": 2018-02-14T02:00:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-15T13:35:00.000Z,
+                  "id": 8,
+                  "start": 2018-02-15T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-15T20:28:00.000Z,
+                  "id": 9,
+                  "start": 2018-02-15T14:35:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-16T20:28:00.000Z,
+                  "id": 10,
+                  "start": 2018-02-16T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-17T13:35:00.000Z,
+                  "id": 12,
+                  "start": 2018-02-17T11:28:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+                Object {
+                  "end": 2018-02-17T20:28:00.000Z,
+                  "id": 13,
+                  "start": 2018-02-17T14:35:00.000Z,
+                  "title": "Project Phase Name - Code/ Document Reviews",
+                },
+              ]
+            }
+            onNavigate={[Function]}
+            onView={[Function]}
+            selectable={false}
+            step={90}
+            toolbar={false}
+            view="week"
+          />,
+        ],
+        "className": "weekly-calendar",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Calendário da semana",
+          },
+          "ref": null,
+          "rendered": "Calendário da semana",
+          "type": "summary",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "date": 2018-02-14T02:00:00.000Z,
+            "events": Array [
+              Object {
+                "end": 2018-02-11T13:35:00.000Z,
+                "id": 0,
+                "start": 2018-02-11T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-11T20:28:00.000Z,
+                "id": 1,
+                "start": 2018-02-11T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-12T13:35:00.000Z,
+                "id": 2,
+                "start": 2018-02-12T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-12T20:28:00.000Z,
+                "id": 3,
+                "start": 2018-02-12T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-13T13:35:00.000Z,
+                "id": 4,
+                "start": 2018-02-13T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-13T20:28:00.000Z,
+                "id": 5,
+                "start": 2018-02-13T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-14T14:00:00.000Z,
+                "id": 6,
+                "start": 2018-02-14T09:00:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-14T02:00:00.000Z,
+                "id": 7,
+                "start": 2018-02-14T02:00:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-15T13:35:00.000Z,
+                "id": 8,
+                "start": 2018-02-15T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-15T20:28:00.000Z,
+                "id": 9,
+                "start": 2018-02-15T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-16T20:28:00.000Z,
+                "id": 10,
+                "start": 2018-02-16T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-17T13:35:00.000Z,
+                "id": 12,
+                "start": 2018-02-17T11:28:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+              Object {
+                "end": 2018-02-17T20:28:00.000Z,
+                "id": 13,
+                "start": 2018-02-17T14:35:00.000Z,
+                "title": "Project Phase Name - Code/ Document Reviews",
+              },
+            ],
+            "onNavigate": [Function],
+            "onView": [Function],
+            "selectable": false,
+            "step": 90,
+            "toolbar": false,
+            "view": "week",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "details",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`WeeklyCalendar render should render the BigCalendar dealing with the props 2`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <WeeklyCalendar
+    controlDate={"2018-02-14T02:00:00.000Z"}
+    storedTimes={
+      Array [
+        Object {
+          "hours": 7,
+          "minutes": 0,
+        },
+        Object {
+          "hours": 12,
+          "minutes": 0,
+        },
+        Object {},
+        Object {},
+      ]
+    }
+    weekEntries={
+      Object {
+        "timeEntries": null,
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <summary>
+          Calendário da semana
+        </summary>,
+        <Uncontrolled(Calendar)
+          date={2018-02-14T02:00:00.000Z}
+          events={
+            Array [
+              Object {},
+            ]
+          }
+          onNavigate={[Function]}
+          onView={[Function]}
+          selectable={false}
+          step={90}
+          toolbar={false}
+          view="week"
+        />,
+      ],
+      "className": "weekly-calendar",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Calendário da semana",
+        },
+        "ref": null,
+        "rendered": "Calendário da semana",
+        "type": "summary",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "date": 2018-02-14T02:00:00.000Z,
+          "events": Array [
+            Object {},
+          ],
+          "onNavigate": [Function],
+          "onView": [Function],
+          "selectable": false,
+          "step": 90,
+          "toolbar": false,
+          "view": "week",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "details",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <summary>
+            Calendário da semana
+          </summary>,
+          <Uncontrolled(Calendar)
+            date={2018-02-14T02:00:00.000Z}
+            events={
+              Array [
+                Object {},
+              ]
+            }
+            onNavigate={[Function]}
+            onView={[Function]}
+            selectable={false}
+            step={90}
+            toolbar={false}
+            view="week"
+          />,
+        ],
+        "className": "weekly-calendar",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Calendário da semana",
+          },
+          "ref": null,
+          "rendered": "Calendário da semana",
+          "type": "summary",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "date": 2018-02-14T02:00:00.000Z,
+            "events": Array [
+              Object {},
+            ],
+            "onNavigate": [Function],
+            "onView": [Function],
+            "selectable": false,
+            "step": 90,
+            "toolbar": false,
+            "view": "week",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "details",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
