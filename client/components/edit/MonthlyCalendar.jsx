@@ -10,7 +10,7 @@ import {
 
 import '../../styles/calendar.styl';
 
-const _getStyleClassForCalendarDays = (weekEntries = {}) => {
+const _getStyleClassForCalendarDays = (weekEntries) => {
 	const dayStyles = [
 		{ 'calendar-checked': [] },
 		{ 'calendar-unchecked': [] },
@@ -60,7 +60,7 @@ MonthlyCalendar.propTypes = {
 
 MonthlyCalendar.defaultProps = {
 	onDateChange: () => {},
-	weekEntries: {}
+	weekEntries: { timeEntries: null }
 };
 
 export default MonthlyCalendar;
