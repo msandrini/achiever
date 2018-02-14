@@ -130,6 +130,15 @@ const activities = phase => async (token) => {
 	return extractSelectOptions('proj_activity', responseHtml);
 };
 
+const getBalance = $ => {
+	const date = moment($('table tr td').eq(0).text().split(' ')[0]);
+	const dayOfWeek = date.isoWeekday();
+	const targetFriday = dayOfWeek === 5 ? 0 : dayOfWeek;
+	const lastFridayBalance = $('table tr td').eq((targetFriday * 10) + 8).text().trim();
+
+	return lastFridayBalance;
+}
+
 const userDetails = () => async (token) => {
 	const cookieJar = cookieJarFactory(token);
 	const { personId } = await getUserDetails(cookieJar);
@@ -147,10 +156,7 @@ const userDetails = () => async (token) => {
 	const $ = cheerio.load(responseHtml);
 	const name = $('h4').eq(0).text().trim();
 	const dailyContractedHours = $('table tr td').eq(1).text();
-	const date = moment($('table tr td').eq(0).text().split(' ')[0]);
-	const dayOfWeek = date.day();
-	const targetFriday = dayOfWeek === 5 ? 0 : dayOfWeek + 1;
-	const lastFridayBalance = $('table tr td').eq((targetFriday * 10) + 8).text();
+	const lastFridayBalance = getBalance($);
 
 	return {
 		name,
@@ -347,5 +353,6 @@ module.exports = {
 	weekEntriesByDate,
 	activities,
 	phases,
-	userDetails
+	userDetails,
+	getBalance
 };
