@@ -243,7 +243,6 @@ class Edit extends React.Component {
 	async _fetchWeekEntries(date) {
 		const { refetch } = this.props.weekEntriesQuery;
 		await refetch({ date: date.format('YYYY-MM-DD') });
-		this._setTimesForChosenDate(date, this.props.weekEntriesQuery);
 	}
 
 	/**
