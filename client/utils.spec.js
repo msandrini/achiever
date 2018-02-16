@@ -244,6 +244,9 @@ describe('client/utils', () => {
 			expect(utils.dismemberTimeString('10:10')).toEqual({ hours: '10', minutes: '10' });
 			expect(utils.dismemberTimeString('9:01')).toEqual({ hours: '9', minutes: '01' });
 		});
+		it('should complete time', () => {
+			expect(utils.dismemberTimeString('9:1')).toEqual({ hours: '9', minutes: '01' });
+		});
 	});
 	describe('isDayBlockedInPast', () => {
 		it('should block all days before last week if today is monday', () => {

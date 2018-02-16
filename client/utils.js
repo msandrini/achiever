@@ -227,7 +227,8 @@ export const timesAreValid = (times) => {
 
 export const dismemberTimeString = (timeString) => {
 	const [hours, minutesRaw] = String(timeString).split(':');
-	const minutes = (parseInt(minutesRaw < 10, 10)) ? `0${minutesRaw}` : minutesRaw;
+	const numberMinutes = parseInt(minutesRaw, 10)
+	const minutes = (numberMinutes < 10) ? `0${numberMinutes}` : minutesRaw;
 	return { hours, minutes };
 };
 

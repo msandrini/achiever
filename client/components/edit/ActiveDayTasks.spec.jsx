@@ -3,8 +3,6 @@ import { shallow } from 'enzyme';
 
 import ActiveDayTasks from './ActiveDayTasks';
 
-import strings from '../../../shared/strings';
-
 describe('ActiveDayTasks', () => {
 	let onPhaseSelect;
 	let onActivitySelect;
