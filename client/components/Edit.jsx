@@ -203,8 +203,8 @@ class Edit extends React.Component {
 
 	onSetProjectPhase(value) {
 		const { phases } = this.props.projectPhasesQuery;
-
-		const phase = phases.options.find(option => option.id === value.id);
+		const id = parseInt(value, 10);
+		const phase = phases.options.find(option => option.id === id);
 
 		const { activities } = phase;
 		const activity = activities.options.find(option => option.id === activities.default);
@@ -216,6 +216,7 @@ class Edit extends React.Component {
 	}
 
 	onSetActivity(value) {
+		console.log(value);
 		const { activities } = this.state.phase;
 		const id = parseInt(value, 10);
 		const activity = activities.options.find(option => option.id === id);
