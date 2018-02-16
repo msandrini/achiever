@@ -339,7 +339,7 @@ describe('Edit', () => {
 		it('should set the state phase and default activity', () => {
 			const activeDayTaskWrapper = wrapper.find('ActiveDayTasks');
 			const onPhaseSelect = activeDayTaskWrapper.prop('onPhaseSelect');
-			onPhaseSelect({ id: 445 });
+			onPhaseSelect(445);
 			expect(wrapper.state('activity')).toEqual({
 				id: 6,
 				name: 'BugFix'

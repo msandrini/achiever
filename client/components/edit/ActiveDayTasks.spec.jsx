@@ -96,6 +96,40 @@ describe('ActiveDayTasks', () => {
 			expect(wrapperHolliday).toMatchSnapshot();
 			done();
 		});
+		it('should render the name and not a select if only option', (done) => {
+			const aloneProjectPhase = {
+				error: false,
+				loading: false,
+				phases: {
+					default: 456,
+					options: [
+						{
+							id: 456,
+							name: 'Project Phase Name',
+							activities: {
+								default: 7,
+								options: [
+									{
+										id: 6,
+										name: 'BugFix'
+									}
+								]
+							}
+						}
+					]
+				}
+			};
+			const wrapper = shallow(<ActiveDayTasks
+				onPhaseSelect={onPhaseSelect}
+				onActivitySelect={onActivitySelect}
+				projectPhasesQuery={aloneProjectPhase}
+				selectedActivity={selectedActivity}
+				selectedPhase={selectedPhase}
+			/>);
+			expect(wrapper.find('SelectGroup').at(0).prop('showTextInstead'))
+				.toEqual('Project Phase Name');
+			done();
+		});
 	});
 	describe('onSelect', () => {
 		it('should call the props selected function with the selected element', () => {

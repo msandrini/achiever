@@ -26,18 +26,35 @@ class ActiveDayTimes extends React.Component {
 		this.togglePause = this.togglePause.bind(this);
 	}
 
+	/**
+	 * When it receives props, it will check if it should show lunch fields
+	 * if the break fields changed, then if break is emtpy and init/end is field => pauseIsEnable
+	 * else !pauseIsEnable
+	 * @param {*} nextProps - react default
+	 */
 	componentWillReceiveProps(nextProps) {
-		const storedPausesHaveChanged = [1, 2].map(key => nextProps.storedTimes[key] && (
-			(nextProps.storedTimes[key].hours !== this.props.storedTimes[key].hours) ||
+		const storedPausesHaveChanged = [0, 1, 2, 3].map(key =>
+			nextProps.storedTimes[key] 	&&
+			((nextProps.storedTimes[key].hours !== this.props.storedTimes[key].hours)	||
 			(nextProps.storedTimes[key].minutes !== this.props.storedTimes[key].minutes)));
-		const storedPausesHaveNoTimeInfo = [1, 2].map(key => !nextProps.storedTimes[key].hours &&
+
+		const storedPausesHaveNoTimeInfo = [0, 1, 2, 3].map(key =>
+			!nextProps.storedTimes[key].hours 	&&
 			!nextProps.storedTimes[key].minutes);
 
-		if (storedPausesHaveChanged[0] || storedPausesHaveChanged[1]) {
-			if (storedPausesHaveNoTimeInfo[0] && storedPausesHaveNoTimeInfo[1]) {
-				this.setState({ pauseIsEnabled: false });
-			} else {
+		const breakIsEmpty = storedPausesHaveNoTimeInfo[1] && storedPausesHaveNoTimeInfo[2];
+		const allButBreakIsField = !storedPausesHaveNoTimeInfo[0] && !storedPausesHaveNoTimeInfo[3];
+
+		if (
+			storedPausesHaveChanged[0] ||
+			storedPausesHaveChanged[1] ||
+			storedPausesHaveChanged[2] ||
+			storedPausesHaveChanged[3]
+		) {
+			if (breakIsEmpty && allButBreakIsField) {
 				this.setState({ pauseIsEnabled: true });
+			} else {
+				this.setState({ pauseIsEnabled: false });
 			}
 		}
 	}
@@ -107,7 +124,7 @@ class ActiveDayTimes extends React.Component {
 
 	togglePause(checkValue) {
 		this.setState({
-			pauseIsEnabled: !checkValue
+			pauseIsEnabled: checkValue
 		});
 		if (checkValue) {
 			[1, 2].forEach(key => this.onChangeTime(key)(0, 0));
@@ -122,7 +139,7 @@ class ActiveDayTimes extends React.Component {
 			tabIndex
 		} = this.props;
 
-		const shouldHideTimeGroup = index => (!this.state.pauseIsEnabled || isHoliday) &&
+		const shouldHideTimeGroup = index => (this.state.pauseIsEnabled || isHoliday) &&
 			(index === 1 || index === 2);
 
 		return (
@@ -131,7 +148,7 @@ class ActiveDayTimes extends React.Component {
 					<CheckBox
 						label={strings.noLunchPause}
 						onCheck={this.togglePause}
-						value={!this.state.pauseIsEnabled}
+						value={this.state.pauseIsEnabled}
 						disabled={disabled}
 					/>
 				</div>

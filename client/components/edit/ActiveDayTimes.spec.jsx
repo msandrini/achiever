@@ -73,8 +73,43 @@ describe('ActiveDayTimes', () => {
 		});
 	});
 	describe('componentWillReceiveProps', () => {
-		it('should enable pause if...', () => {
+		it('should mark pause enable if all but break field has content', () => {
+			const onTimeChange = jest.fn();
+			const focusOnSubmit = jest.fn();
 
+			const wrapper = shallow(<ActiveDayTimes
+				onTimeChange={onTimeChange}
+				focusOnSubmit={focusOnSubmit}
+			/>);
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
+			wrapper.setProps({
+				storedTimes: [
+					{ hours: 10, minutes: 0 },
+					{},
+					{},
+					{ hours: 17, minutes: 0 }
+				]
+			});
+			expect(wrapper.state('pauseIsEnabled')).toBeTruthy();
+		});
+		it('should mark pause disable if any break field has content', () => {
+			const onTimeChange = jest.fn();
+			const focusOnSubmit = jest.fn();
+
+			const wrapper = shallow(<ActiveDayTimes
+				onTimeChange={onTimeChange}
+				focusOnSubmit={focusOnSubmit}
+			/>);
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
+			wrapper.setProps({
+				storedTimes: [
+					{ hours: 10, minutes: 0 },
+					{ hours: 10, minutes: '' },
+					{},
+					{ hours: 17, minutes: 0 }
+				]
+			});
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
 		});
 	});
 });
