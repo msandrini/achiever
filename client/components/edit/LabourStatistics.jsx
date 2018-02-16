@@ -2,10 +2,10 @@ import React from 'react';
 import TimeDuration from 'time-duration';
 import PropTypes from 'prop-types';
 
-import '../../styles/labourStatistics.styl';
 import GaugeBar from '../ui/GaugeBar';
 
 import strings from '../../../shared/strings';
+import './LabourStatistics.styl';
 
 const LabourStatistics = (props) => {
 	const {

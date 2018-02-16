@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/selectGroup.styl';
+import './SelectGroup.styl';
 
 const renderOptions = options =>
 	options.map(option => (

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Spinner from '../ui/Spinner';
 
-import '../../styles/pageLoading.styl';
+import './PageLoading.styl';
 
 const PageLoading = props => (
 	props.active ?

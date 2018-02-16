@@ -8,7 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import strings from '../../../shared/strings';
 
-import '../../styles/weeklyCalendar.styl';
+import './WeeklyCalendar.styl';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 

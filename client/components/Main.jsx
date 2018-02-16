@@ -3,7 +3,7 @@ import React from 'react';
 import ShowComponentOnRoute from './Router';
 import Header from './Header';
 
-import '../styles/main.styl';
+import './Main.styl';
 
 const Main = () => (
 	<div className="root-container">
