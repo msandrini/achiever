@@ -104,6 +104,16 @@ describe('WeeklyCalendar', () => {
 				weekEntries={defaultProps.weekEntries}
 				storedTimes={defaultProps.storedTimes}
 			/>);
+			const fullfilledWrapper = shallow(<WeeklyCalendar
+				controlDate={defaultProps.controlDate}
+				weekEntries={defaultProps.weekEntries}
+				storedTimes={[
+					{ hours: 7, minutes: 0 },
+					{ hours: 12, minutes: 0 },
+					{ hours: 13, minutes: 0 },
+					{ hours: 17, minutes: 0 }
+				]}
+			/>);
 			const emptyWrapper = shallow(<WeeklyCalendar
 				controlDate={defaultProps.controlDate}
 				weekEntries={{ timeEntries: null }}
@@ -111,6 +121,7 @@ describe('WeeklyCalendar', () => {
 			/>);
 			expect(wrapper).toMatchSnapshot();
 			expect(emptyWrapper).toMatchSnapshot();
+			expect(fullfilledWrapper).toMatchSnapshot();
 		});
 	});
 });
