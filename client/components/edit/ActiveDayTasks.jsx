@@ -28,7 +28,6 @@ const ActiveDayTasks = (props) => {
 		textForProjectPhase = projectPhases.options[0].name;
 	}
 
-	const activityOptions = selectedPhase.activities.options ? selectedPhase.activities.options : [];
 	let textForActivity = projectPhases.options ? null : strings.loading;
 	if (isHoliday) {
 		textForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
@@ -49,7 +48,7 @@ const ActiveDayTasks = (props) => {
 			<SelectGroup
 				name="activity"
 				label={strings.activity}
-				options={activityOptions}
+				options={selectedPhase.activities.options || []}
 				selected={selectedActivity.id}
 				onChange={onActivitySelect}
 				showTextInstead={textForActivity}
