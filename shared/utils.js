@@ -1,12 +1,13 @@
 const _isNumber = value => !Number.isNaN(parseInt(value, 10));
 
 const checkValidity = (mode, valueRaw) => {
+	if (valueRaw === null) {
+		return true;	// 1st change on TimeGroup, will be null
+	}
 	if (String(valueRaw).length > 2) {
 		return false;
 	}
-	if (valueRaw === null) {
-		return true;	// 1st change on TimeGroup, onde will be null
-	}
+
 	const value = parseInt(valueRaw, 10);
 	if (_isNumber(value)) {
 		const max = mode === 'hours' ? 24 : 60;

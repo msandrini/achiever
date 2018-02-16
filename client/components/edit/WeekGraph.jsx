@@ -12,7 +12,7 @@ const renderDayBar = (dailyContractedHours, controlDate, storedTimes) => (dayInf
 	const current = (dayInfo.date === controlDate.format('YYYY-MM-DD')) ?
 		(timesAreValid(storedTimes) &&
 			new TimeDuration(calculateLabouredHours(storedTimes)).toMinutes()
-		) :
+		) || 0 :
 		new TimeDuration(dayInfo.total).toMinutes();
 	const reference = new TimeDuration(dailyContractedHours).toMinutes();
 
@@ -48,14 +48,14 @@ const WeekGraph = (props) => {
 };
 
 WeekGraph.propTypes = {
-	weekEntries: PropTypes.object.isRequired,
+	weekEntries: PropTypes.object,
 	dailyContractedHours: PropTypes.string,
 	controlDate: PropTypes.object,
 	storedTimes: PropTypes.array
 };
 
 WeekGraph.defaultProps = {
-	weekEntries: {},
+	weekEntries: { timeEntries: null },
 	dailyContractedHours: '8:00',
 	controlDate: {},
 	storedTimes: [{}, {}, {}, {}]

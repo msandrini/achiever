@@ -5,13 +5,14 @@ import TimeField from './TimeField';
 
 import './TimeGroup.styl';
 
-const randomId = String(Math.random());
 const getClassName = props =>
 	`time-group ${props.emphasis ? 'emphasis' : ''}`;
 
 export default class TimeGroup extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.randomId = String(Math.random());
 
 		this.onChangeTime = this.onChangeTime.bind(this);
 	}
@@ -38,7 +39,7 @@ export default class TimeGroup extends React.Component {
 		}
 		return (
 			<div className={getClassName(this.props)}>
-				<label htmlFor={`${randomId}_h`}>{label}</label>
+				<label htmlFor={`${this.randomId}_h`}>{label}</label>
 				<TimeField
 					mode="hours"
 					value={time.hours}

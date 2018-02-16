@@ -21,9 +21,9 @@ export default class TimeField extends React.Component {
 		this.timeoutId = null;
 	}
 
-	componentDidUpdate(prevProps) {
+	componentWillReceiveProps(nextProps) {
 		const { shouldHaveFocus } = this.props;
-		if (shouldHaveFocus && !prevProps.shouldHaveFocus) {
+		if (!shouldHaveFocus && nextProps.shouldHaveFocus) {
 			this.input.focus();
 		}
 	}

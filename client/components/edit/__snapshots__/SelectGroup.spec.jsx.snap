@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectGroup render should show a select component with min props 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SelectGroup
+    disabled={false}
+    label="testLabel"
+    name="testName"
+    onChange={null}
+    options={Array []}
+    selected=""
+    showTextInstead={null}
+    tabIndex={0}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <label
+          htmlFor="testName"
+        >
+          testLabel
+        </label>,
+        <select
+          className="detail-selector"
+          disabled={false}
+          name="testName"
+          onChange={[Function]}
+          tabIndex={0}
+          value=""
+        />,
+      ],
+      "className": "select-group",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "testLabel",
+          "htmlFor": "testName",
+        },
+        "ref": null,
+        "rendered": "testLabel",
+        "type": "label",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [],
+          "className": "detail-selector",
+          "disabled": false,
+          "name": "testName",
+          "onChange": [Function],
+          "tabIndex": 0,
+          "value": "",
+        },
+        "ref": null,
+        "rendered": Array [],
+        "type": "select",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <label
+            htmlFor="testName"
+          >
+            testLabel
+          </label>,
+          <select
+            className="detail-selector"
+            disabled={false}
+            name="testName"
+            onChange={[Function]}
+            tabIndex={0}
+            value=""
+          />,
+        ],
+        "className": "select-group",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "testLabel",
+            "htmlFor": "testName",
+          },
+          "ref": null,
+          "rendered": "testLabel",
+          "type": "label",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [],
+            "className": "detail-selector",
+            "disabled": false,
+            "name": "testName",
+            "onChange": [Function],
+            "tabIndex": 0,
+            "value": "",
+          },
+          "ref": null,
+          "rendered": Array [],
+          "type": "select",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

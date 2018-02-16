@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import DatePicker from 'react-datepicker';
 
 import {
@@ -10,7 +10,7 @@ import {
 
 import './MonthlyCalendar.styl';
 
-const _getStyleClassForCalendarDays = (weekEntries = {}) => {
+const _getStyleClassForCalendarDays = (weekEntries) => {
 	const dayStyles = [
 		{ 'calendar-checked': [] },
 		{ 'calendar-unchecked': [] },
@@ -60,7 +60,7 @@ MonthlyCalendar.propTypes = {
 
 MonthlyCalendar.defaultProps = {
 	onDateChange: () => {},
-	weekEntries: {}
+	weekEntries: { timeEntries: null }
 };
 
 export default MonthlyCalendar;

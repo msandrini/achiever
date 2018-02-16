@@ -26,19 +26,19 @@ class ActiveDayTimes extends React.Component {
 		this.togglePause = this.togglePause.bind(this);
 	}
 
-	componentWillReceiveProps(props) {
-		const storedPausesHaveChanged = [1, 2].map(key => props.storedTimes[key] && (
-			(props.storedTimes[key].hours !== this.props.storedTimes[key].hours) ||
-			(props.storedTimes[key].minutes !== this.props.storedTimes[key].minutes)));
-		const storedPausesHaveNoTimeInfo = [1, 2].map(key => !props.storedTimes[key].hours &&
-			!props.storedTimes[key].minutes);
+	componentWillReceiveProps(nextProps) {
+		const storedPausesHaveChanged = [1, 2].map(key => nextProps.storedTimes[key] && (
+			(nextProps.storedTimes[key].hours !== this.props.storedTimes[key].hours) ||
+			(nextProps.storedTimes[key].minutes !== this.props.storedTimes[key].minutes)));
+		const storedPausesHaveNoTimeInfo = [1, 2].map(key => !nextProps.storedTimes[key].hours &&
+			!nextProps.storedTimes[key].minutes);
 
 		if (storedPausesHaveChanged[0] || storedPausesHaveChanged[1]) {
 			if (storedPausesHaveNoTimeInfo[0] && storedPausesHaveNoTimeInfo[1]) {
 				this.setState({ pauseIsEnabled: false });
-				return;
+			} else {
+				this.setState({ pauseIsEnabled: true });
 			}
-			this.setState({ pauseIsEnabled: true });
 		}
 	}
 
