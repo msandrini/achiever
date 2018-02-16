@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import MonthlyCalendar from './MonthlyCalendar';
 

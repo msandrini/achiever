@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { shallow } from 'enzyme';
 
 import Edit from './Edit';

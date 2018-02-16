@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BigCalendar from 'react-big-calendar';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import TimeDuration from 'time-duration';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -10,6 +10,8 @@ import strings from '../../../shared/strings';
 
 import './WeeklyCalendar.styl';
 
+moment.locale('pt-br');
+moment.tz.setDefault("America/Sao_Paulo");
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 const noOp = () => () => {};
