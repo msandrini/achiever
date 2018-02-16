@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import Icon from './Icon';
 import strings from '../../../shared/strings';
 
-import '../../styles/modal.styl';
+import './Modal.styl';
 
 
 const showButtons = buttons => (

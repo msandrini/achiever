@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/suggestionBox.styl';
+import './SuggestionBox.styl';
 
 const withLeadingZero = number => (number < 10 ? `0${number}` : String(number));
 
