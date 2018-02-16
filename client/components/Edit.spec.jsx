@@ -4,6 +4,9 @@ import { shallow } from 'enzyme';
 
 import Edit from './Edit';
 
+import * as utils from '../utils';
+import strings from '../../shared/strings';
+
 Date.now = jest.fn(() => new Date(Date.UTC(2018, 1, 15, 12)).valueOf());
 Math.random = jest.fn(() => 12345);
 
@@ -341,6 +344,88 @@ describe('Edit', () => {
 				id: 6,
 				name: 'BugFix'
 			});
+		});
+	});
+	describe('onSubmit', () => {
+		it('should set state as sent if sucess', async () => {
+			const submitPromiseSuccess = Promise.resolve({ successMessage: 'Success!!' });
+			utils.submitToServer = jest.fn(() => submitPromiseSuccess);
+			const form = wrapper.find('form');
+			form.simulate('submit', { preventDefault: jest.fn() });
+			expect(utils.submitToServer).toHaveBeenCalled();
+
+			await submitPromiseSuccess;
+
+			expect(wrapper.state('sentToday')).toBeTruthy();
+			const { sentToday } = utils.getTodayStorage();
+			expect(sentToday).toBeTruthy();
+			expect(defaultProps.weekEntriesQuery.refetch)
+				.toHaveBeenCalledWith({ date: wrapper.state('controlDate').format('YYYY-MM-DD') });
+		});
+		it('should set state as error message if failure', async () => {
+			const submitPromiseSuccess = Promise.resolve({ errorMessage: 'Failure!!' });
+			utils.submitToServer = jest.fn(() => submitPromiseSuccess);
+			const form = wrapper.find('form');
+			form.simulate('submit', { preventDefault: jest.fn() });
+			expect(utils.submitToServer).toHaveBeenCalled();
+
+			await submitPromiseSuccess;
+
+			expect(wrapper.state('sentToday')).toBeFalsy();
+			expect(wrapper.state('errorMessage')).toEqual('Failure!!');
+		});
+	});
+	describe('onTimeChange', () => {
+		it('should set storedTimes labouredHoursOnDay hoursBalanceUpToDate', () => {
+			const onTimeChange = wrapper.find('ActiveDayTimes').prop('onTimeChange');
+			onTimeChange(0)(8, 30);
+			expect(wrapper.state('storedTimes')).toEqual([
+				{ hours: 8, minutes: 30 },
+				{},
+				{},
+				{}
+			]);
+			onTimeChange(1)();
+			expect(wrapper.state('storedTimes')).toEqual([
+				{ hours: 8, minutes: 30 },
+				{ hours: 0, minutes: 0 },
+				{},
+				{}
+			]);
+			onTimeChange(1)(12, 30);
+			onTimeChange(2)(13, 0);
+			onTimeChange(3)(17, 0);
+			expect(wrapper.state('labouredHoursOnDay')).toEqual('8:00');
+		});
+	});
+	describe('onDateChange', () => {
+		it('should alert if controlDate is after today', () => {
+			const onDateChange = wrapper.find('MonthlyCalendar').prop('onDateChange');
+			onDateChange(moment('2018-02-20'));
+			expect(wrapper.state('alertMessage')).toEqual(strings.cannotSelectFutureTime);
+		});
+		it('should change controlDate based on date', () => {
+			const onDateChange = wrapper.find('MonthlyCalendar').prop('onDateChange');
+			const feb2018 = moment('2018-02-14')
+			onDateChange(feb2018);
+			expect(wrapper.state('controlDate')).toEqual(feb2018);
+			expect(wrapper.state('controlDateIsValid')).toBeTruthy();
+
+			const jan2018 = moment('2018-01-15');
+			onDateChange(jan2018);
+			expect(wrapper.state('controlDate')).toEqual(jan2018);
+			expect(wrapper.state('controlDateIsValid')).toBeFalsy();
+
+			expect(defaultProps.weekEntriesQuery.refetch)
+				.toHaveBeenCalledWith({ date: jan2018.format('YYYY-MM-DD') });
+		});
+	});
+	describe('alertOnClose', () => {
+		it('should null the alert message', () => {
+			wrapper.setState({ alertMessage: 'super alert' });
+			const onAlertClose = wrapper.find('AlertModal').prop('onClose');
+			onAlertClose();
+			expect(wrapper.state('alertMessage')).toBeNull();	
 		});
 	});
 });
