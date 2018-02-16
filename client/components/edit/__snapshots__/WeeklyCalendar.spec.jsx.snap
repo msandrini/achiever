@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <WeeklyCalendar
-    controlDate={"2018-02-14T02:00:00.000Z"}
+    controlDate={"2018-02-14T00:00:00.000Z"}
     storedTimes={
       Array [
         Object {
@@ -122,7 +122,7 @@ ShallowWrapper {
           Calendário da semana
         </summary>,
         <Uncontrolled(Calendar)
-          date={2018-02-14T02:00:00.000Z}
+          date={2018-02-14T00:00:00.000Z}
           events={
             Array [
               Object {
@@ -150,27 +150,21 @@ ShallowWrapper {
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-13T13:35:00.000Z,
+                "end": 2018-02-13T14:00:00.000Z,
                 "id": 4,
-                "start": 2018-02-13T11:28:00.000Z,
+                "start": 2018-02-13T09:00:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-13T20:28:00.000Z,
+                "end": 2018-02-13T02:00:00.000Z,
                 "id": 5,
-                "start": 2018-02-13T14:35:00.000Z,
+                "start": 2018-02-13T02:00:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-14T14:00:00.000Z,
+                "end": 2018-02-14T20:28:00.000Z,
                 "id": 6,
-                "start": 2018-02-14T09:00:00.000Z,
-                "title": "Project Phase Name - Code/ Document Reviews",
-              },
-              Object {
-                "end": 2018-02-14T02:00:00.000Z,
-                "id": 7,
-                "start": 2018-02-14T02:00:00.000Z,
+                "start": 2018-02-14T11:28:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
@@ -233,7 +227,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "date": 2018-02-14T02:00:00.000Z,
+          "date": 2018-02-14T00:00:00.000Z,
           "events": Array [
             Object {
               "end": 2018-02-11T13:35:00.000Z,
@@ -260,27 +254,21 @@ ShallowWrapper {
               "title": "Project Phase Name - Code/ Document Reviews",
             },
             Object {
-              "end": 2018-02-13T13:35:00.000Z,
+              "end": 2018-02-13T14:00:00.000Z,
               "id": 4,
-              "start": 2018-02-13T11:28:00.000Z,
+              "start": 2018-02-13T09:00:00.000Z,
               "title": "Project Phase Name - Code/ Document Reviews",
             },
             Object {
-              "end": 2018-02-13T20:28:00.000Z,
+              "end": 2018-02-13T02:00:00.000Z,
               "id": 5,
-              "start": 2018-02-13T14:35:00.000Z,
+              "start": 2018-02-13T02:00:00.000Z,
               "title": "Project Phase Name - Code/ Document Reviews",
             },
             Object {
-              "end": 2018-02-14T14:00:00.000Z,
+              "end": 2018-02-14T20:28:00.000Z,
               "id": 6,
-              "start": 2018-02-14T09:00:00.000Z,
-              "title": "Project Phase Name - Code/ Document Reviews",
-            },
-            Object {
-              "end": 2018-02-14T02:00:00.000Z,
-              "id": 7,
-              "start": 2018-02-14T02:00:00.000Z,
+              "start": 2018-02-14T11:28:00.000Z,
               "title": "Project Phase Name - Code/ Document Reviews",
             },
             Object {
@@ -339,7 +327,7 @@ ShallowWrapper {
             Calendário da semana
           </summary>,
           <Uncontrolled(Calendar)
-            date={2018-02-14T02:00:00.000Z}
+            date={2018-02-14T00:00:00.000Z}
             events={
               Array [
                 Object {
@@ -367,27 +355,21 @@ ShallowWrapper {
                   "title": "Project Phase Name - Code/ Document Reviews",
                 },
                 Object {
-                  "end": 2018-02-13T13:35:00.000Z,
+                  "end": 2018-02-13T14:00:00.000Z,
                   "id": 4,
-                  "start": 2018-02-13T11:28:00.000Z,
+                  "start": 2018-02-13T09:00:00.000Z,
                   "title": "Project Phase Name - Code/ Document Reviews",
                 },
                 Object {
-                  "end": 2018-02-13T20:28:00.000Z,
+                  "end": 2018-02-13T02:00:00.000Z,
                   "id": 5,
-                  "start": 2018-02-13T14:35:00.000Z,
+                  "start": 2018-02-13T02:00:00.000Z,
                   "title": "Project Phase Name - Code/ Document Reviews",
                 },
                 Object {
-                  "end": 2018-02-14T14:00:00.000Z,
+                  "end": 2018-02-14T20:28:00.000Z,
                   "id": 6,
-                  "start": 2018-02-14T09:00:00.000Z,
-                  "title": "Project Phase Name - Code/ Document Reviews",
-                },
-                Object {
-                  "end": 2018-02-14T02:00:00.000Z,
-                  "id": 7,
-                  "start": 2018-02-14T02:00:00.000Z,
+                  "start": 2018-02-14T11:28:00.000Z,
                   "title": "Project Phase Name - Code/ Document Reviews",
                 },
                 Object {
@@ -450,7 +432,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "date": 2018-02-14T02:00:00.000Z,
+            "date": 2018-02-14T00:00:00.000Z,
             "events": Array [
               Object {
                 "end": 2018-02-11T13:35:00.000Z,
@@ -477,27 +459,21 @@ ShallowWrapper {
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-13T13:35:00.000Z,
+                "end": 2018-02-13T14:00:00.000Z,
                 "id": 4,
-                "start": 2018-02-13T11:28:00.000Z,
+                "start": 2018-02-13T09:00:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-13T20:28:00.000Z,
+                "end": 2018-02-13T02:00:00.000Z,
                 "id": 5,
-                "start": 2018-02-13T14:35:00.000Z,
+                "start": 2018-02-13T02:00:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
-                "end": 2018-02-14T14:00:00.000Z,
+                "end": 2018-02-14T20:28:00.000Z,
                 "id": 6,
-                "start": 2018-02-14T09:00:00.000Z,
-                "title": "Project Phase Name - Code/ Document Reviews",
-              },
-              Object {
-                "end": 2018-02-14T02:00:00.000Z,
-                "id": 7,
-                "start": 2018-02-14T02:00:00.000Z,
+                "start": 2018-02-14T11:28:00.000Z,
                 "title": "Project Phase Name - Code/ Document Reviews",
               },
               Object {
@@ -561,7 +537,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <WeeklyCalendar
-    controlDate={"2018-02-14T02:00:00.000Z"}
+    controlDate={"2018-02-14T00:00:00.000Z"}
     storedTimes={
       Array [
         Object {
@@ -599,7 +575,7 @@ ShallowWrapper {
           Calendário da semana
         </summary>,
         <Uncontrolled(Calendar)
-          date={2018-02-14T02:00:00.000Z}
+          date={2018-02-14T00:00:00.000Z}
           events={
             Array [
               Object {},
@@ -633,7 +609,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "date": 2018-02-14T02:00:00.000Z,
+          "date": 2018-02-14T00:00:00.000Z,
           "events": Array [
             Object {},
           ],
@@ -662,7 +638,7 @@ ShallowWrapper {
             Calendário da semana
           </summary>,
           <Uncontrolled(Calendar)
-            date={2018-02-14T02:00:00.000Z}
+            date={2018-02-14T00:00:00.000Z}
             events={
               Array [
                 Object {},
@@ -696,7 +672,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "date": 2018-02-14T02:00:00.000Z,
+            "date": 2018-02-14T00:00:00.000Z,
             "events": Array [
               Object {},
             ],

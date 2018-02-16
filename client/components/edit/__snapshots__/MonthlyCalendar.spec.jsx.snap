@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <MonthlyCalendar
-    controlDate={"2018-02-14T02:00:00.000Z"}
+    controlDate={"2018-02-14T00:00:00.000Z"}
     onDateChange={[MockFunction]}
     weekEntries={
       Object {
@@ -147,7 +147,7 @@ ShallowWrapper {
       "onSelect": [Function],
       "onYearChange": [Function],
       "preventOpenOnFocus": false,
-      "selected": "2018-02-14T02:00:00.000Z",
+      "selected": "2018-02-14T00:00:00.000Z",
       "shouldCloseOnSelect": true,
       "showTimeSelect": false,
       "timeIntervals": 30,
@@ -206,7 +206,7 @@ ShallowWrapper {
         "onSelect": [Function],
         "onYearChange": [Function],
         "preventOpenOnFocus": false,
-        "selected": "2018-02-14T02:00:00.000Z",
+        "selected": "2018-02-14T00:00:00.000Z",
         "shouldCloseOnSelect": true,
         "showTimeSelect": false,
         "timeIntervals": 30,
@@ -232,7 +232,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <MonthlyCalendar
-    controlDate={"2018-02-14T02:00:00.000Z"}
+    controlDate={"2018-02-14T00:00:00.000Z"}
     onDateChange={[MockFunction]}
     weekEntries={
       Object {
@@ -285,7 +285,7 @@ ShallowWrapper {
       "onSelect": [Function],
       "onYearChange": [Function],
       "preventOpenOnFocus": false,
-      "selected": "2018-02-14T02:00:00.000Z",
+      "selected": "2018-02-14T00:00:00.000Z",
       "shouldCloseOnSelect": true,
       "showTimeSelect": false,
       "timeIntervals": 30,
@@ -334,7 +334,7 @@ ShallowWrapper {
         "onSelect": [Function],
         "onYearChange": [Function],
         "preventOpenOnFocus": false,
-        "selected": "2018-02-14T02:00:00.000Z",
+        "selected": "2018-02-14T00:00:00.000Z",
         "shouldCloseOnSelect": true,
         "showTimeSelect": false,
         "timeIntervals": 30,
@@ -360,7 +360,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <MonthlyCalendar
-    controlDate={"2018-02-21T03:00:00.000Z"}
+    controlDate={"2018-02-21T00:00:00.000Z"}
     onDateChange={[MockFunction]}
     weekEntries={
       Object {
@@ -505,7 +505,7 @@ ShallowWrapper {
       "onSelect": [Function],
       "onYearChange": [Function],
       "preventOpenOnFocus": false,
-      "selected": "2018-02-21T03:00:00.000Z",
+      "selected": "2018-02-21T00:00:00.000Z",
       "shouldCloseOnSelect": true,
       "showTimeSelect": false,
       "timeIntervals": 30,
@@ -567,7 +567,7 @@ ShallowWrapper {
         "onSelect": [Function],
         "onYearChange": [Function],
         "preventOpenOnFocus": false,
-        "selected": "2018-02-21T03:00:00.000Z",
+        "selected": "2018-02-21T00:00:00.000Z",
         "shouldCloseOnSelect": true,
         "showTimeSelect": false,
         "timeIntervals": 30,

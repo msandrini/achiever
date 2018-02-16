@@ -5,7 +5,7 @@ import moment from 'moment';
 import MonthlyCalendar from './MonthlyCalendar';
 
 const defaultProps = {
-	controlDate: moment('2018-02-14'),
+	controlDate: moment('2018-02-14T00:00:00.000Z'),
 	onDateChange: jest.fn(),
 	weekEntries: {
 		timeEntries: {
@@ -107,7 +107,7 @@ describe('MonthlyCalendar', () => {
 		it('should show if a day in past is blocked', () => {
 			Date.now = jest.fn(() => new Date(Date.UTC(2018, 1, 22, 12)).valueOf());
 			const nextWeekWrapper = shallow(<MonthlyCalendar
-				controlDate={moment('2018-02-21')}
+				controlDate={moment('2018-02-21T00:00:00.000Z')}
 				onDateChange={defaultProps.onDateChange}
 				weekEntries={defaultProps.weekEntries}
 			/>);

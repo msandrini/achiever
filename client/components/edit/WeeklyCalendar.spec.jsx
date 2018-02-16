@@ -5,7 +5,7 @@ import moment from 'moment';
 import WeeklyCalendar from './WeeklyCalendar';
 
 const defaultProps = {
-	controlDate: moment('2018-02-14'),
+	controlDate: moment('2018-02-14T00:00:00.000Z'),
 	weekEntries: {
 		timeEntries: {
 			0: {

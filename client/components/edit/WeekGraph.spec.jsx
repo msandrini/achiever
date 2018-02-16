@@ -9,7 +9,7 @@ Date.now = jest.fn(() => new Date(Date.UTC(2018, 1, 14, 12)).valueOf());
 
 const defaultProps = {
 	dailyContractedHours: '8:00',
-	controlDate: moment('2018-02-14'),
+	controlDate: moment('2018-02-14T00:00:00.000Z'),
 	weekEntries: {
 		timeEntries: [
 			{
