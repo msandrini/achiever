@@ -9,7 +9,7 @@ import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 import { setAuthToken } from './authentication/token';
 
-import '../styles/login.styl';
+import './Login.styl';
 
 class Login extends React.Component {
 	constructor(props) {
