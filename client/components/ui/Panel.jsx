@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/panels.styl';
+import './Panel.styl';
 
 const Panel = ({ message, type }) => {
 	if (message) {

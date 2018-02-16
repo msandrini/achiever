@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/checkBox.styl';
+import './CheckBox.styl';
 
 const KEY_SPACEBAR = 32;
 

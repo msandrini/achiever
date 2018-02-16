@@ -8,7 +8,7 @@ import {
 	isDayAfterToday
 } from '../../utils';
 
-import '../../styles/calendar.styl';
+import './MonthlyCalendar.styl';
 
 const _getStyleClassForCalendarDays = (weekEntries) => {
 	const dayStyles = [

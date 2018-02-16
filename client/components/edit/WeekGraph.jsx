@@ -6,7 +6,7 @@ import GaugeBar from '../ui/GaugeBar';
 
 import { timesAreValid, calculateLabouredHours } from '../../utils';
 
-import '../../styles/weekGraph.styl';
+import './WeekGraph.styl';
 
 const renderDayBar = (dailyContractedHours, controlDate, storedTimes) => (dayInfo) => {
 	const current = (dayInfo.date === controlDate.format('YYYY-MM-DD')) ?

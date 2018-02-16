@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/spinner.styl';
+import './Spinner.styl';
 
 const Spinner = props => (
 	<div className={`spinner ${props.class}`}>

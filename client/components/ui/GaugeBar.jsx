@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/gaugeBar.styl';
+import './GaugeBar.styl';
 
 const GaugeBar = ({ currentValue, referenceValue, verticalBar }) => {
 	const percentage = (currentValue / referenceValue) * 100;

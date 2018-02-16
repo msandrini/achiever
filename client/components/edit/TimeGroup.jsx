@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TimeField from './TimeField';
 
-import '../../styles/time.styl';
+import './TimeGroup.styl';
 
 const getClassName = props =>
 	`time-group ${props.emphasis ? 'emphasis' : ''}`;

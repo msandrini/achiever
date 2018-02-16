@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/staticTime.styl';
+import './StaticTime.styl';
 
 const formatTime = value => (
 	String(value).length === 1 ? `0${String(value)}` : String(value)

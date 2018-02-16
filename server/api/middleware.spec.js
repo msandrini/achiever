@@ -31,7 +31,7 @@ const TABLE_HEADER = `
 		<th>Balance</th>
 		<th>Remarks</th>
 	</tr>
-`
+`;
 
 describe('middleware', () => {
 	describe('getBalance()', () => {
@@ -40,10 +40,10 @@ describe('middleware', () => {
 		it('should return last FRIDAY 8th td WHEN first tr-td is MONDAY', () => {
 			const baseHtml = `
 				<table>
-					${ generateTableLine('2018-02-05 Mon', '5:00') }
-					${ generateTableLine('2018-02-02 Fri', targetBalance) }
+					${generateTableLine('2018-02-05 Mon', '5:00')}
+					${generateTableLine('2018-02-02 Fri', targetBalance)}
 				</table>
-			`;			
+			`;
 			const $ = cheerio.load(baseHtml);
 			const result = getBalance($);
 			expect(result).toEqual(targetBalance);
@@ -52,15 +52,15 @@ describe('middleware', () => {
 		it('should return last FRIDAY 8th td WHEN it has header in the middle', () => {
 			const baseHtml = `
 				<table>
-					${ generateTableLine('2018-02-07 Web', '7:00') }
-					${ TABLE_HEADER }
-					${ generateTableLine('2018-02-06 Tue', '6:00') }
-					${ TABLE_HEADER }
-					${ generateTableLine('2018-02-05 Mon', '5:00') }
-					${ TABLE_HEADER }
-					${ generateTableLine('2018-02-02 Fri', targetBalance) }
+					${generateTableLine('2018-02-07 Web', '7:00')}
+					${TABLE_HEADER}
+					${generateTableLine('2018-02-06 Tue', '6:00')}
+					${TABLE_HEADER}
+					${generateTableLine('2018-02-05 Mon', '5:00')}
+					${TABLE_HEADER}
+					${generateTableLine('2018-02-02 Fri', targetBalance)}
 				</table>
-			`;			
+			`;
 			const $ = cheerio.load(baseHtml);
 			const result = getBalance($);
 			expect(result).toEqual(targetBalance);
@@ -69,9 +69,9 @@ describe('middleware', () => {
 		it('should return 8th td when the first tr-td is FRIDAY', () => {
 			const baseHtml = `
 				<table>
-					${ generateTableLine('2018-02-02 Fri', targetBalance) }
+					${generateTableLine('2018-02-02 Fri', targetBalance)}
 				</table>
-			`;			
+			`;
 			const $ = cheerio.load(baseHtml);
 			const result = getBalance($);
 			expect(result).toEqual(targetBalance);
