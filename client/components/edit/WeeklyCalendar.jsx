@@ -7,14 +7,19 @@ import TimeDuration from 'time-duration';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import strings from '../../../shared/strings';
+import {
+	timesAreValid
+} from '../../utils';
 
 import './WeeklyCalendar.styl';
 
+
 moment.locale('pt-br');
-moment.tz.setDefault("America/Sao_Paulo");
+moment.tz.setDefault('America/Sao_Paulo');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 const noOp = () => () => {};
+
 
 const _getDateFromComposedObj = (dateObj, entryType) => {
 	const dateFormatSent = 'YYYY-MM-DD H:mm';
@@ -30,13 +35,18 @@ const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
 	const _isEmptyObj = obj => (
 		Object.keys(obj).length === 0 ? 0 : obj
 	);
-	const dayEntry = {
-		...timeEntryAtIndex,
-		startTime: new TimeDuration(_isEmptyObj(storedTimes[0])).toString(),
-		startBreakTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
-		endBreakTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
-		endTime: new TimeDuration(_isEmptyObj(storedTimes[3])).toString()
+	let dayEntry = {
+		...timeEntryAtIndex
 	};
+	if (timesAreValid(storedTimes)) {
+		dayEntry = {
+			...timeEntryAtIndex,
+			startTime: new TimeDuration(_isEmptyObj(storedTimes[0])).toString(),
+			startBreakTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
+			endBreakTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
+			endTime: new TimeDuration(_isEmptyObj(storedTimes[3])).toString()
+		};
+	}
 	return dayEntry;
 };
 
@@ -50,7 +60,13 @@ const _convertweekEntriesToEvents = (weekEntries, controlDate, storedTimes) => {
 				weekEntries.timeEntries[index];
 
 			if (dayEntry) {
-				const hasBreak = dayEntry.startBreakTime && dayEntry.endBreakTime;
+				const hasBreak = Boolean((
+					dayEntry.startBreakTime &&
+					dayEntry.startBreakTime !== '0:00' &&
+					dayEntry.endBreakTime &&
+					dayEntry.endBreakTime !== '0:00'
+				));
+
 				if (hasBreak) {
 					events.push({
 						id: index * 2,
