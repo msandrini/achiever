@@ -29,6 +29,25 @@ const typeDefs = `
 		total: String
 	}
 
+	type TimeData {
+		date: String
+		dayOfWeek: String
+		contractedTime: String
+		startTime: String
+		endTime: String
+		paidTime: String
+		breakStartTime: String
+		breakEndTime: String
+		balanceTime: String
+		remarks: String
+	}
+
+	type AllEntries {
+		name: String
+		admission: String
+		timeData: [TimeData]
+	}
+
 	type WeekEntries {
 		timeEntries: [TimeEntry]
 		total: String
@@ -72,6 +91,7 @@ const typeDefs = `
 	type Query {
 		userDetails: UserDetails
 		weekEntries(date: String!): WeekEntries
+		allEntries: AllEntries
 		dayEntry(date: String!): DayEntry
 		phases: PhaseList
 	}

@@ -6,6 +6,7 @@ const {
 	delTimeEntry,
 	dailyEntries,
 	weekEntriesByDate,
+	allEntries,
 	activities,
 	phases,
 	userDetails
@@ -35,6 +36,9 @@ const resolvers = {
 	Query: {
 		weekEntries: async (_, { date }, { token }) => (
 			callWithAuth(weekEntriesByDate(date), token)
+		),
+		allEntries: async (_, __, { token }) => (
+			callWithAuth(allEntries(), token)
 		),
 		dayEntry: async (_, { date }, { token }) => (
 			{ timeEntry: callWithAuth(dailyEntries(date), token) }

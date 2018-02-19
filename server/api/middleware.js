@@ -130,14 +130,44 @@ const activities = phase => async (token) => {
 	return extractSelectOptions('proj_activity', responseHtml);
 };
 
-const getBalance = $ => {
+const getBalance = ($) => {
 	const date = moment($('table tr td').eq(0).text().split(' ')[0]);
 	const dayOfWeek = date.isoWeekday();
 	const targetFriday = dayOfWeek === 5 ? 0 : dayOfWeek;
 	const lastFridayBalance = $('table tr td').eq((targetFriday * 10) + 8).text().trim();
 
 	return lastFridayBalance;
-}
+};
+
+const allTimesTableToData = ($) => {
+	const data = [];
+	const trimmedText = element => $(element).text().trim();
+	$('#all_records table tr').each((i, tr) => {
+		const tds = $(tr).find('td');
+		if (tds.length) {
+			const [date, dayOfWeek] = trimmedText(tds[0]).split(' ');
+			const breaksText = trimmedText($(tds[4]).find('div'));
+			const breaksRegExp = /Break from (\d{1,2}:\d{1,2}):00 to (\d{1,2}:\d{1,2}):00/;
+			const breaksMatch = breaksText.match(breaksRegExp);
+			const breakStartTime = breaksMatch ? breaksMatch[1] : '';
+			const breakEndTime = breaksMatch ? breaksMatch[2] : '';
+
+			data.push({
+				date,
+				dayOfWeek,
+				contractedTime: trimmedText(tds[1]),
+				startTime: trimmedText(tds[2]),
+				endTime: trimmedText(tds[5]),
+				paidTime: trimmedText(tds[3]),
+				breakStartTime,
+				breakEndTime,
+				balanceTime: trimmedText(tds[8]),
+				remarks: trimmedText(tds[9])
+			});
+		}
+	});
+	return data;
+};
 
 const userDetails = () => async (token) => {
 	const cookieJar = cookieJarFactory(token);
@@ -225,6 +255,33 @@ const dailyEntries = date => async (token) => {
 	};
 
 	return timeEntry;
+};
+
+const allEntries = () => async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const { personId } = await getUserDetails(cookieJar);
+	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/report.php`, cookieJar);
+	options.qs = {
+		init_userid: personId
+	};
+
+	const responseHtml = await rp(options);
+	const error = extractError(responseHtml);
+	if (error) {
+		throw error;
+	}
+
+	const $ = cheerio.load(responseHtml);
+	const name = $('h4').eq(0).text().trim();
+	const admissionRaw = $('h4').eq(1).text();
+	const admission = admissionRaw.replace('Admission:', '').trim();
+	const timeData = allTimesTableToData($);
+
+	return {
+		name,
+		admission,
+		timeData
+	};
 };
 
 const weekEntriesByDate = date => async (token) => {
@@ -350,6 +407,7 @@ module.exports = {
 	addTimeEntry,
 	delTimeEntry,
 	dailyEntries,
+	allEntries,
 	weekEntriesByDate,
 	activities,
 	phases,
