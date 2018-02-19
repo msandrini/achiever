@@ -13,6 +13,7 @@
     "start": "node server/index.js",
     "start:debug": "DEBUG=true npm start",
     "start:debug-win": "set DEBUG=true && npm start",
+    "quickstart": "node server/index.js",
     "watch": "nodemon server/index.js",
     "watch:debug": "DEBUG=true npm run watch",
     "watch:debug-win": "set DEBUG=true && npm run watch",
