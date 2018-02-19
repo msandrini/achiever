@@ -49,6 +49,25 @@ query dayEntry($date: String!) {
     }
 }
 
+query allEntries {
+    allEntries {
+        name
+        admission
+        timeData {
+            date
+            dayOfWeek
+            contractedTime
+            startTime
+            endTime
+            paidTime
+            breakStartTime
+            breakEndTime
+            balanceTime
+            remarks
+        }
+    }
+}
+
 query weekEntries($date: String!) {
     weekEntries(date: $date) {
         timeEntries {
