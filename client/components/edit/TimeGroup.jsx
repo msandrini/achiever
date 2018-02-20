@@ -49,6 +49,7 @@ export default class TimeGroup extends React.Component {
 					onFocus={this.props.onFocus}
 					tabIndex={this.props.tabIndexes}
 					disabled={disabled}
+					handleKeyPress={this.props.handleKeyPress}
 				/>
 				<span className="separator">:</span>
 				<TimeField
@@ -59,6 +60,7 @@ export default class TimeGroup extends React.Component {
 					onFocus={this.props.onFocus}
 					tabIndex={this.props.tabIndexes + 1}
 					disabled={disabled}
+					handleKeyPress={this.props.handleKeyPress}
 				/>
 			</div>
 		);
@@ -77,16 +79,18 @@ TimeGroup.propTypes = {
 	onFocus: PropTypes.func.isRequired,
 	tabIndexes: PropTypes.number,
 	hidden: PropTypes.bool,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	handleKeyPress: PropTypes.func
 };
 
 TimeGroup.defaultProps = {
-	onSet: () => {},
 	referenceHour: 9,
 	label: '',
 	shouldHaveFocus: false,
 	time: { hours: 0, minutes: 0 },
 	tabIndexes: 0,
 	hidden: false,
-	disabled: false
+	disabled: false,
+	onSet: () => {},
+	handleKeyPress: () => {}
 };

@@ -6,6 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TimeGroup
     disabled={false}
+    handleKeyPress={[Function]}
     hidden={true}
     label=""
     onFocus={[Function]}
@@ -47,6 +48,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TimeGroup
     disabled={false}
+    handleKeyPress={[Function]}
     hidden={false}
     label=""
     onFocus={[Function]}
@@ -81,6 +83,7 @@ ShallowWrapper {
         </label>,
         <TimeField
           disabled={false}
+          handleKeyPress={[Function]}
           mode="hours"
           onChange={[Function]}
           onFocus={[Function]}
@@ -96,6 +99,7 @@ ShallowWrapper {
         </span>,
         <TimeField
           disabled={false}
+          handleKeyPress={[Function]}
           mode="minutes"
           onChange={[Function]}
           onFocus={[Function]}
@@ -127,6 +131,7 @@ ShallowWrapper {
         "nodeType": "class",
         "props": Object {
           "disabled": false,
+          "handleKeyPress": [Function],
           "mode": "hours",
           "onChange": [Function],
           "onFocus": [Function],
@@ -157,6 +162,7 @@ ShallowWrapper {
         "nodeType": "class",
         "props": Object {
           "disabled": false,
+          "handleKeyPress": [Function],
           "mode": "minutes",
           "onChange": [Function],
           "onFocus": [Function],
@@ -186,6 +192,7 @@ ShallowWrapper {
           </label>,
           <TimeField
             disabled={false}
+            handleKeyPress={[Function]}
             mode="hours"
             onChange={[Function]}
             onFocus={[Function]}
@@ -201,6 +208,7 @@ ShallowWrapper {
           </span>,
           <TimeField
             disabled={false}
+            handleKeyPress={[Function]}
             mode="minutes"
             onChange={[Function]}
             onFocus={[Function]}
@@ -232,6 +240,7 @@ ShallowWrapper {
           "nodeType": "class",
           "props": Object {
             "disabled": false,
+            "handleKeyPress": [Function],
             "mode": "hours",
             "onChange": [Function],
             "onFocus": [Function],
@@ -262,6 +271,7 @@ ShallowWrapper {
           "nodeType": "class",
           "props": Object {
             "disabled": false,
+            "handleKeyPress": [Function],
             "mode": "minutes",
             "onChange": [Function],
             "onFocus": [Function],
