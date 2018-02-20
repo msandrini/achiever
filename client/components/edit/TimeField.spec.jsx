@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import TimeField from './TimeField';
 
@@ -24,8 +24,8 @@ describe('TimeField', () => {
 			expect(focusedTimeField).toMatchSnapshot();
 		});
 	});
-	describe('_changeTime', () => {
-		it('should call onChange and validate it', () => {
+	describe('onChangeValue', () => {
+		it('should call _changeTime and validate it', () => {
 			const onChange = jest.fn();
 			let wrapper = shallow(<TimeField
 				mode="minutes"
@@ -81,20 +81,43 @@ describe('TimeField', () => {
 		});
 	});
 	describe('componentDidUpdate', () => {
-		// Faz on instance() do wrapper com a variavel input, na variável coloca um objeto...
 		it('should have focus if receive props', () => {
-			const onChange = jest.fn();
 			const wrapper = shallow(<TimeField
+				mode="minutes"
+				onFocus={jest.fn()}
+				shouldHaveFocus={false}
+			/>);
+			wrapper.instance().input = { select: jest.fn(), focus: jest.fn() };
+			const focusedProps = wrapper.instance().props;
+			wrapper.setProps({ ...focusedProps, shouldHaveFocus: true });
+			expect(wrapper.instance().input.focus).toHaveBeenCalledWith();
+		});
+	});
+	describe('componentWillUnmount', () => {
+		it('should remove blur timeOut from window', () => {
+			window.clearTimeout = jest.fn();
+			const onChange = jest.fn();
+			const wrapper = mount(<TimeField
 				mode="minutes"
 				onFocus={jest.fn()}
 				onChange={onChange}
 				shouldHaveFocus={false}
 			/>);
-			wrapper.instance().input = { select: jest.fn(), focus: jest.fn() };
 
-			const focusedProps = wrapper.instance().props;
-			wrapper.setProps({ ...focusedProps, shouldHaveFocus: true });
-			expect(wrapper.instance().input.focus).toHaveBeenCalledWith();
+			wrapper.unmount();
+			expect(window.clearTimeout).toHaveBeenCalled();
 		});
+	});
+	it('should test default idiot props ¯\\_(ツ)_/¯', () => {
+		const wrapper = shallow(<TimeField
+			mode="minutes"
+			onFocus={jest.fn()}
+			shouldHaveFocus={false}
+		/>);
+
+		// This is just to check if default change if callable
+		const { onChange, handleKeyPress } = wrapper.instance().props;
+		onChange();
+		handleKeyPress();	// Expect nothing to happen as it's default is () => {}
 	});
 });
