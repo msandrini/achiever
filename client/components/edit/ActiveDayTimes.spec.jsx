@@ -24,6 +24,9 @@ describe('ActiveDayTimes', () => {
 			const { onCheck } = wrapper.find('CheckBox').props();
 			onCheck(true);
 			expect(wrapper).toMatchSnapshot();
+
+			onCheck(false);
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
 		});
 	});
 	describe('onChangeTime', () => {
@@ -156,10 +159,29 @@ describe('ActiveDayTimes', () => {
 			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
 			wrapper.setProps({
 				storedTimes: [
-					{ hours: 10, minutes: 0 },
+					{ },
 					{ hours: 10, minutes: '' },
 					{},
 					{ hours: 17, minutes: 0 }
+				]
+			});
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
+		});
+		it('should not set pauseIsEnabled if none storedTimes ahs changed', () => {
+			const onTimeChange = jest.fn();
+			const focusOnSubmit = jest.fn();
+
+			const wrapper = shallow(<ActiveDayTimes
+				onTimeChange={onTimeChange}
+				focusOnSubmit={focusOnSubmit}
+			/>);
+			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
+			wrapper.setProps({
+				storedTimes: [
+					{ },
+					{ },
+					{ },
+					{ }
 				]
 			});
 			expect(wrapper.state('pauseIsEnabled')).toBeFalsy();
