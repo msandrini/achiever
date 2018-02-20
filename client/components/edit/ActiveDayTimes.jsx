@@ -20,8 +20,6 @@ class ActiveDayTimes extends React.Component {
 			pauseIsEnabled: props.isHoliday
 		};
 
-		this.composedTime = {};
-
 		this.onChangeTime = this.onChangeTime.bind(this);
 		this.checksForAutotabNeed = this.checksForAutotabNeed.bind(this);
 		this._onFieldFocus = this._onFieldFocus.bind(this);
