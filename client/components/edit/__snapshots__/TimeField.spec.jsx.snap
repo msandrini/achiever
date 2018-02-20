@@ -6,6 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TimeField
     disabled={false}
+    handleKeyPress={[Function]}
     mode="hours"
     onChange={[Function]}
     onFocus={[MockFunction]}
@@ -36,6 +37,7 @@ ShallowWrapper {
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          onKeyUp={[Function]}
           placeholder="0"
           tabIndex={1}
           type="number"
@@ -65,6 +67,7 @@ ShallowWrapper {
           "onBlur": [Function],
           "onChange": [Function],
           "onFocus": [Function],
+          "onKeyUp": [Function],
           "placeholder": "0",
           "tabIndex": 1,
           "type": "number",
@@ -107,6 +110,7 @@ ShallowWrapper {
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            onKeyUp={[Function]}
             placeholder="0"
             tabIndex={1}
             type="number"
@@ -136,6 +140,7 @@ ShallowWrapper {
             "onBlur": [Function],
             "onChange": [Function],
             "onFocus": [Function],
+            "onKeyUp": [Function],
             "placeholder": "0",
             "tabIndex": 1,
             "type": "number",
@@ -179,6 +184,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TimeField
     disabled={false}
+    handleKeyPress={[Function]}
     mode="minutes"
     onChange={[Function]}
     onFocus={[MockFunction]}
@@ -209,6 +215,7 @@ ShallowWrapper {
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          onKeyUp={[Function]}
           placeholder="00"
           tabIndex={1}
           type="number"
@@ -238,6 +245,7 @@ ShallowWrapper {
           "onBlur": [Function],
           "onChange": [Function],
           "onFocus": [Function],
+          "onKeyUp": [Function],
           "placeholder": "00",
           "tabIndex": 1,
           "type": "number",
@@ -280,6 +288,7 @@ ShallowWrapper {
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            onKeyUp={[Function]}
             placeholder="00"
             tabIndex={1}
             type="number"
@@ -309,6 +318,7 @@ ShallowWrapper {
             "onBlur": [Function],
             "onChange": [Function],
             "onFocus": [Function],
+            "onKeyUp": [Function],
             "placeholder": "00",
             "tabIndex": 1,
             "type": "number",

@@ -8,6 +8,7 @@ import strings from '../../../shared/strings';
 
 const referenceHours = [9, 12, 13, 17];
 
+const keyIsNumber = key => (!Number.isNaN(Number(key)));
 
 class ActiveDayTimes extends React.Component {
 	constructor(props) {
@@ -20,6 +21,7 @@ class ActiveDayTimes extends React.Component {
 		};
 
 		this.onChangeTime = this.onChangeTime.bind(this);
+		this.checksForAutotabNeed = this.checksForAutotabNeed.bind(this);
 		this._onFieldFocus = this._onFieldFocus.bind(this);
 		this._getNextField = this._getNextField.bind(this);
 		this._shouldHaveFocus = this._shouldHaveFocus.bind(this);
@@ -66,20 +68,20 @@ class ActiveDayTimes extends React.Component {
 	 */
 	onChangeTime(index) {
 		return (hours = 0, minutes = 0) => {
-			const composedTime = { hours, minutes };
-			if (this.state.focusedField) {
-				this.checksForAutotabNeed(composedTime);
-			}
-
 			this.props.onTimeChange(index)(hours, minutes);
 		};
 	}
 
-	checksForAutotabNeed(composedTime) {
-		const modeBeingChanged = this.state.focusedField.fieldMode;
-		const valueBeingChanged = composedTime[modeBeingChanged];
+	/**
+	 * Function to check wheter it needs to change the focus from one field to another
+	 * To do this, it checks if a number key @ keyboard was pressed and if the length of the number
+	 * is 2.
+	 * @param {Obejct} composedTime - {hour: HH, minutes: MM}
+	 */
+	checksForAutotabNeed(event) {
+		const valueBeingChanged = event.target.value;
 
-		if (String(valueBeingChanged).length === 2) {
+		if (keyIsNumber(event.key) && String(valueBeingChanged).length === 2) {
 			const nextField = this._getNextField();
 			this.setState({
 				shouldHaveFocus: nextField
@@ -165,6 +167,7 @@ class ActiveDayTimes extends React.Component {
 						onFocus={this._onFieldFocus(index)}
 						hidden={shouldHideTimeGroup(index)}
 						disabled={disabled}
+						handleKeyPress={this.checksForAutotabNeed}
 					/>
 				))}
 			</div>

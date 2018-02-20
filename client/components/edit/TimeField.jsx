@@ -115,6 +115,7 @@ export default class TimeField extends React.Component {
 					onFocus={this.onFocus()}
 					onBlur={this.onBlur()}
 					ref={(input) => { this.input = input; }}
+					onKeyUp={this.props.handleKeyPress}
 				/>
 				<SuggestionBox
 					mode={mode}
@@ -138,7 +139,8 @@ TimeField.propTypes = {
 	referenceHour: PropTypes.number,
 	onFocus: PropTypes.func.isRequired,
 	tabIndex: PropTypes.number,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	handleKeyPress: PropTypes.func
 };
 
 TimeField.defaultProps = {
@@ -147,5 +149,6 @@ TimeField.defaultProps = {
 	value: '',
 	shouldHaveFocus: false,
 	tabIndex: 0,
-	disabled: false
+	disabled: false,
+	handleKeyPress: () => {}
 };

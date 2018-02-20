@@ -28,4 +28,14 @@ describe('TimeGroup', () => {
 			expect(onSet).toHaveBeenCalledWith(12, 0);
 		});
 	});
+	it('should test default idiot props ¯\\_(ツ)_/¯', () => {
+		const wrapper = shallow(<TimeGroup
+			onFocus={() => {}}
+		/>);
+
+		// This is just to check if default change if callable
+		const { onSet, handleKeyPress } = wrapper.instance().props;
+		onSet();
+		handleKeyPress();	// Expect nothing to happen as it's default is () => {}
+	});
 });
