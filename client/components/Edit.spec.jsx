@@ -246,7 +246,7 @@ describe('Edit', () => {
 					weekEntriesQuery: {
 						...defaultProps.weekEntriesQuery,
 						loading: false,
-						error: 'Super error message from week query',
+						error: 'Super error message from week query'
 					},
 					projectPhasesQuery: {
 						...defaultProps.projectPhasesQuery,
@@ -406,7 +406,7 @@ describe('Edit', () => {
 		});
 		it('should change controlDate based on date', () => {
 			const onDateChange = wrapper.find('MonthlyCalendar').prop('onDateChange');
-			const feb2018 = moment('2018-02-14')
+			const feb2018 = moment('2018-02-14');
 			onDateChange(feb2018);
 			expect(wrapper.state('controlDate')).toEqual(feb2018);
 			expect(wrapper.state('controlDateIsValid')).toBeTruthy();
@@ -425,7 +425,7 @@ describe('Edit', () => {
 			wrapper.setState({ alertMessage: 'super alert' });
 			const onAlertClose = wrapper.find('AlertModal').prop('onClose');
 			onAlertClose();
-			expect(wrapper.state('alertMessage')).toBeNull();	
+			expect(wrapper.state('alertMessage')).toBeNull();
 		});
 	});
 });
