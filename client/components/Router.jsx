@@ -11,8 +11,9 @@ import { getAuthToken, removeAuthToken } from './authentication/token';
 
 const PATH_ROOT = '/';
 
-const _checkAuth = () => Boolean(getAuthToken());
-
+const _checkAuth = () => {
+	return Boolean(getAuthToken());
+};
 class ShowComponentOnRoute extends React.Component {
 	constructor(props) {
 		super(props);

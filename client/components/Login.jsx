@@ -2,15 +2,30 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
 import * as queries from '../queries.graphql';
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
-import { setAuthToken } from './authentication/token';
+import { setAuthToken, removeAuthToken } from './authentication/token';
+import DB from '../db';
+
+import apolloClient from '../apolloClient';
 
 import './Login.styl';
 
+(new DB([{ date: 'oi' }]))
+	.then((db) => {
+		(db.getAll())
+			.then((e) => {
+				console.log('get', e);
+			}).catch((e) => {
+				console.log('gerErr', e.message);
+			});
+	})
+	.catch((e) => {
+		console.log('err', e);
+	});
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -59,7 +74,18 @@ class Login extends React.Component {
 			this.setState({ errorMessage: '' });
 			const { token } = response.data.signIn;
 			setAuthToken(token);
-			window.location.reload();
+			// Fetch allData from server and insert it @ indexedDB
+			apolloClient.query({
+				query: queries.allEntries
+			}).then((respose) => {
+				(new DB(respose.data.allEntries.timeData)).then(() => {
+					window.location.reload();
+				});
+				removeAuthToken();
+			}).catch((erro) => {
+				console.log(erro);
+				removeAuthToken();
+			});
 		}
 	}
 
@@ -105,8 +131,11 @@ class Login extends React.Component {
 	}
 }
 
-export default graphql(queries.signIn, { name: 'signIn' })(Login);
+export default compose(
+	graphql(queries.signIn, { name: 'signIn' }),
+)(Login);
 
 Login.propTypes = {
 	signIn: PropTypes.func.isRequired
+	// allEntries: PropTypes.object.isRequired
 };
