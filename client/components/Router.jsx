@@ -9,27 +9,46 @@ import PageNotFound from './genericPages/PageNotFound';
 import PageLoading from './genericPages/PageLoading';
 import { getAuthToken, removeAuthToken } from './authentication/token';
 
+import DB from '../db';
+
 const PATH_ROOT = '/';
 
-const _checkAuth = () => {
-	return Boolean(getAuthToken());
-};
+const _checkAuth = () => Boolean(getAuthToken());
+
 class ShowComponentOnRoute extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			path: props.path,
-			authenticated: _checkAuth()
+			authenticated: _checkAuth();
 		};
 
-		this.componentToBeRendered = null;
+		this.l = null;
 	}
 
 	componentWillMount() {
 		history.onChangeLocation((path) => {
 			this.setState({ path });
 		});
+
+		// Check if data on indexedDB
+		// it's never auth if indexedDB table
+		(new DB())
+			.then((db) => {
+				(db.getAll())
+					.then(() => {
+						this.setState({ authenticated: _checkAuth() });
+					}).catch((e) => {
+						console.log('errQ', e);
+						this.setState({ authenticated: false });
+						removeAuthToken();
+					});
+			})
+			.catch((e) => {
+				this.setState({ authenticated: false });
+				removeAuthToken();
+			});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -38,7 +57,24 @@ class ShowComponentOnRoute extends React.Component {
 			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-			this.setState({ authenticated: _checkAuth() });
+			// Check if data on indexedDB
+			// it's never auth if indexedDB table
+			(new DB())
+				.then((db) => {
+					(db.getAll())
+						.then(() => {
+							this.setState({ authenticated: _checkAuth() });
+						}).catch((e) => {
+							console.log('errQ', e);
+							this.setState({ authenticated: false });
+							removeAuthToken();
+						});
+				})
+				.catch((e) => {
+					console.log('errI', e);
+					this.setState({ authenticated: false });
+					removeAuthToken();
+				});
 		}
 	}
 

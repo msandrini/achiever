@@ -14,18 +14,7 @@ import apolloClient from '../apolloClient';
 
 import './Login.styl';
 
-(new DB([{ date: 'oi' }]))
-	.then((db) => {
-		(db.getAll())
-			.then((e) => {
-				console.log('get', e);
-			}).catch((e) => {
-				console.log('gerErr', e.message);
-			});
-	})
-	.catch((e) => {
-		console.log('err', e);
-	});
+
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -81,7 +70,6 @@ class Login extends React.Component {
 				(new DB(respose.data.allEntries.timeData)).then(() => {
 					window.location.reload();
 				});
-				removeAuthToken();
 			}).catch((erro) => {
 				console.log(erro);
 				removeAuthToken();
