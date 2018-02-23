@@ -20,15 +20,14 @@ import {
 	calculateHoursBalanceUpToDate,
 	calculateLabouredHours,
 	dismemberTimeString,
-	getTodayStorage,
 	isDayBlockedInPast,
 	isDayAfterToday,
 	replacingValueInsideArray,
-	setTodayStorage,
 	submitToServer,
 	timesAreValid,
 	SPECIAL_ACTIVITY_HOLIDAY
 } from '../utils';
+import DB from '../db';
 
 const START_TABINDEX = 0;
 const CTA_TABINDEX = 10;
@@ -174,10 +173,15 @@ class Edit extends React.Component {
 				};
 
 				if (areTheSameDay(prevState.controlDate, moment())) {
-					setTodayStorage({
-						storedTimes: newState.storedTimes,
-						sentToday: newState.sentToday
-					});
+					DB('entries', 'date')
+						.then((db) => {
+							db.put({
+								date: moment().format('YYYY-MM-DD'),
+								storedTimes: newState.storedTimes,
+								sentToday: newState.sentToday
+							});
+						})
+						.catch((er1) => { console.error('DB err:', er1); });
 				}
 
 				return newState;
@@ -187,14 +191,26 @@ class Edit extends React.Component {
 
 	onSubmit(callback) {
 		return async (event) => {
+			const _this = this;
 			event.preventDefault();
 			const { storedTimes, phase, activity } = { ...this.state };
 			const date = this.state.controlDate;
 			const ret = await submitToServer(date, storedTimes, phase, activity, callback);
 			if (ret.successMessage) {
 				this.setState({ ...this.state, ...ret, sentToday: true });
-				setTodayStorage({ storedTimes, sentToday: true });
-				await this._fetchWeekEntries(date);
+				DB('entries', 'date')
+					.then((db) => {
+						db.put({
+							date: date.format('YYYY-MM-DD'),
+							storedTimes,
+							sentToday: true
+						})
+							.then(() => {
+								_this._fetchWeekEntries(date);
+							})
+							.catch((er2) => { console.error('DB err:', er2); });
+					})
+					.catch((er1) => { console.error('DB err:', er1); });
 			} else {
 				this.setState(ret);
 			}
@@ -303,6 +319,7 @@ class Edit extends React.Component {
 	}
 
 	_setTimesForChosenDate(chosenDate, weekEntriesQuery) {
+		const _this = this;
 		const {
 			loading,
 			error,
@@ -340,10 +357,15 @@ class Edit extends React.Component {
 
 				// If today was fetched
 				if (isToday) {
-					setTodayStorage({
-						storedTimes,
-						sentToday: true
-					});
+					DB('entries', 'date')
+						.then((db) => {
+							db.put({
+								date: date.format('YYYY-MM-DD'),
+								storedTimes,
+								sentToday: true
+							});
+						})
+						.catch((er1) => { console.error('DB err:', er1); });
 				}
 				this.setState({
 					storedTimes,
@@ -353,14 +375,22 @@ class Edit extends React.Component {
 				});
 			} else if (isToday) {
 				// If today and not in server, use localStorage
-				const { storedTimes: localStoredTimes, sentToday } = getTodayStorage();
-				this.setState({
-					storedTimes: localStoredTimes,
-					sentToday,
-					labouredHoursOnDay: (timesAreValid(localStoredTimes) &&
-						calculateLabouredHours(localStoredTimes)) || '',
-					hoursBalanceUpToDate
-				});
+				DB('entries', 'date')
+					.then((db) => {
+						db.getEntry(moment().format('YYYY-MM-DD'))
+							.then((dayStorage) => {
+								const { storedTimes: dbStoredTimes, sentToday } = dayStorage || {};
+								_this.setState({
+									storedTimes: dbStoredTimes,
+									sentToday,
+									labouredHoursOnDay: (timesAreValid(dbStoredTimes) &&
+										calculateLabouredHours(dbStoredTimes)) || '',
+									hoursBalanceUpToDate
+								});
+							})
+							.catch((er2) => { console.error('DB err:', er2); });
+					})
+					.catch((er1) => { console.error('DB err:', er1); });
 			} else {
 				// If not today should do something... for now, just set state empty
 				this.setState({
