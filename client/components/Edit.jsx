@@ -360,7 +360,7 @@ class Edit extends React.Component {
 					DB('entries', 'date')
 						.then((db) => {
 							db.put({
-								date: date.format('YYYY-MM-DD'),
+								date: moment().format('YYYY-MM-DD'),
 								storedTimes,
 								sentToday: true
 							});
