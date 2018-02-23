@@ -67,11 +67,23 @@ class Login extends React.Component {
 			apolloClient.query({
 				query: queries.allEntries
 			}).then((respose) => {
-				(new DB(respose.data.allEntries.timeData)).then(() => {
-					window.location.reload();
-				});
+				DB('entries', 'date')
+					.then((db) => {
+						db.put(respose.data.allEntries.timeData)
+							.then(() => {
+								window.location.reload();
+							})
+							.catch((e) => {
+								console.error('Propagation error 3', e);
+								removeAuthToken();
+							});
+					})
+					.catch((e) => {
+						console.error('Propagation error 2', e);
+						removeAuthToken();
+					});
 			}).catch((erro) => {
-				console.log(erro);
+				console.error('Query error 1', erro);
 				removeAuthToken();
 			});
 		}
