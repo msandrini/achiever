@@ -12,8 +12,6 @@ import PageLoading from './genericPages/PageLoading';
 import strings from '../../shared/strings';
 import DB from '../db';
 import {
-	// setTodayStorage,
-	// getTodayStorage,
 	submitToServer
 } from '../utils';
 import {
@@ -26,40 +24,6 @@ import {
 
 const MODAL_ALERT = 'alert';
 const MODAL_CONFIRM = 'confirm';
-
-// const helper = async () => {
-// 	const db = await DB.use('entriesStore');
-// 	db.getEntry('2016-02-18').then((e) => {
-// 		console.log('getEn', e);
-// 		db.delete('2016-02-18').then(() => {
-// 			console.log('removed');
-// 			db.getAll().then((e3) => {
-// 				console.log(e3);
-// 				db.getEntry('2016-02-18').then((e2) => {
-// 					console.log('searched', e2);
-// 					db.put(e).then(() => {
-// 						console.log('insert ok');
-// 						db.getAll().then((e4) => {
-// 							console.log(e4);
-// 						});
-// 					});
-// 				});
-// 			});
-// 		});
-// 	});
-// };
-// DB('entries', 'date')
-// 		.then((db) => {
-// 			// First fetch from DB and check if it's already there
-// 			db.getEntry(moment().format('YYYY-MM-DD'))
-// 				.then((todayEntry) => {
-
-// 				})
-// 				.catch((er2) => { console.error('DB err:', er2); });
-// 		})
-// 		.catch((er1) => { console.error('DB err:', er1); });
-
-// helper();
 
 class Today extends React.Component {
 	constructor() {
