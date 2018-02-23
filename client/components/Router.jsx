@@ -21,10 +21,10 @@ class ShowComponentOnRoute extends React.Component {
 
 		this.state = {
 			path: props.path,
-			authenticated: _checkAuth();
+			authenticated: _checkAuth()
 		};
 
-		this.l = null;
+		this.componentToBeRendered = null;
 	}
 
 	componentWillMount() {
@@ -33,21 +33,21 @@ class ShowComponentOnRoute extends React.Component {
 		});
 
 		// Check if data on indexedDB
-		// it's never auth if indexedDB table
-		(new DB())
+		// it's never auth if indexedDB table is empty
+		DB('entries', 'date')
 			.then((db) => {
-				(db.getAll())
-					.then(() => {
-						this.setState({ authenticated: _checkAuth() });
-					}).catch((e) => {
-						console.log('errQ', e);
-						this.setState({ authenticated: false });
-						removeAuthToken();
+				db.getAll()
+					.then((data) => {
+						if (data.length) {
+							this.setState({ authenticated: _checkAuth() });
+						}
+					})
+					.catch((e) => {
+						console.error('Router db detection error:', e);
 					});
 			})
 			.catch((e) => {
-				this.setState({ authenticated: false });
-				removeAuthToken();
+				console.error('Check db error 1', e);
 			});
 	}
 
@@ -57,23 +57,22 @@ class ShowComponentOnRoute extends React.Component {
 			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-			// Check if data on indexedDB
-			// it's never auth if indexedDB table
-			(new DB())
+		// Check if data on indexedDB
+		// it's never auth if indexedDB table is empty
+			DB('entries', 'date')
 				.then((db) => {
-					(db.getAll())
-						.then(() => {
-							this.setState({ authenticated: _checkAuth() });
-						}).catch((e) => {
-							console.log('errQ', e);
-							this.setState({ authenticated: false });
-							removeAuthToken();
+					db.getAll()
+						.then((data) => {
+							if (data.length) {
+								this.setState({ authenticated: _checkAuth() });
+							}
+						})
+						.catch((e) => {
+							console.error('Router db detection error:', e);
 						});
 				})
 				.catch((e) => {
-					console.log('errI', e);
-					this.setState({ authenticated: false });
-					removeAuthToken();
+					console.error('Check db error 1', e);
 				});
 		}
 	}
