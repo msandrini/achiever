@@ -24,12 +24,13 @@ import {
 
 const MODAL_ALERT = 'alert';
 const MODAL_CONFIRM = 'confirm';
+const defaultStoredTimes = [{}, {}, {}, {}];
 
 class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			storedTimes: [{}, {}, {}, {}],
+			storedTimes: [...defaultStoredTimes],
 			sentToday: false,
 			showModal: null,
 			alertInfo: {},
@@ -37,6 +38,7 @@ class Today extends React.Component {
 		};
 		this.onMark = this.onMark.bind(this);
 		this._getButtonString = this._getButtonString.bind(this);
+		this._getTime = this._getTime.bind(this);
 		this._getNextTimeEntryPoint = this._getNextTimeEntryPoint.bind(this);
 		this._shouldButtonBeAvailable = this._shouldButtonBeAvailable.bind(this);
 		this._onConfirmSubmit = this._onConfirmSubmit.bind(this);
@@ -62,9 +64,9 @@ class Today extends React.Component {
 
 	onMark(event) {
 		event.preventDefault();
-		const _this = this;
+		// const this = this;
 		setTimeout(() => {
-			_this.setState({ buttonDisabled: false });
+			this.setState({ buttonDisabled: false });
 		}, 60000);
 		this.setState({ buttonDisabled: true });
 
@@ -79,7 +81,7 @@ class Today extends React.Component {
 					// First fetch from DB and check if it's already there
 					db.put({ date: moment().format('YYYY-MM-DD'), storedTimes, sentToday })
 						.then(() => {
-							_this.setState((prevState) => {
+							this.setState((prevState) => {
 								const newState = { ...prevState, storedTimes, sentToday };
 								if (index === 3) {
 									const date = moment();
@@ -137,9 +139,9 @@ class Today extends React.Component {
 	}
 
 	_checkEnteredValues(dayEntryQuery) {
-		const {	loading, dayEntry } = dayEntryQuery;
+		const {	loading, dayEntry } = dayEntryQuery || {};
 
-		if (loading) {
+		if (loading || !dayEntry) {
 			return;
 		}
 
@@ -199,7 +201,7 @@ class Today extends React.Component {
 							.then((todayEntry) => {
 								// { date: 'YYYY-MM-DD', storedTimes: [{},{},{},{}], sentToday: false }
 								const { storedTimes, sentToday } = todayEntry || {};
-								if (!sentToday && storedTimes) {
+								if (!sentToday) {
 									if (allTheTimesAreFilled(storedTimes)) {
 										if (timeSetIsValid(storedTimes)) {
 											this.setState({
@@ -215,8 +217,12 @@ class Today extends React.Component {
 											});
 										}
 									}
+								} else if (storedTimes) {
+									this.setState({
+										storedTimes,
+										sentToday
+									});
 								}
-								this.setState({ storedTimes, sentToday });
 							})
 							.catch((er2) => { console.error('DB err:', er2); });
 					})
@@ -243,7 +249,7 @@ class Today extends React.Component {
 	}
 
 	_getNextTimeEntryPoint() {
-		const storedTimes = [...this.state.storedTimes];
+		const storedTimes = [...this.state.storedTimes] || [];
 		return getNextEmptyObjectOnArray(storedTimes);
 	}
 

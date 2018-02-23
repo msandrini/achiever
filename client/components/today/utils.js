@@ -6,11 +6,14 @@ export const isEmptyObject = obj => (
 
 export const isValidTimeObject = obj => Boolean(obj.minutes && obj.hours);
 
-export const getNextEmptyObjectOnArray = arr => (
-	arr.findIndex((element => (
-		isEmptyObject(element) || !('hours' in element) || !('minutes' in element)
-	)))
-);
+export const getNextEmptyObjectOnArray = (arr) => {
+	if (arr) {
+		return arr.findIndex((element => (
+			isEmptyObject(element) || !('hours' in element) || !('minutes' in element)
+		)));
+	}
+	return false;
+};
 
 export const timeSetIsValid = (times) => {
 	let comparisonTerm = 0;
