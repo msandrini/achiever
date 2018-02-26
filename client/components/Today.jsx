@@ -46,11 +46,11 @@ class Today extends React.Component {
 		this._checkEnteredValues = this._checkEnteredValues.bind(this);
 	}
 
-	componentDidMount() {
-		this._checkEnteredValues(this.props.dayEntryQuery);
+	async componentDidMount() {
+		await this._checkEnteredValues(this.props.dayEntryQuery);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	async componentWillReceiveProps(nextProps) {
 		// If finished (was loading and stoped) loading from server and no erros fill the state
 		const {
 			loading,
@@ -58,7 +58,7 @@ class Today extends React.Component {
 		} = nextProps.dayEntryQuery;
 
 		if (this.props.dayEntryQuery.loading && !loading && !error) {
-			this._checkEnteredValues(nextProps.dayEntryQuery);
+			await this._checkEnteredValues(nextProps.dayEntryQuery);
 		}
 	}
 
@@ -105,40 +105,30 @@ class Today extends React.Component {
 	}
 
 	async _onConfirmSubmit() {
-		DB('entries', 'date')
-			.then((db) => {
-				// First fetch from DB and check if it's already there
-				db.getEntry(moment().format('YYYY-MM-DD'))
-					.then((todayEntry) => {
-						// { date: 'YYYY-MM-DD', storedTimes: [{},{},{},{}], sentToday: false }
-						const { storedTimes } = todayEntry();
-						const date = moment();
-						submitToServer(date, storedTimes, this.props.addTimeEntry)
-							.then((ret) => {
-								if (ret.successMessage) {
-									this.setState({ storedTimes, sentToday: true });
-									DB('entries', 'date')
-										.then((insertDB) => {
-											// First fetch from DB and check if it's already there
-											insertDB.put({
-												date: moment().format('YYYY-MM-DD'),
-												sentToday: true,
-												storedTimes
-											});
-										})
-										.catch((er1) => { console.error('DB err:', er1); });
-								} else {
-									// Was not able to send to server even if user said to send
-									goBack();
-								}
-							});
-					})
-					.catch((er2) => { console.error('DB err:', er2); });
-			})
-			.catch((er1) => { console.error('DB err:', er1); });
+		try {
+			const db = await DB('entries', 'date');
+			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'))
+			const { storedTimes } = todayEntry();
+			const date = moment();
+			const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry)
+
+			if (ret.successMessage) {
+				this.setState({ storedTimes, sentToday: true });
+				await db.put({
+					date: moment().format('YYYY-MM-DD'),
+					sentToday: true,
+					storedTimes
+				});
+			} else {
+				// Was not able to send to server even if user said to send
+				goBack();
+			}
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
-	_checkEnteredValues(dayEntryQuery) {
+	async _checkEnteredValues(dayEntryQuery) {
 		const {	loading, dayEntry } = dayEntryQuery || {};
 
 		if (loading || !dayEntry) {
@@ -176,57 +166,54 @@ class Today extends React.Component {
 						minutes: endTime.minutes()
 					}
 				];
-				DB('entries', 'date')
-					.then((db) => {
-						// First fetch from DB and check if it's already there
-						db.put({
-							date: moment().format('YYYY-MM-DD'),
-							sentToday: true,
-							storedTimes
-						})
-							.then(() => {
-								this.setState({
-									storedTimes,
-									sentToday: true
-								});
-							})
-							.catch((er2) => { console.error('DB err:', er2); });
-					})
-					.catch((er1) => { console.error('DB err:', er1); });
+				try {
+					const db = await DB('entries', 'date');
+					await db.put({
+						date: moment().format('YYYY-MM-DD'),
+						sentToday: true,
+						storedTimes
+					});
+					this.setState({
+						storedTimes,
+						sentToday: true
+					});
+				} catch (e) {
+					console.error(e);
+				}
 			} else {
-				DB('entries', 'date')
-					.then((db) => {
-						// First fetch from DB and check if it's already there
-						db.getEntry(moment().format('YYYY-MM-DD'))
-							.then((todayEntry) => {
-								// { date: 'YYYY-MM-DD', storedTimes: [{},{},{},{}], sentToday: false }
-								const { storedTimes, sentToday } = todayEntry || {};
-								if (!sentToday) {
-									if (allTheTimesAreFilled(storedTimes)) {
-										if (timeSetIsValid(storedTimes)) {
-											this.setState({
-												showModal: MODAL_CONFIRM
-											});
-										} else {
-											this.setState({
-												alertInfo: {
-													content: strings.invalidTime,
-													onClose: () => goBack()
-												},
-												showModal: MODAL_ALERT
-											});
-										}
-									}
-								} else if (storedTimes) {
-									this.setState({
-										storedTimes,
-										sentToday
-									});
-								}
-							})
-							.catch((er2) => { console.error('DB err:', er2); });
-					})
-					.catch((er1) => { console.error('DB err:', er1); });
+				try {
+					const db = await DB('entries', 'date');
+					// First fetch from DB and check if it's already there
+					const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
+					const { storedTimes, sentToday } = todayEntry || {};
+
+					if (storedTimes) {
+						this.setState({
+							storedTimes,
+							sentToday
+						});
+					}
+
+					if (!sentToday ) {
+						if (allTheTimesAreFilled(storedTimes)) {
+							if (timeSetIsValid(storedTimes)) {
+								this.setState({
+									showModal: MODAL_CONFIRM
+								});
+							} else {
+								this.setState({
+									alertInfo: {
+										content: strings.invalidTime,
+										onClose: () => goBack()
+									},
+									showModal: MODAL_ALERT
+								});
+							}
+						}
+					}
+				} catch (e) {
+					console.error(e);
+				}
 			}
 		}
 	}
