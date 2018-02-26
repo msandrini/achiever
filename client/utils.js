@@ -4,9 +4,10 @@ import TimeDuration from 'time-duration';
 
 import strings from '../shared/strings';
 import { timeIsValid } from '../shared/utils';
+import DB from './db';
 
 moment.locale('pt-br');
-moment.tz.setDefault("America/Sao_Paulo");
+moment.tz.setDefault('America/Sao_Paulo');
 
 export const STORAGEKEY = 'storedTimes';
 export const STORAGEDAYKEY = 'storedMoment';
@@ -248,3 +249,43 @@ export const isDayBlockedInPast = (day) => {
 };
 
 export const isDayAfterToday = day => day.isAfter(moment(), 'day');
+
+const indexedDBToTimeEntry = async (database, stringOfDateQuery) => {
+	const indexedDbQuery = await database.getEntry(stringOfDateQuery);
+	const timeEntry = indexedDbQuery ?  
+		{
+			activity: '',		// For the uses now, this doesn't matter
+			date: stringOfDateQuery,
+			endBreakTime: indexedDbQuery.breakEndTime,
+			endTime: indexedDbQuery.endTime,
+			phase: '',
+			startBreakTime: indexedDbQuery.breakStartTime,
+			startTime: indexedDbQuery.startTime,
+			total: indexedDbQuery.paidTime
+		} :
+		{
+			activity: '',
+			date: stringOfDateQuery,
+			endBreakTime: '',
+			endTime: '',
+			phase: '',
+			startBreakTime: '',
+			startTime: '',
+			total: ''
+		};
+	return timeEntry;
+};
+
+export const getTimeEntriesForWeek = async (choosenDay) => {
+	const momentChoosenDay = { ...choosenDay };
+	const firstDay = moment(momentChoosenDay).day(0);
+	const db = await DB('entries', 'date');
+	const promisses = [];
+
+	for (const weekDayIterator of [0, 1, 2, 3, 4, 5, 6]) {
+		promisses.push(indexedDBToTimeEntry(db, firstDay.day(weekDayIterator).format('YYYY-MM-DD')));
+	}
+
+	const timeEntries = await Promise.all(promisses);
+	return timeEntries;
+};
