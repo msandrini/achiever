@@ -8,7 +8,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import strings from '../../../shared/strings';
 import {
-	timesAreValid
+	timesAreValid,
+	getTimeEntriesForWeek
 } from '../../utils';
 
 import './WeeklyCalendar.styl';
@@ -50,14 +51,14 @@ const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
 	return dayEntry;
 };
 
-const _convertweekEntriesToEvents = (weekEntries, controlDate, storedTimes) => {
+const _convertweekEntriesToEvents = (timeEntries, controlDate, storedTimes) => {
 	const emptyValidReturn = [{}];
-	if (weekEntries.timeEntries) {
+	if (timeEntries) {
 		const events = [];
 		[0, 1, 2, 3, 4, 5, 6].forEach((index) => {
-			const dayEntry = weekEntries.timeEntries[index].date === controlDate.format('YYYY-MM-DD') ?
-				_storedTimesToDayEntry(storedTimes, weekEntries.timeEntries[index]) :
-				weekEntries.timeEntries[index];
+			const dayEntry = timeEntries[index].date === controlDate.format('YYYY-MM-DD') ?
+				_storedTimesToDayEntry(storedTimes, timeEntries[index]) :
+				timeEntries[index];
 
 			if (dayEntry) {
 				const hasBreak = Boolean((
@@ -95,31 +96,48 @@ const _convertweekEntriesToEvents = (weekEntries, controlDate, storedTimes) => {
 	return emptyValidReturn;
 };
 
-const WeeklyCalendar = ({ weekEntries, controlDate, storedTimes }) => (
-	<details className="weekly-calendar">
-		<summary>{strings.weeklyCalendar}</summary>
-		<BigCalendar
-			view="week"
-			onView={noOp}
-			step={90}
-			onNavigate={noOp}
-			date={controlDate.toDate()}
-			toolbar={false}
-			selectable={false}
-			events={_convertweekEntriesToEvents(weekEntries, controlDate, storedTimes)}
-		/>
-	</details>
-);
+class WeeklyCalendar extends React.Component {
+	constructor() {
+		super();
+		this.state = {
+			events: [{}]
+		};
+	}
+
+	async componentWillReceiveProps(nextProps) {
+		const { controlDate, storedTimes } = nextProps;
+		const weekEntries = await getTimeEntriesForWeek(controlDate);
+		const events = _convertweekEntriesToEvents(weekEntries, controlDate, storedTimes);
+		this.setState({ events });
+	}
+
+	render() {
+		const { controlDate } = this.props;
+		return (
+			<details className="weekly-calendar">
+				<summary>{strings.weeklyCalendar}</summary>
+				<BigCalendar
+					view="week"
+					onView={noOp}
+					step={90}
+					onNavigate={noOp}
+					date={controlDate.toDate()}
+					toolbar={false}
+					selectable={false}
+					events={this.state.events}
+				/>
+			</details>
+		);
+	}
+};
 
 WeeklyCalendar.propTypes = {
 	controlDate: PropTypes.object,
-	weekEntries: PropTypes.object,
 	storedTimes: PropTypes.array
 };
 
 WeeklyCalendar.defaultProps = {
 	controlDate: {},
-	weekEntries: {},
 	storedTimes: []
 };
 

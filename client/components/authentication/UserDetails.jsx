@@ -7,6 +7,7 @@ import Link from '../router/Link';
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
 import { clearTodayStorage } from '../../utils';
+import DB from '../../db';
 
 import './UserDetails.styl';
 
@@ -14,6 +15,7 @@ const _logout = (event) => {
 	event.preventDefault();
 	removeAuthToken();
 	clearTodayStorage();
+	DB('entries', 'date').then((db) => { db.flush(); });
 	window.location.reload();
 };
 

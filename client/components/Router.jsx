@@ -9,6 +9,8 @@ import PageNotFound from './genericPages/PageNotFound';
 import PageLoading from './genericPages/PageLoading';
 import { getAuthToken, removeAuthToken } from './authentication/token';
 
+import DB from '../db';
+
 const PATH_ROOT = '/';
 
 const _checkAuth = () => Boolean(getAuthToken());
@@ -29,6 +31,24 @@ class ShowComponentOnRoute extends React.Component {
 		history.onChangeLocation((path) => {
 			this.setState({ path });
 		});
+
+		// Check if data on indexedDB
+		// it's never auth if indexedDB table is empty
+		DB('entries', 'date')
+			.then((db) => {
+				db.getAll()
+					.then((data) => {
+						if (data.length) {
+							this.setState({ authenticated: _checkAuth() });
+						}
+					})
+					.catch((e) => {
+						console.error('Router db detection error:', e);
+					});
+			})
+			.catch((e) => {
+				console.error('Check db error 1', e);
+			});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -37,7 +57,23 @@ class ShowComponentOnRoute extends React.Component {
 			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-			this.setState({ authenticated: _checkAuth() });
+		// Check if data on indexedDB
+		// it's never auth if indexedDB table is empty
+			DB('entries', 'date')
+				.then((db) => {
+					db.getAll()
+						.then((data) => {
+							if (data.length) {
+								this.setState({ authenticated: _checkAuth() });
+							}
+						})
+						.catch((e) => {
+							console.error('Router db detection error:', e);
+						});
+				})
+				.catch((e) => {
+					console.error('Check db error 1', e);
+				});
 		}
 	}
 
