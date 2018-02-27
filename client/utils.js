@@ -289,3 +289,17 @@ export const getTimeEntriesForWeek = async (choosenDay) => {
 	const timeEntries = await Promise.all(promisses);
 	return timeEntries;
 };
+
+export const isControlDatePersisted = async (controlDate) => {
+	try {
+		const db = await DB('entries', 'date');
+		const entry = await db.getEntry(controlDate.format('YYYY-MM-DD'));
+		if (areTheSameDay(controlDate, moment())) {
+			return Boolean(entry && entry.sentToday);
+		}
+		return Boolean(entry && entry.contractedTime);
+	} catch (e) {
+		console.error(e);
+		return false;
+	}
+};
