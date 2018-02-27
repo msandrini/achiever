@@ -13,8 +13,8 @@ export const STORAGEKEY = 'storedTimes';
 export const STORAGEDAYKEY = 'storedMoment';
 export const storedTimesIndex = {
 	startTime: 0,
-	startBreakTime: 1,
-	endBreakTime: 2,
+	breakStartTime: 1,
+	breakEndTime: 2,
 	endTime: 3
 };
 export const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
@@ -122,8 +122,8 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
  */
 export const submitToServer = async (date, stateStoredTimes, phase, activity, addTimeEntry) => {
 	const startTime = stateStoredTimes[storedTimesIndex.startTime];
-	const startBreakTime = stateStoredTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = stateStoredTimes[storedTimesIndex.endBreakTime];
+	const breakStartTime = stateStoredTimes[storedTimesIndex.breakStartTime];
+	const breakEndTime = stateStoredTimes[storedTimesIndex.breakEndTime];
 	const endTime = stateStoredTimes[storedTimesIndex.endTime];
 
 	const timeEntryInput = {
@@ -131,8 +131,8 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
 		phaseId: phase.id,
 		activityId: activity.id,
 		startTime: `${startTime.hours}:${startTime.minutes}`,
-		startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
-		endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
+		breakStartTime: `${breakStartTime.hours}:${breakStartTime.minutes}`,
+		breakEndTime: `${breakEndTime.hours}:${breakEndTime.minutes}`,
 		endTime: `${endTime.hours}:${endTime.minutes}`
 	};
 
@@ -147,14 +147,14 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
  */
 export const calculateLabouredHours = (storedTimes) => {
 	const startTime = storedTimes[storedTimesIndex.startTime];
-	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
+	const breakStartTime = storedTimes[storedTimesIndex.breakStartTime];
+	const breakEndTime = storedTimes[storedTimesIndex.breakEndTime];
 	const endTime = storedTimes[storedTimesIndex.endTime];
 
 	const labouredHoursOnDay = new TimeDuration();
 	labouredHoursOnDay.add(endTime);
-	labouredHoursOnDay.subtract(endBreakTime);
-	labouredHoursOnDay.add(startBreakTime);
+	labouredHoursOnDay.subtract(breakEndTime);
+	labouredHoursOnDay.add(breakStartTime);
 	labouredHoursOnDay.subtract(startTime);
 
 	return labouredHoursOnDay.toString();
@@ -256,20 +256,20 @@ const indexedDBToTimeEntry = async (database, stringOfDateQuery) => {
 		{
 			activity: '',		// For the uses now, this doesn't matter
 			date: stringOfDateQuery,
-			endBreakTime: indexedDbQuery.breakEndTime,
+			breakEndTime: indexedDbQuery.breakEndTime,
 			endTime: indexedDbQuery.endTime,
 			phase: '',
-			startBreakTime: indexedDbQuery.breakStartTime,
+			breakStartTime: indexedDbQuery.breakStartTime,
 			startTime: indexedDbQuery.startTime,
 			total: indexedDbQuery.paidTime
 		} :
 		{
 			activity: '',
 			date: stringOfDateQuery,
-			endBreakTime: '',
+			breakEndTime: '',
 			endTime: '',
 			phase: '',
-			startBreakTime: '',
+			breakStartTime: '',
 			startTime: '',
 			total: ''
 		};
