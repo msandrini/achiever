@@ -69,7 +69,7 @@ class Today extends React.Component {
 		}, 60000);
 		this.setState({ buttonDisabled: true });
 
-		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
+		const momentTime = { hours: moment().format('HH'), minutes: moment().format('mm') };
 		const index = this._getNextTimeEntryPoint();
 		const { storedTimes, sentToday } = this.state;
 		storedTimes[index] = momentTime;
