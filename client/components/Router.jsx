@@ -50,29 +50,28 @@ class ShowComponentOnRoute extends React.Component {
 			});
 	}
 
-	componentWillReceiveProps(nextProps) {
+	async componentWillReceiveProps(nextProps) {
 		const { userDetails, loading, error } = nextProps.userDetailsQuery;
 		if (error || (!loading && !userDetails)) {
 			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-		// Check if data on indexedDB
-		// it's never auth if indexedDB table is empty
-			DB('entries', 'date')
-				.then((db) => {
-					db.getAll()
-						.then((data) => {
-							if (data.length) {
-								this.setState({ authenticated: _checkAuth() });
-							}
-						})
-						.catch((e) => {
-							console.error('Router db detection error:', e);
-						});
-				})
-				.catch((e) => {
-					console.error('Check db error 1', e);
-				});
+			try {
+				// Check if data on indexedDB
+				// it's never auth if indexedDB table is empty
+				const db = await DB('entries', 'date')
+				const allEntries = await db.getAll();
+				if (allEntries.length) {
+					this.setState({ authenticated: _checkAuth() });
+				} else {
+					removeAuthToken();
+					this.setState({ authenticated: false });
+				}
+			} catch (e) {
+				removeAuthToken();
+				window.location.reload();
+				console.error(e);
+			}
 		}
 	}
 

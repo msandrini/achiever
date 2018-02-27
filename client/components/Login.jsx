@@ -55,37 +55,24 @@ class Login extends React.Component {
 					password
 				}
 			});
-		} catch (error) {
-			this.setState({ errorMessage: strings.authenticationError });
-		}
+			if (response) {
+				this.setState({ errorMessage: '' });
+				const { token } = response.data.signIn;
+				setAuthToken(token);
 
-		if (response) {
-			this.setState({ errorMessage: '' });
-			const { token } = response.data.signIn;
-			setAuthToken(token);
-			// Fetch allData from server and insert it @ indexedDB
-			apolloClient.query({
-				query: queries.allEntries
-			}).then((respose) => {
-				DB('entries', 'date')
-					.then((db) => {
-						db.put(respose.data.allEntries.timeData)
-							.then(() => {
-								window.location.reload();
-							})
-							.catch((e) => {
-								console.error('Propagation error 3', e);
-								removeAuthToken();
-							});
-					})
-					.catch((e) => {
-						console.error('Propagation error 2', e);
-						removeAuthToken();
-					});
-			}).catch((erro) => {
-				console.error('Query error 1', erro);
-				removeAuthToken();
-			});
+				// Fetch allData from server and insert it @ indexedDB
+				const allEntriesQuery = await apolloClient.query({
+					query: queries.allEntries
+				});
+				// Propagate the date to indexedDB
+				const db = await DB('entries', 'date');
+				await db.put(allEntriesQuery.data.allEntries.timeData);
+				window.location.reload();
+			}
+		} catch (error) {
+			console.log(response, error);
+			this.setState({ errorMessage: strings.authenticationError });
+			removeAuthToken();
 		}
 	}
 
@@ -137,5 +124,4 @@ export default compose(
 
 Login.propTypes = {
 	signIn: PropTypes.func.isRequired
-	// allEntries: PropTypes.object.isRequired
 };
