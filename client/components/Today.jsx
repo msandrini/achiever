@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import DB from 'minimal-indexed-db';
 import { graphql, compose } from 'react-apollo';
 
 import * as queries from '../queries.graphql';
@@ -10,7 +11,6 @@ import ConfirmModal from './ui/modals/ConfirmModal';
 import StaticTime from './today/StaticTime';
 import PageLoading from './genericPages/PageLoading';
 import strings from '../../shared/strings';
-import DB from '../db';
 import {
 	submitToServer
 } from '../utils';
@@ -107,10 +107,10 @@ class Today extends React.Component {
 	async _onConfirmSubmit() {
 		try {
 			const db = await DB('entries', 'date');
-			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'))
+			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
 			const { storedTimes } = todayEntry();
 			const date = moment();
-			const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry)
+			const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
 
 			if (ret.successMessage) {
 				this.setState({ storedTimes, sentToday: true });
@@ -194,7 +194,7 @@ class Today extends React.Component {
 						});
 					}
 
-					if (!sentToday ) {
+					if (!sentToday) {
 						if (allTheTimesAreFilled(storedTimes)) {
 							if (timeSetIsValid(storedTimes)) {
 								this.setState({

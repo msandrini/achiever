@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
+import DB from 'minimal-indexed-db';
 
 import * as queries from '../queries.graphql';
 import * as history from './router/history';
@@ -8,8 +9,6 @@ import { routeDefinitions, defaultPages } from './router/pages';
 import PageNotFound from './genericPages/PageNotFound';
 import PageLoading from './genericPages/PageLoading';
 import { getAuthToken, removeAuthToken } from './authentication/token';
-
-import DB from '../db';
 
 const PATH_ROOT = '/';
 

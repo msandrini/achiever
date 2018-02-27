@@ -2,13 +2,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import DB from 'minimal-indexed-db';
 import { graphql, compose } from 'react-apollo';
 
 import * as queries from '../queries.graphql';
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 import { setAuthToken, removeAuthToken } from './authentication/token';
-import DB from '../db';
 
 import apolloClient from '../apolloClient';
 

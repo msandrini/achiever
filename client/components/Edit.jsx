@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
+import DB from 'minimal-indexed-db';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import ActiveDayTasks from './edit/ActiveDayTasks';
@@ -28,7 +29,6 @@ import {
 	SPECIAL_ACTIVITY_HOLIDAY,
 	getTimeEntriesForWeek
 } from '../utils';
-import DB from '../db';
 
 const START_TABINDEX = 0;
 const CTA_TABINDEX = 10;
@@ -476,7 +476,7 @@ class Edit extends React.Component {
 						<Panel message={this.state.errorMessage} type="error" />
 						<ActiveDayTasks
 							disable={isEditionDisabled}
-							isHoliday={isEditionDisabled}
+							isHoliday={isHoliday}
 							onPhaseSelect={this.onSetProjectPhase}
 							onActivitySelect={this.onSetActivity}
 							projectPhasesQuery={this.props.projectPhasesQuery}
@@ -487,7 +487,7 @@ class Edit extends React.Component {
 						<ActiveDayTimes
 							disabled={isEditionDisabled}
 							focusOnSubmit={this.focusOnSubmit}
-							isHoliday={isEditionDisabled}
+							isHoliday={isHoliday}
 							onTimeChange={this.onTimeChange}
 							storedTimes={storedTimes}
 							tabIndex={START_TABINDEX + 2}

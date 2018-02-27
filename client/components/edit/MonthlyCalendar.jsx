@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 import DatePicker from 'react-datepicker';
+import DB from 'minimal-indexed-db';
 
-import {
-	isDayBlockedInPast,
-	isDayAfterToday
-} from '../../utils';
-import DB from '../../db';
+import { isDayAfterToday } from '../../utils';
 
 import './MonthlyCalendar.styl';
 
@@ -72,9 +69,9 @@ class MonthlyCalendar extends React.Component {
 				filterDate={date => date.isSameOrBefore(moment(), 'day')}
 				maxTime={moment()}
 			/>
-		)
+		);
 	}
-};
+}
 
 MonthlyCalendar.propTypes = {
 	controlDate: PropTypes.object.isRequired,
