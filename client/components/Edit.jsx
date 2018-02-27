@@ -21,13 +21,13 @@ import {
 	calculateHoursBalanceUpToDate,
 	calculateLabouredHours,
 	dismemberTimeString,
-	// isDayBlockedInPast,
 	isDayAfterToday,
 	replacingValueInsideArray,
 	submitToServer,
 	timesAreValid,
-	SPECIAL_ACTIVITY_HOLIDAY,
-	getTimeEntriesForWeek
+	getTimeEntriesForWeek,
+	isControlDatePersisted,
+	SPECIAL_ACTIVITY_HOLIDAY
 } from '../utils';
 
 const START_TABINDEX = 0;
@@ -39,6 +39,7 @@ class Edit extends React.Component {
 		this.state = {
 			controlDate: moment(),
 			controlDateIsValid: true,
+			controlDateIsPersisted: false,
 			labouredHoursOnDay: null,
 			hoursBalanceUpToDate: {},
 			storedTimes: [{}, {}, {}, {}],
@@ -68,15 +69,14 @@ class Edit extends React.Component {
 		this.focusOnSubmit = this.focusOnSubmit.bind(this);
 		this._getHoursBalanceValues = this._getHoursBalanceValues.bind(this);
 		this._imReligious = this._imReligious.bind(this);
-		this._isControlDatePersisted = this._isControlDatePersisted.bind(this);
-		this._setPhaseAndActivityForChosenDate = this._setPhaseAndActivityForChosenDate.bind(this);
 		this._populateProjectPhaseAndActivity =	this._populateProjectPhaseAndActivity.bind(this);
 
 		this.submitButton = null;
 	}
 
 	componentWillMount() {
-		this.onDateChange()(this.state.controlDate);
+		// Select day on mount;
+		this.onDateChange()(moment());
 	}
 
 	async componentWillReceiveProps(nextProps) {
@@ -91,13 +91,17 @@ class Edit extends React.Component {
 			return;
 		}
 
+		// For the first execution of the query
 		if (this.props.projectPhasesQuery.loading && !projectPhasesQuery.loading) {
-			this._populateProjectPhaseAndActivity(projectPhasesQuery);
+			this._populateProjectPhaseAndActivity(projectPhasesQuery, dayEntryQuery);
 		}
 
 		if (this.props.dayEntryQuery.loading && !dayEntryQuery.loading) {
-			await this._propagateDayTime(dayEntryQuery);
-			await this._setPhaseAndActivityForChosenDate();
+			// MAYBE: Do the two lines below
+			// const storedTimeAndInfos = await this._storedTimeFromDate(this.state.controlDate);
+			// this.setState(storedTimeAndInfos);
+			// Populate the phases and activity from the dayEntry.
+			await this._populateProjectPhaseAndActivity(projectPhasesQuery, dayEntryQuery);
 		}
 	}
 
@@ -115,25 +119,28 @@ class Edit extends React.Component {
 				return;
 			}
 
+			// Get { sentToday, labouredHoursOnDay, hoursBalanceUpToDate } for the selected day
+			const storedTimeAndInfos = await this._storedTimeFromDate(date);
+			const controlDateIsPersisted = await isControlDatePersisted(date);
+
+			this.setState({
+				...storedTimeAndInfos,
+				controlDate: date,
+				controlDateIsValid: true,
+				controlDateIsPersisted,
+				errorMessage: '',
+				successMessage: ''
+			});
+
 			await this._fetchDayEntry(date);
+
 			const {
 				projectPhasesQuery,
 				dayEntryQuery
 			} = this.props;
 
-
-			const controlDateIsValid = !isDayAfterToday(date); // TO_DO
-
-			this.setState({
-				controlDate: date,
-				controlDateIsValid,
-				errorMessage: '',
-				successMessage: ''
-			});
-
-			this._propagateDayTime(dayEntryQuery);
 			if (dayEntryQuery.dayEntry) {
-				this._populateProjectPhaseAndActivity(projectPhasesQuery);
+				this._populateProjectPhaseAndActivity(projectPhasesQuery, dayEntryQuery);
 			}
 		};
 	}
@@ -143,9 +150,9 @@ class Edit extends React.Component {
 			let shouldUpdateIndexedDB = false;
 			const timeEntries = await getTimeEntriesForWeek(this.state.controlDate);
 			const composedTime = { hours, minutes };
-			this.setState((prevState) => {
+			this.setState((currentState) => {
 				const storedTimes = replacingValueInsideArray(
-					prevState.storedTimes,
+					currentState.storedTimes,
 					groupIndex,
 					composedTime
 				);
@@ -159,32 +166,34 @@ class Edit extends React.Component {
 					timeEntries
 				};
 				const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-					prevState.controlDate,
+					currentState.controlDate,
 					paramsToSend
 				);
 
 				const newState = {
-					...prevState,
+					...currentState,
 					storedTimes,
 					labouredHoursOnDay,
 					hoursBalanceUpToDate
 				};
 
-				if (areTheSameDay(prevState.controlDate, moment())) {
+				if (areTheSameDay(currentState.controlDate, moment())) {
 					shouldUpdateIndexedDB = { ...newState };
 				}
 
 				return newState;
 			});
-			try {
-				const db = await DB('entries', 'date')
-				await db.put({
-					date: this.state.controlDate.format('YYYY-MM-DD'),
-					storedTimes: shouldUpdateIndexedDB.storedTimes,
-					sentToday: shouldUpdateIndexedDB.sentToday
-				});
-			} catch (e) {
-				console.error(e);
+			if (shouldUpdateIndexedDB) {
+				try {
+					const db = await DB('entries', 'date');
+					await db.put({
+						date: this.state.controlDate.format('YYYY-MM-DD'),
+						storedTimes: shouldUpdateIndexedDB.storedTimes,
+						sentToday: shouldUpdateIndexedDB.sentToday
+					});
+				} catch (e) {
+					console.error(e);
+				}
 			}
 		};
 	}
@@ -199,13 +208,13 @@ class Edit extends React.Component {
 			if (ret.successMessage) {
 				this.setState({ ...this.state, ...ret, sentToday: true });
 				try {
-					const db = await DB('entries', 'date')
+					const db = await DB('entries', 'date');
 					await db.put({
 						date: date.format('YYYY-MM-DD'),
 						storedTimes,
 						sentToday: true
 					});
-					_this.dayEntryQuery(date);	
+					_this.dayEntryQuery(date);
 				} catch (e) {
 					console.error(e);
 				}
@@ -261,14 +270,14 @@ class Edit extends React.Component {
 
 	/**
 	 * Return state hoursBalanceUpToDate based on weekentries
-	 * @param {Object} controlDate is a Moment() of the selected day.
-	 * @param {Object} weekEntriesQuery is the fecthed query return.
+	 * @param {Object} date is a Moment() of the selected day.
+	 * @param {Object} labouredHoursOnDay is how many hours the user has worked that day
 	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
 	 */
-	async _getHoursBalanceValues(labouredHoursOnDay) {
-		const weekTimeEntries = await getTimeEntriesForWeek(this.state.controlDate);
+	async _getHoursBalanceValues(date, labouredHoursOnDay) {
+		const weekTimeEntries = await getTimeEntriesForWeek(date);
 		const hoursBalanceUpToDate = calculateHoursBalanceUpToDate(
-			this.state.controlDate,
+			date,
 			{
 				labouredHoursOnDay,
 				contractedHoursForADay: this.props.userDetailsQuery.userDetails.dailyContractedHours,
@@ -278,123 +287,58 @@ class Edit extends React.Component {
 		return hoursBalanceUpToDate;
 	}
 
-	async _isControlDatePersisted() {
-		const { controlDate } = this.state;
-
-		try {
-			const db = await DB('entries', 'date');
-			const entry = await db.getEntry(controlDate.format('YYYY-MM-DD'));
-			return Boolean(entry && entry.contractedTime);
-		} catch(e) {
-			console.error(e);
-		}
-	}
-
-	_setPhaseAndActivityForChosenDate() {
-		const { dayEntry } = this.props.dayEntryQuery;
-		const activityFromDayData = dayEntry && dayEntry.activity;
-
-		if (this.state.phase.activities.options) {
-			const chosenActivity = this.state.phase.activities.options.find(activity =>
-				activity.name === activityFromDayData);
-
-			let activityToSend = {};
-			if (chosenActivity) {
-				activityToSend = chosenActivity;
-			} else if (activityFromDayData === SPECIAL_ACTIVITY_HOLIDAY.name) {
-				activityToSend = SPECIAL_ACTIVITY_HOLIDAY;
-			} else {
-				const defaultActivity = this.state.phase.activities.default;
-				activityToSend = this.state.phase.activities.options.find(activity =>
-					activity.id === defaultActivity);
-			}
-			this.setState({ activity: activityToSend });
-		}
-
-	}
-
-	async _propagateDayTime(dayEntryQuery) {
-		const {
-			loading,
-			error,
-			dayEntry
-		} = dayEntryQuery;
-
-		const { timeEntry } = dayEntry;
-
-		if (loading || error) {
-			return;
-		}
+	/**
+	 * Given a date, select and propagate it from indexedDB
+	 * @param {Object} date - a moment date object
+	 * @return {storedTimes, sentToday, labouredHoursOnDay, hoursBalanceUpToDate}
+	 */
+	async _storedTimeFromDate(date) {
+		const db = await DB('entries', 'date');
+		const timeEntry = await db.getEntry(date.format('YYYY-MM-DD'));
 
 		if (timeEntry) {
-			const startTime = moment(timeEntry.startTime, 'H:mm');
-			const endTime = moment(timeEntry.endTime, 'H:mm');
-			const labouredHoursOnDay = timeEntry.total;
 			const isToday = areTheSameDay(moment(timeEntry.date), moment());
+			const labouredHoursOnDay = timeEntry.paidTime;
 			const hoursBalanceUpToDate = await this._getHoursBalanceValues(
-				moment(timeEntry.date),
-				labouredHoursOnDay,
+				date,
+				labouredHoursOnDay
 			);
 
-			// If data is on server
-			if (startTime.isValid() && endTime.isValid()) {
-				const timesAsString = [
-					timeEntry.startTime,
-					timeEntry.startBreakTime,
-					timeEntry.endBreakTime,
-					timeEntry.endTime
-				];
-				const storedTimes = timesAsString.map(timeString =>
-					dismemberTimeString(timeString));
-
-				// If today was fetched
-				if (isToday) {
-					try {
-						const db = await DB('entries', 'date');
-						await db.put({
-							date: moment().format('YYYY-MM-DD'),
-							storedTimes,
-							sentToday: true
-						});
-					} catch (e) {
-						console.error(e);
-					}
-				}
-				this.setState({
-					storedTimes,
-					sentToday: true,
-					labouredHoursOnDay,
-					hoursBalanceUpToDate
-				});
-			} else if (isToday) {
-				// If today and not in server, try using localStorage
-				try {
-					const db = await DB('entries', 'date');
-					const dayStorage = await db.getEntry(moment().format('YYYY-MM-DD'));
-					const { storedTimes: dbStoredTimes, sentToday } = dayStorage || { };
-
-					if (dbStoredTimes) {
-						this.setState({
-							storedTimes: dbStoredTimes,
-							sentToday,
-							labouredHoursOnDay: (dbStoredTimes && timesAreValid(dbStoredTimes) &&
-								calculateLabouredHours(dbStoredTimes)) || '',
-							hoursBalanceUpToDate
-						});
-					}
-				} catch (e) {
-					console.error(e);
-				}
-			} else {
-				// If not today should do something... for now, just set state empty
-				this.setState({
-					storedTimes: [{}, {}, {}, {}],
-					labouredHoursOnDay,
+			if (isToday) {
+				return ({
+					storedTimes: timeEntry.storedTimes,
+					sentToday: timeEntry.sentToday,
+					labouredHoursOnDay: (
+						timeEntry.storedTimes &&
+						timesAreValid(timeEntry.storedTimes) &&
+						calculateLabouredHours(timeEntry.storedTimes)
+					) || '',
 					hoursBalanceUpToDate
 				});
 			}
 
+			const timesAsString = [
+				timeEntry.startTime,
+				timeEntry.breakStartTime,
+				timeEntry.breakEndTime,
+				timeEntry.endTime
+			];
+			const storedTimes = timesAsString.map(timeString =>
+				dismemberTimeString(timeString));
+
+			return ({
+				storedTimes,
+				sentToday: timeEntry.sentToday,
+				labouredHoursOnDay,
+				hoursBalanceUpToDate
+			});
 		}
+		return {
+			storedTimes: [{}, {}, {}, {}],
+			sentToday: false,
+			labouredHoursOnDay: '0',
+			hoursBalanceUpToDate: '0'
+		};
 	}
 
 	_shouldSendBeAvailable() {
@@ -405,16 +349,27 @@ class Edit extends React.Component {
 	 * Insert the default project phase and activity
 	 * @param {*} projectPhases
 	 */
-	_populateProjectPhaseAndActivity(projectPhasesQuery) {
+	_populateProjectPhaseAndActivity(projectPhasesQuery, dayEntryQuery) {
 		const { phases, loading, error } = projectPhasesQuery;
+		const { timeEntry } = dayEntryQuery && dayEntryQuery.dayEntry;
+
 
 		if (loading || error) {
 			return;
 		}
-		// Set queried project phases and activities from server
-		const phase = phases.options.find(option => option.id === phases.default);
+
+		// Set queried project phases and activities from server - default if none from dayquery
+		const phase = phases.options.find(option => option.name === timeEntry.phase) ||
+			phases.options.find(option => option.id === phases.default);
 		const { activities } = phase;
-		const activity = activities.options.find(option => option.id === activities.default);
+
+		let activity;
+		if (timeEntry.activity === SPECIAL_ACTIVITY_HOLIDAY.name) {
+			activity = SPECIAL_ACTIVITY_HOLIDAY;
+		} else {
+			activity = activities.options.find(option => option.name === timeEntry.activity) ||
+				activities.options.find(option => option.id === activities.default);
+		}
 
 		this.setState({
 			phase,
@@ -425,6 +380,7 @@ class Edit extends React.Component {
 	render() {
 		const {
 			controlDate,
+			controlDateIsPersisted,
 			labouredHoursOnDay,
 			hoursBalanceUpToDate,
 			storedTimes,
@@ -443,15 +399,14 @@ class Edit extends React.Component {
 		const isHoliday = activity.id === SPECIAL_ACTIVITY_HOLIDAY.id;
 		const isEditionDisabled = isHoliday || !controlDateIsValid;
 
-		const isTimeEntryPersisted = this._isControlDatePersisted();
-		const submitAction = isTimeEntryPersisted ?
+		const submitAction = controlDateIsPersisted ?
 			this.props.updateTimeEntry :
 			this.props.addTimeEntry;
 
 		return (
 			<div className="page-wrapper">
 				<PageLoading
-					active={this.props.dayEntryQuery.loading}
+					active={this.props.projectPhasesQuery.loading}
 				/>
 				<h2 className="current-date">
 					{strings.dateBeingEdited}:{' '}
@@ -476,6 +431,7 @@ class Edit extends React.Component {
 						<Panel message={this.state.errorMessage} type="error" />
 						<ActiveDayTasks
 							disable={isEditionDisabled}
+							isLoading={this.props.dayEntryQuery.loading}
 							isHoliday={isHoliday}
 							onPhaseSelect={this.onSetProjectPhase}
 							onActivitySelect={this.onSetActivity}
@@ -499,7 +455,7 @@ class Edit extends React.Component {
 							disabled={!this._shouldSendBeAvailable()}
 							tabIndex={CTA_TABINDEX}
 						>
-							{isTimeEntryPersisted ? strings.update : strings.send}
+							{controlDateIsPersisted ? strings.update : strings.send}
 						</button>
 						<button
 							type="button"
