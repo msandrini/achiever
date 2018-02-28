@@ -51,8 +51,8 @@ const extractBreakTime = (response) => {
 
 	if (times && times.length > 2) {
 		return {
-			startBreakTime: times[1],
-			endBreakTime: times[2]
+			breakStartTime: times[1],
+			breakEndTime: times[2]
 		};
 	}
 
@@ -119,12 +119,12 @@ const breakTimeFromHtml = ($) => {
 	const breakTimeDuration = $('table tr.yellow td').eq(3).text().trim();
 	const breakTime = $('table tr.yellow td').eq(1).text().trim();
 
-	const { startBreakTime, endBreakTime } = extractBreakTime(breakTime);
+	const { breakStartTime, breakEndTime } = extractBreakTime(breakTime);
 
 	return {
 		breakTimeId,
-		startBreakTime,
-		endBreakTime,
+		breakStartTime,
+		breakEndTime,
 		breakTimeDuration
 	};
 };
@@ -147,8 +147,8 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 	const date = moment(timeEntry.date);
 	const startTime = moment(timeEntry.startTime, 'H:mm');
 	const endTime = moment(timeEntry.endTime, 'H:mm');
-	const startBreakTime = moment(timeEntry.startBreakTime || '12:00', 'H:mm');
-	const endBreakTime = moment(timeEntry.endBreakTime || '13:00', 'H:mm');
+	const breakStartTime = moment(timeEntry.breakStartTime || '12:00', 'H:mm');
+	const breakEndTime = moment(timeEntry.breakEndTime || '13:00', 'H:mm');
 
 	const totalWorkedTime = moment().startOf('day');
 
@@ -163,13 +163,13 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 	});
 
 	totalWorkedTime.add({
-		hours: startBreakTime.hours(),
-		minutes: startBreakTime.minutes()
+		hours: breakStartTime.hours(),
+		minutes: breakStartTime.minutes()
 	});
 
 	totalWorkedTime.subtract({
-		hours: endBreakTime.hours(),
-		minutes: endBreakTime.minutes()
+		hours: breakEndTime.hours(),
+		minutes: breakEndTime.minutes()
 	});
 
 	return {
@@ -181,8 +181,8 @@ const activityToPayload = (timeEntry, phaseId, activityId) => {
 		anoi: date.year(),
 		timehH: startTime.hours(),
 		timemH: startTime.minutes(),
-		startBreak6: timeEntry.startBreakTime || '12:00',
-		endBreak6: timeEntry.endBreakTime || '13:00',
+		startBreak6: timeEntry.breakStartTime || '12:00',
+		endBreak6: timeEntry.breakEndTime || '13:00',
 		timeh: totalWorkedTime.hours(),
 		timem: totalWorkedTime.minutes()
 	};

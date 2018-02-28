@@ -43,8 +43,8 @@ const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
 		dayEntry = {
 			...timeEntryAtIndex,
 			startTime: new TimeDuration(_isEmptyObj(storedTimes[0])).toString(),
-			startBreakTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
-			endBreakTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
+			breakStartTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
+			breakEndTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
 			endTime: new TimeDuration(_isEmptyObj(storedTimes[3])).toString()
 		};
 	}
@@ -62,22 +62,22 @@ const _convertweekEntriesToEvents = (timeEntries, controlDate, storedTimes) => {
 
 			if (dayEntry) {
 				const hasBreak = Boolean((
-					dayEntry.startBreakTime &&
-					dayEntry.startBreakTime !== '0:00' &&
-					dayEntry.endBreakTime &&
-					dayEntry.endBreakTime !== '0:00'
+					dayEntry.breakStartTime &&
+					dayEntry.breakStartTime !== '0:00' &&
+					dayEntry.breakEndTime &&
+					dayEntry.breakEndTime !== '0:00'
 				));
 
 				if (hasBreak) {
 					events.push({
 						id: index * 2,
 						start: _getDateFromComposedObj(dayEntry, 'startTime'),
-						end: _getDateFromComposedObj(dayEntry, 'startBreakTime'),
+						end: _getDateFromComposedObj(dayEntry, 'breakStartTime'),
 						title: `${dayEntry.phase} - ${dayEntry.activity}`
 					});
 					events.push({
 						id: (index * 2) + 1,
-						start: _getDateFromComposedObj(dayEntry, 'endBreakTime'),
+						start: _getDateFromComposedObj(dayEntry, 'breakEndTime'),
 						end: _getDateFromComposedObj(dayEntry, 'endTime'),
 						title: `${dayEntry.phase} - ${dayEntry.activity}`
 					});

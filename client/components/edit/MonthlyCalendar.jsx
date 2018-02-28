@@ -8,6 +8,9 @@ import { isDayAfterToday } from '../../utils';
 
 import './MonthlyCalendar.styl';
 
+
+const isDayValid = day => (Boolean(day && day.paidTime && day.paidTime !== '0:00'));
+
 const _getStyleClassForCalendarDays = async () => {
 	let allEntries = [];
 	try {
@@ -25,7 +28,7 @@ const _getStyleClassForCalendarDays = async () => {
 	];
 	if (allEntries) {
 		allEntries.forEach((day) => {
-			const elementToPush = day.paidTime ?
+			const elementToPush = isDayValid(day) ?
 				dayStyles[0]['calendar-checked'] :
 				dayStyles[1]['calendar-unchecked'];
 
@@ -33,9 +36,6 @@ const _getStyleClassForCalendarDays = async () => {
 
 			elementToPush.push(dayMoment);
 
-			// if (isDayBlockedInPast(dayMoment)) {
-			// 	dayStyles[2]['calendar-locked'].push(dayMoment);
-			// }
 			if (isDayAfterToday(dayMoment)) {
 				dayStyles[3]['calendar-future-day'].push(dayMoment);
 			}

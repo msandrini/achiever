@@ -16,8 +16,8 @@ mutation addTimeEntry($timeEntry: TimeEntryInput!) {
     addTimeEntry(timeEntry: $timeEntry) {
         date
         startTime
-        startBreakTime
-        endBreakTime
+        breakStartTime
+        breakEndTime
         endTime
         total
     }
@@ -27,8 +27,8 @@ mutation updateTimeEntry($timeEntry: TimeEntryInput!) {
     updateTimeEntry(timeEntry: $timeEntry) {
         date
         startTime
-        startBreakTime
-        endBreakTime
+        breakStartTime
+        breakEndTime
         endTime
         total
     }
@@ -41,8 +41,8 @@ query dayEntry($date: String!) {
             phase
             activity
             startTime
-            startBreakTime
-            endBreakTime
+            breakStartTime
+            breakEndTime
             endTime
             total
         }
@@ -75,8 +75,8 @@ query weekEntries($date: String!) {
             phase
             activity
             startTime
-            startBreakTime
-            endBreakTime
+            breakStartTime
+            breakEndTime
             endTime
             total
         }

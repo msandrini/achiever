@@ -6,8 +6,8 @@ const typeDefs = `
 		date: String!,
 		startTime: String!,
 		endTime: String!,
-		startBreakTime: String,
-		endBreakTime: String,
+		breakStartTime: String,
+		breakEndTime: String,
 		phaseId: Int,
 		activityId: Int
 	}
@@ -24,8 +24,8 @@ const typeDefs = `
 		activity: String,
 		startTime: String,
 		endTime: String,
-		startBreakTime: String,
-		endBreakTime: String,
+		breakStartTime: String,
+		breakEndTime: String,
 		total: String
 	}
 

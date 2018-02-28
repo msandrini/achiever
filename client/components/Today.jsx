@@ -24,13 +24,12 @@ import {
 
 const MODAL_ALERT = 'alert';
 const MODAL_CONFIRM = 'confirm';
-const defaultStoredTimes = [{}, {}, {}, {}];
 
 class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			storedTimes: [...defaultStoredTimes],
+			storedTimes: [{}, {}, {}, {}],
 			sentToday: false,
 			showModal: null,
 			alertInfo: {},
@@ -62,7 +61,7 @@ class Today extends React.Component {
 		}
 	}
 
-	onMark(event) {
+	async onMark(event) {
 		event.preventDefault();
 		// const this = this;
 		setTimeout(() => {
@@ -70,29 +69,23 @@ class Today extends React.Component {
 		}, 60000);
 		this.setState({ buttonDisabled: true });
 
-		const momentTime = { hours: moment().hours(), minutes: moment().minutes() };
+		const momentTime = { hours: moment().format('HH'), minutes: moment().format('mm') };
 		const index = this._getNextTimeEntryPoint();
 		const { storedTimes, sentToday } = this.state;
 		storedTimes[index] = momentTime;
 
 		if (timeSetIsValid(storedTimes)) {
-			DB('entries', 'date')
-				.then((db) => {
-					// First fetch from DB and check if it's already there
-					db.put({ date: moment().format('YYYY-MM-DD'), storedTimes, sentToday })
-						.then(() => {
-							this.setState((prevState) => {
-								const newState = { ...prevState, storedTimes, sentToday };
-								if (index === 3) {
-									const date = moment();
-									submitToServer(date, storedTimes, this.props.addTimeEntry);
-								}
-								return newState;
-							});
-						})
-						.catch((er2) => { console.error('DB err:', er2); });
-				})
-				.catch((er1) => { console.error('DB err:', er1); });
+			const db = await DB('entries', 'date');
+			// Insert it to indexedDB and then insert set state. Also, if needed, send to server;
+			await db.put({ date: moment().format('YYYY-MM-DD'), storedTimes, sentToday });
+			this.setState((prevState) => {
+				const newState = { ...prevState, storedTimes, sentToday };
+				if (index === 3) {
+					const date = moment();
+					submitToServer(date, storedTimes, this.props.addTimeEntry);
+				}
+				return newState;
+			});
 		} else {
 			this.setState({
 				alertInfo: {
@@ -138,14 +131,14 @@ class Today extends React.Component {
 		const { timeEntry } = dayEntry;
 		if (timeEntry) {
 			const startTime = moment(timeEntry.startTime, 'H:mm');
-			const startBreakTime = moment(timeEntry.startBreakTime, 'H:mm');
-			const endBreakTime = moment(timeEntry.endBreakTime, 'H:mm');
+			const breakStartTime = moment(timeEntry.breakStartTime, 'H:mm');
+			const breakEndTime = moment(timeEntry.breakEndTime, 'H:mm');
 			const endTime = moment(timeEntry.endTime, 'H:mm');
 
 			// If data is on server
 			if (startTime.isValid() &&
-				startBreakTime.isValid() &&
-				endBreakTime.isValid() &&
+				breakStartTime.isValid() &&
+				breakEndTime.isValid() &&
 				endTime.isValid()
 			) {
 				const storedTimes = [
@@ -154,12 +147,12 @@ class Today extends React.Component {
 						minutes: startTime.minutes()
 					},
 					{
-						hours: startBreakTime.hours(),
-						minutes: startBreakTime.minutes()
+						hours: breakStartTime.hours(),
+						minutes: breakStartTime.minutes()
 					},
 					{
-						hours: endBreakTime.hours(),
-						minutes: endBreakTime.minutes()
+						hours: breakEndTime.hours(),
+						minutes: breakEndTime.minutes()
 					},
 					{
 						hours: endTime.hours(),
