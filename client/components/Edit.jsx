@@ -298,7 +298,8 @@ class Edit extends React.Component {
 
 		if (timeEntry) {
 			const isToday = areTheSameDay(moment(timeEntry.date), moment());
-			const labouredHoursOnDay = timeEntry.paidTime;
+			const labouredHoursOnDay = timeEntry.paidTime ||
+				calculateLabouredHours(timeEntry.storedTimes);
 			const hoursBalanceUpToDate = await this._getHoursBalanceValues(
 				date,
 				labouredHoursOnDay
