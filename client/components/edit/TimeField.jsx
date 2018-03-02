@@ -103,7 +103,7 @@ export default class TimeField extends React.Component {
 			<div className="field">
 				<input
 					type="number"
-					value={value}
+					value={value || ''}
 					min={0}
 					disabled={disabled}
 					max={this._getMaxValue()}
