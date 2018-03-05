@@ -163,17 +163,11 @@ export const calculateHoursBalanceUpToDate = (controlDate, params) => {
 };
 
 export const dismemberTimeString = (timeString) => {
-	const [rawHours, rawMinutes] = String(timeString).split(':');
-	let hours;
-	let minutes;
+	const validStringTime = rawTime => (Number.isNaN(Number(rawTime)) ? null : Number(rawTime));
 
-	if (rawHours && rawMinutes) {
-		hours = Number.isNaN(Number(rawHours)) ? null : Number(rawHours);
-		minutes = Number.isNaN(Number(rawMinutes)) ? null : Number(rawMinutes);
-	} else {
-		hours = null;
-		minutes = null;
-	}
+	const [rawHours, rawMinutes] = String(timeString).split(':');
+	const minutes = validStringTime(rawMinutes);
+	const hours = minutes === null ? null : validStringTime(rawHours);
 	return { hours, minutes };
 };
 
