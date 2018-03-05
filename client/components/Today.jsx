@@ -179,7 +179,13 @@ class Today extends React.Component {
 				breakEndTime,
 				endTime,
 				persisted
-			} = todayEntry || {};
+			} = todayEntry || {
+				startTime: { hours: null, minutes: null },
+				breakStartTime: { hours: null, minutes: null },
+				breakEndTime: { hours: null, minutes: null },
+				endTime: { hours: null, minutes: null }
+			};
+
 			const storedTimes = {
 				startTime,
 				breakStartTime,
@@ -215,81 +221,23 @@ class Today extends React.Component {
 			console.error(e);
 		}
 	}
-	// dayEntryQuery
-	// const {	loading, dayEntry } = dayEntryQuery || {};
-
-	// if (loading || !dayEntry) {
-	// 	return;
-	// }
-
-	// const { timeEntry } = dayEntry;
-	// if (timeEntry) {
-	// 	const startTime = moment(timeEntry.startTime, 'H:mm');
-	// 	const breakStartTime = moment(timeEntry.breakStartTime, 'H:mm');
-	// 	const breakEndTime = moment(timeEntry.breakEndTime, 'H:mm');
-	// 	const endTime = moment(timeEntry.endTime, 'H:mm');
-
-	// 	// If data is on server
-	// 	if (startTime.isValid() &&
-	// 		breakStartTime.isValid() &&
-	// 		breakEndTime.isValid() &&
-	// 		endTime.isValid()
-	// 	) {
-	// 		const storedTimes = {
-	// 			startTime: {
-	// 				hours: startTime.hours(),
-	// 				minutes: startTime.minutes()
-	// 			},
-	// 			breakStartTime: {
-	// 				hours: breakStartTime.hours(),
-	// 				minutes: breakStartTime.minutes()
-	// 			},
-	// 			breakEndTime: {
-	// 				hours: breakEndTime.hours(),
-	// 				minutes: breakEndTime.minutes()
-	// 			},
-	// 			endTime: {
-	// 				hours: endTime.hours(),
-	// 				minutes: endTime.minutes()
-	// 			}
-	// 		};
-	// 		try {
-	// 			const db = await DB('entries', 'date');
-	// 			await db.put({
-	// 				date: moment().format('YYYY-MM-DD'),
-	// 				persisted: true,
-	// 				startTime: storedTimes.startTime,
-	// 				breakStartTime: storedTimes.breakStartTime,
-	// 				breakEndTime: storedTimes.breakEndTime,
-	// 				endTime: storedTimes.endTime
-	// 			});
-	// 			this.setState({
-	// 				storedTimes,
-	// 				persisted: true
-	// 			});
-	// 		} catch (e) {
-	// 			console.error(e);
-	// 		}
-	// 	}
-	// } else {
-	// 	}
-	// }
 
 	_getTime(index) {
-		// const storedTimesLength = this._getNextTimeEntryPoint();
-		// if (storedTimesLength === '') {
-		// 	return { hours: 0, minutes: 0 };
-		// }
 		return this.state.storedTimes[index];
 	}
 
 	_getButtonString() {
 		const nextPosition = this._getNextTimeEntryPoint();
 		const len = storedTimePosition.findIndex(e => (e === nextPosition));
+		if (len !== -1) {
+			return (
+				<span>
+					{strings.markNow} <strong>{strings.times[len].label}</strong>
+				</span>
+			);
+		}
 		return (
-			<span>
-				{strings.markNow} <strong>{strings.times[len].label}</strong>
-			</span>
+			<span />
 		);
 	}
 
@@ -304,7 +252,10 @@ class Today extends React.Component {
 	}
 
 	_shouldButtonBeAvailable() {
-		return this._getNextTimeEntryPoint() !== -1;
+		return !(
+			this._getNextTimeEntryPoint() === '' ||
+			this.state.storedTimes.breakStartTime.hours === null
+		);
 	}
 
 	_hideAlert() {
@@ -315,6 +266,13 @@ class Today extends React.Component {
 
 	render() {
 		const { dayEntryQuery } = this.props;
+		const {
+			alertInfo,
+			buttonDisabled,
+			showModal,
+			storedTimes
+		} = this.state;
+
 		return (
 			<div className="page-wrapper">
 				<PageLoading
@@ -331,7 +289,7 @@ class Today extends React.Component {
 								key={value}
 								time={this._getTime(value)}
 								label={strings.times[index].label}
-								emphasis={isValidTimeObject(this.state.storedTimes[value])}
+								emphasis={isValidTimeObject(storedTimes[value])}
 							/>
 						))}
 					</div>
@@ -340,7 +298,7 @@ class Today extends React.Component {
 							<button
 								type="submit"
 								className="send send-today"
-								disabled={this.state.buttonDisabled}
+								disabled={buttonDisabled}
 							>
 								{this._getButtonString()}
 							</button>
@@ -350,12 +308,12 @@ class Today extends React.Component {
 					</div>
 				</form>
 				<AlertModal
-					active={this.state.showModal === MODAL_ALERT}
-					content={this.state.alertInfo.content}
-					onClose={this.state.alertInfo.onClose}
+					active={showModal === MODAL_ALERT}
+					content={alertInfo.content}
+					onClose={alertInfo.onClose}
 				/>
 				<ConfirmModal
-					active={this.state.showModal === MODAL_CONFIRM}
+					active={showModal === MODAL_CONFIRM}
 					content={strings.confirmSave}
 					onCancel={() => goBack()}
 					onConfirm={this._onConfirmSubmit}
