@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
+import DB from 'minimal-indexed-db';
 
 import * as queries from '../queries.graphql';
 import * as history from './router/history';
@@ -29,15 +30,48 @@ class ShowComponentOnRoute extends React.Component {
 		history.onChangeLocation((path) => {
 			this.setState({ path });
 		});
+
+		// Check if data on indexedDB
+		// it's never auth if indexedDB table is empty
+		DB('entries', 'date')
+			.then((db) => {
+				db.getAll()
+					.then((data) => {
+						if (data.length) {
+							this.setState({ authenticated: _checkAuth() });
+						}
+					})
+					.catch((e) => {
+						console.error('Router db detection error:', e);
+					});
+			})
+			.catch((e) => {
+				console.error('Check db error 1', e);
+			});
 	}
 
-	componentWillReceiveProps(nextProps) {
+	async componentWillReceiveProps(nextProps) {
 		const { userDetails, loading, error } = nextProps.userDetailsQuery;
 		if (error || (!loading && !userDetails)) {
 			removeAuthToken();
 			this.setState({ authenticated: false });
 		} else {
-			this.setState({ authenticated: _checkAuth() });
+			try {
+				// Check if data on indexedDB
+				// it's never auth if indexedDB table is empty
+				const db = await DB('entries', 'date')
+				const allEntries = await db.getAll();
+				if (allEntries.length) {
+					this.setState({ authenticated: _checkAuth() });
+				} else {
+					removeAuthToken();
+					this.setState({ authenticated: false });
+				}
+			} catch (e) {
+				removeAuthToken();
+				window.location.reload();
+				console.error(e);
+			}
 		}
 	}
 

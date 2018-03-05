@@ -2,14 +2,19 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import DB from 'minimal-indexed-db';
+import { graphql, compose } from 'react-apollo';
 
 import * as queries from '../queries.graphql';
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
-import { setAuthToken } from './authentication/token';
+import { setAuthToken, removeAuthToken } from './authentication/token';
+import { dismemberTimeString } from '../utils';
+
+import apolloClient from '../apolloClient';
 
 import './Login.styl';
+
 
 class Login extends React.Component {
 	constructor(props) {
@@ -51,15 +56,35 @@ class Login extends React.Component {
 					password
 				}
 			});
-		} catch (error) {
-			this.setState({ errorMessage: strings.authenticationError });
-		}
+			if (response) {
+				this.setState({ errorMessage: '' });
+				const { token } = response.data.signIn;
+				setAuthToken(token);
 
-		if (response) {
-			this.setState({ errorMessage: '' });
-			const { token } = response.data.signIn;
-			setAuthToken(token);
-			window.location.reload();
+				// Fetch allData from server and insert it @ indexedDB
+				const allEntriesQuery = await apolloClient.query({
+					query: queries.allEntries
+				});
+				const timeData = [];
+				allEntriesQuery.data.allEntries.timeData.forEach((timeEntry) => {
+					timeData.push({
+						...timeEntry,
+						startTime: dismemberTimeString(timeEntry.startTime),
+						breakStartTime: dismemberTimeString(timeEntry.breakStartTime),
+						breakEndTime: dismemberTimeString(timeEntry.breakEndTime),
+						endTime: dismemberTimeString(timeEntry.endTime),
+						persisted: true
+					});
+				});
+				// Propagate the date to indexedDB
+				const db = await DB('entries', 'date');
+				await db.put(timeData);
+				window.location.reload();
+			}
+		} catch (error) {
+			console.log(response, error);
+			this.setState({ errorMessage: strings.authenticationError });
+			removeAuthToken();
 		}
 	}
 
@@ -105,7 +130,9 @@ class Login extends React.Component {
 	}
 }
 
-export default graphql(queries.signIn, { name: 'signIn' })(Login);
+export default compose(
+	graphql(queries.signIn, { name: 'signIn' }),
+)(Login);
 
 Login.propTypes = {
 	signIn: PropTypes.func.isRequired

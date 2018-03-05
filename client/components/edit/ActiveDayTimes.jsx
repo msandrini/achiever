@@ -5,8 +5,16 @@ import TimeGroup from './TimeGroup';
 import CheckBox from '../ui/CheckBox';
 
 import strings from '../../../shared/strings';
+import {
+	isEmptyStoredValue
+} from '../../utils';
 
-const referenceHours = [9, 12, 13, 17];
+const referenceHours = [
+	{ type: 'startTime', value: 9 },
+	{ type: 'breakStartTime', value: 12 },
+	{ type: 'breakEndTime', value: 13 },
+	{ type: 'endTime', value: 17 }
+];
 
 const keyIsNumber = key => (!Number.isNaN(Number(key)));
 
@@ -35,25 +43,27 @@ class ActiveDayTimes extends React.Component {
 	 * @param {*} nextProps - react default
 	 */
 	componentWillReceiveProps(nextProps) {
-		const storedPausesHaveChanged = [0, 1, 2, 3].map(key =>
-			nextProps.storedTimes[key] 	&&
-			((nextProps.storedTimes[key].hours !== this.props.storedTimes[key].hours)	||
-			(nextProps.storedTimes[key].minutes !== this.props.storedTimes[key].minutes)));
+		const storedPausesHaveChanged = ['startTime', 'breakStartTime', 'breakEndTime', 'endTime']
+			.map(key =>
+				nextProps.storedTimes[key] 	&&
+				(JSON.stringify(nextProps.storedTimes[key]) !==
+					JSON.stringify(this.props.storedTimes[key])));
 
-		const storedPausesHaveNoTimeInfo = [0, 1, 2, 3].map(key =>
-			!nextProps.storedTimes[key].hours 	&&
-			!nextProps.storedTimes[key].minutes);
+		const haveNoTimeInfo = ['startTime', 'breakStartTime', 'breakEndTime', 'endTime']
+			.map(key =>
+				(nextProps.storedTimes[key]			 &&
+					isEmptyStoredValue(nextProps.storedTimes[key].hours) &&
+					isEmptyStoredValue(nextProps.storedTimes[key].minutes)));
 
-		const breakIsEmpty = storedPausesHaveNoTimeInfo[1] && storedPausesHaveNoTimeInfo[2];
-		const allButBreakIsField = !storedPausesHaveNoTimeInfo[0] && !storedPausesHaveNoTimeInfo[3];
-
+		const breakIsEmpty = haveNoTimeInfo[1] && haveNoTimeInfo[2];
+		const allButBreakIsFilled = !haveNoTimeInfo[0] && !haveNoTimeInfo[3];	// Avoid start enbld
 		if (
-			storedPausesHaveChanged[0] ||
-			storedPausesHaveChanged[1] ||
-			storedPausesHaveChanged[2] ||
+			storedPausesHaveChanged[0]	||
+			storedPausesHaveChanged[1]	||
+			storedPausesHaveChanged[2]	||
 			storedPausesHaveChanged[3]
 		) {
-			if (breakIsEmpty && allButBreakIsField) {
+			if (breakIsEmpty && allButBreakIsFilled) {
 				this.setState({ pauseIsEnabled: true });
 			} else {
 				this.setState({ pauseIsEnabled: false });
@@ -129,7 +139,7 @@ class ActiveDayTimes extends React.Component {
 			pauseIsEnabled: checkValue
 		});
 		if (checkValue) {
-			[1, 2].forEach(key => this.onChangeTime(key)(0, 0));
+			[1, 2].forEach(key => this.onChangeTime(key)(null, null));
 		}
 	}
 
@@ -154,14 +164,14 @@ class ActiveDayTimes extends React.Component {
 						disabled={disabled}
 					/>
 				</div>
-				{referenceHours.map((refHour, index) => (
+				{referenceHours.map((defaultHoursForType, index) => (
 					<TimeGroup
-						key={refHour}
+						key={defaultHoursForType.value}
 						label={strings.times[index].label}
 						emphasis={index === 0 || index === 3}
 						tabIndexes={tabIndex + 2 + (index * 2)}
-						referenceHour={refHour}
-						time={storedTimes[index] || '00'}
+						referenceHour={defaultHoursForType.value}
+						time={storedTimes[defaultHoursForType.type] || {}}
 						shouldHaveFocus={this._shouldHaveFocus(index)}
 						onSet={this.onChangeTime(index)}
 						onFocus={this._onFieldFocus(index)}
@@ -180,7 +190,7 @@ ActiveDayTimes.propTypes = {
 	focusOnSubmit: PropTypes.func,
 	isHoliday: PropTypes.bool,
 	onTimeChange: PropTypes.func.isRequired,
-	storedTimes: PropTypes.array,
+	storedTimes: PropTypes.object,
 	tabIndex: PropTypes.number
 };
 
@@ -188,7 +198,12 @@ ActiveDayTimes.defaultProps = {
 	disabled: false,
 	focusOnSubmit: () => {},
 	isHoliday: false,
-	storedTimes: [{}, {}, {}, {}],
+	storedTimes: {
+		breakEndTime: {},
+		breakStartTime: {},
+		endTime: {},
+		startTime: {}
+	},
 	tabIndex: 3
 };
 

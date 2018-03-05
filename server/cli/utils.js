@@ -7,7 +7,7 @@ const logger = require('../logger');
 const strings = require('../../shared/strings');
 const { sendActivity } = require('./calls');
 
-const timeKeys = ['startTime', 'startBreakTime', 'endBreakTime', 'endTime'];
+const timeKeys = ['startTime', 'breakStartTime', 'breakEndTime', 'endTime'];
 
 const STORAGE_KEY = 'storedTimes';
 storage.initSync({ dir: 'server/temp' });

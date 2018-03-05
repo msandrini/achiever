@@ -18,17 +18,18 @@ const ActiveDayTasks = (props) => {
 		tabIndex,
 		disable,
 		onActivitySelect,
-		projectPhasesQuery
+		projectPhasesQuery,
+		isLoading
 	} = props;
 
 	const projectPhases = projectPhasesQuery.phases || {};
 
-	let textForProjectPhase = projectPhases.options ? null : strings.loading;
+	let textForProjectPhase = projectPhases.options || isLoading ? null : strings.loading;
 	if (projectPhases.options && projectPhases.options.length === 1) {
 		textForProjectPhase = projectPhases.options[0].name;
 	}
 
-	let textForActivity = projectPhases.options ? null : strings.loading;
+	let textForActivity = projectPhases.options || isLoading ? null : strings.loading;
 	if (isHoliday) {
 		textForActivity = SPECIAL_ACTIVITY_HOLIDAY.name;
 	}
@@ -69,11 +70,13 @@ ActiveDayTasks.propTypes = {
 	projectPhasesQuery: PropTypes.object.isRequired,
 	selectedActivity: PropTypes.object.isRequired,
 	selectedPhase: PropTypes.object.isRequired,
-	tabIndex: PropTypes.number
+	tabIndex: PropTypes.number,
+	isLoading: PropTypes.bool
 };
 
 ActiveDayTasks.defaultProps = {
 	disable: false,
 	isHoliday: false,
+	isLoading: false,
 	tabIndex: 0
 };

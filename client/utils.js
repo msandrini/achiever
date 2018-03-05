@@ -1,19 +1,20 @@
 /* global window */
 import moment from 'moment-timezone';
 import TimeDuration from 'time-duration';
+import DB from 'minimal-indexed-db';
 
 import strings from '../shared/strings';
 import { timeIsValid } from '../shared/utils';
 
 moment.locale('pt-br');
-moment.tz.setDefault("America/Sao_Paulo");
+moment.tz.setDefault('America/Sao_Paulo');
 
 export const STORAGEKEY = 'storedTimes';
 export const STORAGEDAYKEY = 'storedMoment';
 export const storedTimesIndex = {
 	startTime: 0,
-	startBreakTime: 1,
-	endBreakTime: 2,
+	breakStartTime: 1,
+	breakEndTime: 2,
 	endTime: 3
 };
 export const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
@@ -30,6 +31,12 @@ export const areTheSameDay = (date1, date2) => (
 );
 
 /**
+ * A storedValue is empty if null or 0
+ * @param {*} key is a value
+ */
+export const isEmptyStoredValue = key => ((key === null) || (typeof key === 'undefined'));
+
+/**
  * Replace the value of array[index] to be newValue
  * @param {[]} array to be replaced
  * @param {*} index of the element to be replaced
@@ -40,54 +47,6 @@ export const replacingValueInsideArray = (array, index, newValue) => [
 	newValue,
 	...array.slice(index + 1)
 ];
-
-const _setStorage = (key, data) => {
-	global.localStorage.setItem(key, JSON.stringify(data));
-};
-
-/**
- * This function set at storage {key, value} {dayKey: today's date}
- * @param {*} key to be used as a index key for data
- * @param {*} dayKey to be used as index key for the day
- * @param {*} data to be save as {key, data}
- */
-export const setTodayStorage = (data, key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
-	const today = moment();
-	_setStorage(dayKey, today.valueOf());
-	_setStorage(key, data);
-};
-
-const _getStorage = key => (
-	JSON.parse(global.localStorage.getItem(key))
-);
-
-/**
- * Get from storage {key, data} and {dayKey, dayOnLocalStorage}. If today's date is different from
- * LocalStorage it will delete it all
- * @param {*} key is the key to be used to get {key, data}
- * @param {*} dayKey is the key to be used to get {dayKey, dayOnLocalStorage}
- */
-export const getTodayStorage = (key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
-	const dayOnLocal = moment(_getStorage(dayKey));
-	const today = moment();
-	if (global.localStorage.getItem(dayKey)) {
-		if (areTheSameDay(dayOnLocal, today)) {
-			return _getStorage(key);
-		}
-	}
-	setTodayStorage({ storedTimes: [{}, {}, {}, {}], sentToday: false }, key, dayKey);
-	return { storedTimes: [{}, {}, {}, {}], sentToday: false };
-};
-
-/**
- * Remove from localStorage key, dayKey
- * @param {*} key
- * @param {*} dayKey
- */
-export const clearTodayStorage = (key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
-	localStorage.removeItem(key);
-	localStorage.removeItem(dayKey);
-};
 
 /**
  *
@@ -119,19 +78,27 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
  * @param {Object} stateStoredTimes
  * @param {Function} addTimeEntry
  */
-export const submitToServer = async (date, stateStoredTimes, phase, activity, addTimeEntry) => {
-	const startTime = stateStoredTimes[storedTimesIndex.startTime];
-	const startBreakTime = stateStoredTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = stateStoredTimes[storedTimesIndex.endBreakTime];
-	const endTime = stateStoredTimes[storedTimesIndex.endTime];
+export const submitToServer = async (
+	date,
+	stateStoredTimes,
+	addTimeEntry,
+	phase = null,
+	activity = null
+) => {
+	const {
+		startTime,
+		breakStartTime,
+		breakEndTime,
+		endTime
+	} = stateStoredTimes;
 
 	const timeEntryInput = {
 		date: date.format('YYYY-MM-DD'),
-		phaseId: phase.id,
-		activityId: activity.id,
+		phaseId: phase && phase.id,
+		activityId: activity && activity.id,
 		startTime: `${startTime.hours}:${startTime.minutes}`,
-		startBreakTime: `${startBreakTime.hours}:${startBreakTime.minutes}`,
-		endBreakTime: `${endBreakTime.hours}:${endBreakTime.minutes}`,
+		breakStartTime: `${breakStartTime.hours}:${breakStartTime.minutes}`,
+		breakEndTime: `${breakEndTime.hours}:${breakEndTime.minutes}`,
 		endTime: `${endTime.hours}:${endTime.minutes}`
 	};
 
@@ -145,15 +112,17 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
  * @return {string} the total duration as HH:mm
  */
 export const calculateLabouredHours = (storedTimes) => {
-	const startTime = storedTimes[storedTimesIndex.startTime];
-	const startBreakTime = storedTimes[storedTimesIndex.startBreakTime];
-	const endBreakTime = storedTimes[storedTimesIndex.endBreakTime];
-	const endTime = storedTimes[storedTimesIndex.endTime];
+	const {
+		startTime,
+		breakStartTime,
+		breakEndTime,
+		endTime
+	} = storedTimes;
 
 	const labouredHoursOnDay = new TimeDuration();
 	labouredHoursOnDay.add(endTime);
-	labouredHoursOnDay.subtract(endBreakTime);
-	labouredHoursOnDay.add(startBreakTime);
+	labouredHoursOnDay.subtract(breakEndTime);
+	labouredHoursOnDay.add(breakStartTime);
 	labouredHoursOnDay.subtract(startTime);
 
 	return labouredHoursOnDay.toString();
@@ -205,31 +174,74 @@ export const calculateHoursBalanceUpToDate = (controlDate, params) => {
 	};
 };
 
+export const dismemberTimeString = (timeString) => {
+	const validStringTime = rawTime => (Number.isNaN(Number(rawTime)) ? null : Number(rawTime));
+
+	const [rawHours, rawMinutes] = String(timeString).split(':');
+	const minutes = validStringTime(rawMinutes);
+	const hours = minutes === null ? null : validStringTime(rawHours);
+	return { hours, minutes };
+};
+
 /**
  * Given and array of times, check if it's completed and if hours are increasing
- * @param {Object[]} times is an array of obj {hours, minutes}
+ * @param {Object[]} times is an obj of startTime, breakStartTime, breakEndTime, endTime
  * @return {bool} if it is a valid array
  */
 export const timesAreValid = (times) => {
-	let comparisonTerm = 0;
-	const isSequentialTime = (time) => {
-		if (time && timeIsValid(time)) {
-			const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
-			const isLaterThanComparison = date > comparisonTerm;
-			comparisonTerm = Number(date);
-			return isLaterThanComparison;
-		}
-		return false;
+	const isSequential = (usedFields) => {
+		let comparisonTerm = 0;
+		const isSequentialTime = (timeName) => {
+			const time = times[timeName];
+			if (time && timeIsValid(time)) {
+				const date = new Date(2017, 0, 1, time.hours, time.minutes, 0, 0);
+				const isLaterThanComparison = date > comparisonTerm;
+				comparisonTerm = Number(date);
+				return isLaterThanComparison;
+			}
+			return false;
+		};
+
+		return usedFields.every(isSequentialTime);
 	};
 
-	return times.every(isSequentialTime);
+	if (times) {
+		const sequence = []
+		if (times.startTime && times.startTime.hours && times.startTime.minutes) {
+			sequence.push('startTime');
+		}
+		if (times.breakStartTime && times.breakStartTime.hours && times.breakStartTime.minutes) {
+			sequence.push('breakStartTime');
+		}
+		if (times.breakEndTime && times.breakEndTime.hours && times.breakEndTime.minutes) {
+			sequence.push('breakEndTime');
+		}
+		if (times.endTime && times.endTime.hours && times.endTime.minutes) {
+			sequence.push('endTime');
+		}
+		return isSequential(sequence);
+	}
+	return false;
 };
 
-export const dismemberTimeString = (timeString) => {
-	const [hours, minutesRaw] = String(timeString).split(':');
-	const numberMinutes = parseInt(minutesRaw, 10)
-	const minutes = (numberMinutes < 10) ? `0${numberMinutes}` : minutesRaw;
-	return { hours, minutes };
+export const allTimesAreFilled = (times) => {
+	const startTime = times.startTime &&
+		!isEmptyStoredValue(times.startTime.hours) &&
+		!isEmptyStoredValue(times.startTime.minutes);
+	const breakStartTime = times.breakStartTime &&
+		!isEmptyStoredValue(times.breakStartTime.hours) &&
+		!isEmptyStoredValue(times.breakStartTime.minutes);
+	const breakEndTime = times.breakEndTime &&
+		!isEmptyStoredValue(times.breakEndTime.hours) &&
+		!isEmptyStoredValue(times.breakEndTime.minutes);
+	const endTime = times.endTime &&
+		!isEmptyStoredValue(times.endTime.hours) &&
+		!isEmptyStoredValue(times.endTime.minutes);
+	return Boolean(startTime && endTime &&
+		(
+			(breakStartTime && breakEndTime) ||
+			(!breakStartTime && !breakEndTime)
+		));
 };
 
 export const isDayBlockedInPast = (day) => {
@@ -248,3 +260,57 @@ export const isDayBlockedInPast = (day) => {
 };
 
 export const isDayAfterToday = day => day.isAfter(moment(), 'day');
+
+const indexedDBToTimeEntry = async (database, stringOfDateQuery) => {
+	const indexedDbQuery = await database.getEntry(stringOfDateQuery);
+	const timeEntry = indexedDbQuery ?
+		{
+			activity: '',		// For the uses now, this doesn't matter
+			date: stringOfDateQuery,
+			breakEndTime: indexedDbQuery.breakEndTime,
+			endTime: indexedDbQuery.endTime,
+			phase: '',
+			breakStartTime: indexedDbQuery.breakStartTime,
+			startTime: indexedDbQuery.startTime,
+			total: indexedDbQuery.paidTime
+		} :
+		{
+			activity: '',
+			date: stringOfDateQuery,
+			breakEndTime: '',
+			endTime: '',
+			phase: '',
+			breakStartTime: '',
+			startTime: '',
+			total: ''
+		};
+	return timeEntry;
+};
+
+export const getTimeEntriesForWeek = async (choosenDay) => {
+	const momentChoosenDay = { ...choosenDay };
+	const firstDay = moment(momentChoosenDay).day(0);
+	const db = await DB('entries', 'date');
+	const promisses = [];
+
+	for (const weekDayIterator of [0, 1, 2, 3, 4, 5, 6]) {
+		promisses.push(indexedDBToTimeEntry(db, firstDay.day(weekDayIterator).format('YYYY-MM-DD')));
+	}
+
+	const timeEntries = await Promise.all(promisses);
+	return timeEntries;
+};
+
+export const isControlDatePersisted = async (controlDate) => {
+	try {
+		const db = await DB('entries', 'date');
+		const entry = await db.getEntry(controlDate.format('YYYY-MM-DD'));
+		if (areTheSameDay(controlDate, moment())) {
+			return Boolean(entry && entry.sentToday);
+		}
+		return Boolean(entry && entry.contractedTime);
+	} catch (e) {
+		console.error(e);
+		return false;
+	}
+};

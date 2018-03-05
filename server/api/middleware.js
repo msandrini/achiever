@@ -140,7 +140,7 @@ const getBalance = ($) => {
 };
 
 const allTimesTableToData = ($) => {
-	const data = [];
+	const data = [{ date: '1969-01-01' }];
 	const trimmedText = element => $(element).text().trim();
 	$('#all_records table tr').each((i, tr) => {
 		const tds = $(tr).find('td');
@@ -211,8 +211,8 @@ const dailyEntries = date => async (token) => {
 	} = workTimeFromHtml($);
 	const {
 		breakTimeId,
-		startBreakTime,
-		endBreakTime,
+		breakStartTime,
+		breakEndTime,
 		breakTimeDuration
 	} = breakTimeFromHtml($);
 
@@ -249,8 +249,8 @@ const dailyEntries = date => async (token) => {
 		activity,
 		startTime: (isValid && startTime) || '',
 		endTime: (isValid && endTime) || '',
-		startBreakTime: (isValid && startBreakTime) || '',
-		endBreakTime: (isValid && endBreakTime) || '',
+		breakStartTime: (isValid && breakStartTime) || '',
+		breakEndTime: (isValid && breakEndTime) || '',
 		total: (isValid && newTotal) || ''
 	};
 
