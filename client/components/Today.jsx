@@ -17,10 +17,7 @@ import {
 	allTimesAreFilled
 } from '../utils';
 import {
-	isValidTimeObject,
-	// getNextEmptyObjectOnArray,
-	// timeSetIsValid,
-	// allTimesAreFilled,
+	isActiveDayOjbect,
 	goBack
 } from './today/utils';
 
@@ -72,21 +69,21 @@ class Today extends React.Component {
 	async onMark(event) {
 		event.preventDefault();
 		// const this = this;
-		setTimeout(() => {
-			this.setState({ buttonDisabled: false });
-		}, 60000);
-		this.setState({ buttonDisabled: true });
-
 		const momentTime = {
 			hours: Number(moment().format('HH')),
 			minutes: Number(moment().format('mm'))
 		};
 		const index = this._getNextTimeEntryPoint();
-		const { storedTimes } = this.state;
+		const storedTimes = { ...this.state.storedTimes };
 		let { persisted } = this.state;
 		storedTimes[index] = momentTime;
 
 		if (timesAreValid(storedTimes)) {
+			setTimeout(() => {
+				this.setState({ buttonDisabled: false });
+			}, 60000);
+			this.setState({ buttonDisabled: true });
+
 			const db = await DB('entries', 'date');
 			// Insert it to indexedDB and then insert set state. Also, if needed, send to server;
 			let submited = false;
@@ -292,7 +289,7 @@ class Today extends React.Component {
 								key={value}
 								time={this._getTime(value)}
 								label={strings.times[index].label}
-								emphasis={isValidTimeObject(storedTimes[value])}
+								emphasis={isActiveDayOjbect(storedTimes[value])}
 							/>
 						))}
 					</div>

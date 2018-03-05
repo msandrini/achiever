@@ -215,7 +215,7 @@ class Edit extends React.Component {
 			event.preventDefault();
 			const { storedTimes, phase, activity } = { ...this.state };
 			const date = this.state.controlDate;
-			const ret = await submitToServer(date, storedTimes, phase, activity, callback);
+			const ret = await submitToServer(date, storedTimes, callback, phase, activity);
 			if (ret.successMessage) {
 				this.setState({ ...this.state, ...ret, persisted: true });
 				try {
