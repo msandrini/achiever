@@ -14,6 +14,7 @@ const referenceHours = [
 ];
 
 const keyIsNumber = key => (!Number.isNaN(Number(key)));
+const isEmptyStoredValue = key => ((key === null) || (typeof key === 'undefined'));
 
 class ActiveDayTimes extends React.Component {
 	constructor(props) {
@@ -49,8 +50,8 @@ class ActiveDayTimes extends React.Component {
 		const haveNoTimeInfo = ['startTime', 'breakStartTime', 'breakEndTime', 'endTime']
 			.map(key =>
 				(nextProps.storedTimes[key]			 &&
-					nextProps.storedTimes[key].hours === null &&
-					nextProps.storedTimes[key].minutes === null));
+					isEmptyStoredValue(nextProps.storedTimes[key].hours) &&
+					isEmptyStoredValue(nextProps.storedTimes[key].minutes)));
 
 		const breakIsEmpty = haveNoTimeInfo[1] && haveNoTimeInfo[2];
 		const allButBreakIsFilled = !haveNoTimeInfo[0] && !haveNoTimeInfo[3];	// Avoid start enbld
