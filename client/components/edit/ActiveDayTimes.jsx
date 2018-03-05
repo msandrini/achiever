@@ -5,6 +5,9 @@ import TimeGroup from './TimeGroup';
 import CheckBox from '../ui/CheckBox';
 
 import strings from '../../../shared/strings';
+import {
+	isEmptyStoredValue
+} from '../../utils';
 
 const referenceHours = [
 	{ type: 'startTime', value: 9 },
@@ -14,7 +17,6 @@ const referenceHours = [
 ];
 
 const keyIsNumber = key => (!Number.isNaN(Number(key)));
-const isEmptyStoredValue = key => ((key === null) || (typeof key === 'undefined'));
 
 class ActiveDayTimes extends React.Component {
 	constructor(props) {
