@@ -254,7 +254,10 @@ class Today extends React.Component {
 	_shouldButtonBeAvailable() {
 		return !(
 			this._getNextTimeEntryPoint() === '' ||
-			this.state.storedTimes.breakStartTime.hours === null
+			(
+				this.state.storedTimes.breakStartTime.hours === null &&
+				this.state.storedTimes.endTime.hours
+			)
 		);
 	}
 
