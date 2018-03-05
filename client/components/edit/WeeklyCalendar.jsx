@@ -33,19 +33,16 @@ const _getDateFromComposedObj = (dateObj, entryType) => {
  * @param {Object[]} storedTimes is an array of stored times
  */
 const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
-	const _isEmptyObj = obj => (
-		Object.keys(obj).length === 0 ? 0 : obj
-	);
 	let dayEntry = {
 		...timeEntryAtIndex
 	};
 	if (timesAreValid(storedTimes)) {
 		dayEntry = {
 			...timeEntryAtIndex,
-			startTime: new TimeDuration(_isEmptyObj(storedTimes[0])).toString(),
-			breakStartTime: new TimeDuration(_isEmptyObj(storedTimes[1])).toString(),
-			breakEndTime: new TimeDuration(_isEmptyObj(storedTimes[2])).toString(),
-			endTime: new TimeDuration(_isEmptyObj(storedTimes[3])).toString()
+			startTime: new TimeDuration(storedTimes.startTime).toString(),
+			breakStartTime: new TimeDuration(storedTimes.breakStartTime).toString(),
+			breakEndTime: new TimeDuration(storedTimes.breakEndTime).toString(),
+			endTime: new TimeDuration(storedTimes.endTime).toString()
 		};
 	}
 	return dayEntry;
@@ -133,12 +130,17 @@ class WeeklyCalendar extends React.Component {
 
 WeeklyCalendar.propTypes = {
 	controlDate: PropTypes.object,
-	storedTimes: PropTypes.array
+	storedTimes: PropTypes.object
 };
 
 WeeklyCalendar.defaultProps = {
 	controlDate: {},
-	storedTimes: []
+	storedTimes: {
+		breakEndTime: '',
+		breakStartTime: '',
+		endTime: '',
+		startTime: ''
+	}
 };
 
 export default WeeklyCalendar;

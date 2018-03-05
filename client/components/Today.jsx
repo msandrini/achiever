@@ -12,25 +12,33 @@ import StaticTime from './today/StaticTime';
 import PageLoading from './genericPages/PageLoading';
 import strings from '../../shared/strings';
 import {
-	submitToServer
+	submitToServer,
+	timesAreValid,
+	allTimesAreFilled
 } from '../utils';
 import {
 	isValidTimeObject,
-	getNextEmptyObjectOnArray,
-	timeSetIsValid,
-	allTheTimesAreFilled,
+	// getNextEmptyObjectOnArray,
+	// timeSetIsValid,
+	// allTimesAreFilled,
 	goBack
 } from './today/utils';
 
 const MODAL_ALERT = 'alert';
 const MODAL_CONFIRM = 'confirm';
+const storedTimePosition = ['startTime', 'breakStartTime', 'breakEndTime', 'endTime'];
 
 class Today extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			storedTimes: [{}, {}, {}, {}],
-			sentToday: false,
+			storedTimes: {
+				startTime: { hours: null, minutes: null },
+				breakStartTime: { hours: null, minutes: null },
+				breakEndTime: { hours: null, minutes: null },
+				endTime: { hours: null, minutes: null }
+			},
+			persisted: false,
 			showModal: null,
 			alertInfo: {},
 			buttonDisabled: false
@@ -69,22 +77,47 @@ class Today extends React.Component {
 		}, 60000);
 		this.setState({ buttonDisabled: true });
 
-		const momentTime = { hours: moment().format('HH'), minutes: moment().format('mm') };
+		const momentTime = {
+			hours: Number(moment().format('HH')),
+			minutes: Number(moment().format('mm'))
+		};
 		const index = this._getNextTimeEntryPoint();
-		const { storedTimes, sentToday } = this.state;
+		const { storedTimes } = this.state;
+		let { persisted } = this.state;
 		storedTimes[index] = momentTime;
 
-		if (timeSetIsValid(storedTimes)) {
+		if (timesAreValid(storedTimes)) {
 			const db = await DB('entries', 'date');
 			// Insert it to indexedDB and then insert set state. Also, if needed, send to server;
-			await db.put({ date: moment().format('YYYY-MM-DD'), storedTimes, sentToday });
+			let submited = false;
 			this.setState((prevState) => {
-				const newState = { ...prevState, storedTimes, sentToday };
+				const newState = { ...prevState, storedTimes, persisted };
 				if (index === 3) {
 					const date = moment();
-					submitToServer(date, storedTimes, this.props.addTimeEntry);
+					submited = submitToServer(date, storedTimes, this.props.addTimeEntry);
 				}
 				return newState;
+			});
+
+			if (submited) {
+				try {
+					await submited;
+					if (submited.successMessage) {
+						persisted = true;
+					} else {
+						persisted = false;
+					}
+				} catch (e) {
+					persisted = false;
+				}
+			}
+			await db.put({
+				date: moment().format('YYYY-MM-DD'),
+				startTime: storedTimes.startTime,
+				breakStartTime: storedTimes.breakStartTime,
+				breakEndTime: storedTimes.breakEndTime,
+				endTime: storedTimes.endTime,
+				persisted
 			});
 		} else {
 			this.setState({
@@ -101,16 +134,30 @@ class Today extends React.Component {
 		try {
 			const db = await DB('entries', 'date');
 			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
-			const { storedTimes } = todayEntry();
+			const {
+				startTime,
+				breakStartTime,
+				breakEndTime,
+				endTime
+			} = todayEntry;
+			const storedTimes = {
+				startTime,
+				breakStartTime,
+				breakEndTime,
+				endTime
+			};
 			const date = moment();
 			const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
 
 			if (ret.successMessage) {
-				this.setState({ storedTimes, sentToday: true });
+				this.setState({ storedTimes, persisted: true });
 				await db.put({
 					date: moment().format('YYYY-MM-DD'),
-					sentToday: true,
-					storedTimes
+					persisted: true,
+					startTime,
+					breakStartTime,
+					breakEndTime,
+					endTime
 				});
 			} else {
 				// Was not able to send to server even if user said to send
@@ -121,120 +168,94 @@ class Today extends React.Component {
 		}
 	}
 
-	async _checkEnteredValues(dayEntryQuery) {
-		const {	loading, dayEntry } = dayEntryQuery || {};
+	async _checkEnteredValues() {
+		try {
+			const db = await DB('entries', 'date');
+			// First fetch from DB and check if it's already there
+			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
+			const {
+				startTime,
+				breakStartTime,
+				breakEndTime,
+				endTime,
+				persisted
+			} = todayEntry || {
+				startTime: { hours: null, minutes: null },
+				breakStartTime: { hours: null, minutes: null },
+				breakEndTime: { hours: null, minutes: null },
+				endTime: { hours: null, minutes: null }
+			};
 
-		if (loading || !dayEntry) {
-			return;
-		}
+			const storedTimes = {
+				startTime,
+				breakStartTime,
+				breakEndTime,
+				endTime
+			};
 
-		const { timeEntry } = dayEntry;
-		if (timeEntry) {
-			const startTime = moment(timeEntry.startTime, 'H:mm');
-			const breakStartTime = moment(timeEntry.breakStartTime, 'H:mm');
-			const breakEndTime = moment(timeEntry.breakEndTime, 'H:mm');
-			const endTime = moment(timeEntry.endTime, 'H:mm');
+			if (storedTimes) {
+				this.setState({
+					storedTimes,
+					persisted
+				});
+			}
 
-			// If data is on server
-			if (startTime.isValid() &&
-				breakStartTime.isValid() &&
-				breakEndTime.isValid() &&
-				endTime.isValid()
-			) {
-				const storedTimes = [
-					{
-						hours: startTime.hours(),
-						minutes: startTime.minutes()
-					},
-					{
-						hours: breakStartTime.hours(),
-						minutes: breakStartTime.minutes()
-					},
-					{
-						hours: breakEndTime.hours(),
-						minutes: breakEndTime.minutes()
-					},
-					{
-						hours: endTime.hours(),
-						minutes: endTime.minutes()
-					}
-				];
-				try {
-					const db = await DB('entries', 'date');
-					await db.put({
-						date: moment().format('YYYY-MM-DD'),
-						sentToday: true,
-						storedTimes
-					});
-					this.setState({
-						storedTimes,
-						sentToday: true
-					});
-				} catch (e) {
-					console.error(e);
-				}
-			} else {
-				try {
-					const db = await DB('entries', 'date');
-					// First fetch from DB and check if it's already there
-					const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
-					const { storedTimes, sentToday } = todayEntry || {};
-
-					if (storedTimes) {
+			if (!persisted) {
+				if (allTimesAreFilled(storedTimes)) {
+					if (timesAreValid(storedTimes)) {
 						this.setState({
-							storedTimes,
-							sentToday
+							showModal: MODAL_CONFIRM
+						});
+					} else {
+						this.setState({
+							alertInfo: {
+								content: strings.invalidTime,
+								onClose: () => goBack()
+							},
+							showModal: MODAL_ALERT
 						});
 					}
-
-					if (!sentToday) {
-						if (allTheTimesAreFilled(storedTimes)) {
-							if (timeSetIsValid(storedTimes)) {
-								this.setState({
-									showModal: MODAL_CONFIRM
-								});
-							} else {
-								this.setState({
-									alertInfo: {
-										content: strings.invalidTime,
-										onClose: () => goBack()
-									},
-									showModal: MODAL_ALERT
-								});
-							}
-						}
-					}
-				} catch (e) {
-					console.error(e);
 				}
 			}
+		} catch (e) {
+			console.error(e);
 		}
 	}
 
 	_getTime(index) {
-		const storedTimesLength = this._getNextTimeEntryPoint();
-		if (storedTimesLength !== -1 && storedTimesLength < index) {
-			return { hours: 0, minutes: 0 };
-		}
 		return this.state.storedTimes[index];
 	}
 
 	_getButtonString() {
-		const len = this._getNextTimeEntryPoint();
+		const nextPosition = this._getNextTimeEntryPoint();
+		const len = storedTimePosition.findIndex(e => (e === nextPosition));
+		if (len !== -1) {
+			return (
+				<span>
+					{strings.markNow} <strong>{strings.times[len].label}</strong>
+				</span>
+			);
+		}
 		return (
-			<span>
-				{strings.markNow} <strong>{strings.times[len].label}</strong>
-			</span>
+			<span />
 		);
 	}
 
 	_getNextTimeEntryPoint() {
-		const storedTimes = [...this.state.storedTimes] || [];
-		return getNextEmptyObjectOnArray(storedTimes);
+		for (const value of storedTimePosition) {
+			const selectedStoredTimes = this.state.storedTimes[value];
+			if (selectedStoredTimes.hours === null || selectedStoredTimes.minutes === null) {
+				return value;
+			}
+		};
+		return '';
 	}
 
 	_shouldButtonBeAvailable() {
-		return this._getNextTimeEntryPoint() !== -1;
+		return !(
+			this._getNextTimeEntryPoint() === '' ||
+			this.state.storedTimes.breakStartTime.hours === null
+		);
 	}
 
 	_hideAlert() {
@@ -245,6 +266,13 @@ class Today extends React.Component {
 
 	render() {
 		const { dayEntryQuery } = this.props;
+		const {
+			alertInfo,
+			buttonDisabled,
+			showModal,
+			storedTimes
+		} = this.state;
+
 		return (
 			<div className="page-wrapper">
 				<PageLoading
@@ -256,12 +284,12 @@ class Today extends React.Component {
 				</h2>
 				<form onSubmit={e => this.onMark(e)} className="columns">
 					<div className="column column-half">
-						{[0, 1, 2, 3].map(index => (
+						{storedTimePosition.map((value, index) => (
 							<StaticTime
-								key={index}
-								time={this._getTime(index)}
+								key={value}
+								time={this._getTime(value)}
 								label={strings.times[index].label}
-								emphasis={isValidTimeObject(this.state.storedTimes[index])}
+								emphasis={isValidTimeObject(storedTimes[value])}
 							/>
 						))}
 					</div>
@@ -270,7 +298,7 @@ class Today extends React.Component {
 							<button
 								type="submit"
 								className="send send-today"
-								disabled={this.state.buttonDisabled}
+								disabled={buttonDisabled}
 							>
 								{this._getButtonString()}
 							</button>
@@ -280,12 +308,12 @@ class Today extends React.Component {
 					</div>
 				</form>
 				<AlertModal
-					active={this.state.showModal === MODAL_ALERT}
-					content={this.state.alertInfo.content}
-					onClose={this.state.alertInfo.onClose}
+					active={showModal === MODAL_ALERT}
+					content={alertInfo.content}
+					onClose={alertInfo.onClose}
 				/>
 				<ConfirmModal
-					active={this.state.showModal === MODAL_CONFIRM}
+					active={showModal === MODAL_CONFIRM}
 					content={strings.confirmSave}
 					onCancel={() => goBack()}
 					onConfirm={this._onConfirmSubmit}

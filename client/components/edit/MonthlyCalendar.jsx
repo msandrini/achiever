@@ -28,7 +28,7 @@ const _getStyleClassForCalendarDays = async () => {
 	];
 	if (allEntries) {
 		allEntries.forEach((day) => {
-			const elementToPush = isDayValid(day) ?
+			const elementToPush = isDayValid(day) &&  day.persisted ?
 				dayStyles[0]['calendar-checked'] :
 				dayStyles[1]['calendar-unchecked'];
 
