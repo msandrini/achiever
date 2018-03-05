@@ -31,6 +31,12 @@ export const areTheSameDay = (date1, date2) => (
 );
 
 /**
+ * A storedValue is empty if null or 0
+ * @param {*} key is a value
+ */
+export const isEmptyStoredValue = key => ((key === null) || (typeof key === 'undefined'));
+
+/**
  * Replace the value of array[index] to be newValue
  * @param {[]} array to be replaced
  * @param {*} index of the element to be replaced
@@ -72,7 +78,13 @@ const _addTimeEntry = async (timeEntryInput, addTimeEntry) => {
  * @param {Object} stateStoredTimes
  * @param {Function} addTimeEntry
  */
-export const submitToServer = async (date, stateStoredTimes, phase, activity, addTimeEntry) => {
+export const submitToServer = async (
+	date,
+	stateStoredTimes,
+	addTimeEntry,
+	phase = null,
+	activity = null
+) => {
 	const {
 		startTime,
 		breakStartTime,
@@ -82,8 +94,8 @@ export const submitToServer = async (date, stateStoredTimes, phase, activity, ad
 
 	const timeEntryInput = {
 		date: date.format('YYYY-MM-DD'),
-		phaseId: phase.id,
-		activityId: activity.id,
+		phaseId: phase && phase.id,
+		activityId: activity && activity.id,
 		startTime: `${startTime.hours}:${startTime.minutes}`,
 		breakStartTime: `${breakStartTime.hours}:${breakStartTime.minutes}`,
 		breakEndTime: `${breakEndTime.hours}:${breakEndTime.minutes}`,
@@ -214,17 +226,17 @@ export const timesAreValid = (times) => {
 
 export const allTimesAreFilled = (times) => {
 	const startTime = times.startTime &&
-		times.startTime.hours &&
-		times.startTime.minutes;
+		!isEmptyStoredValue(times.startTime.hours) &&
+		!isEmptyStoredValue(times.startTime.minutes);
 	const breakStartTime = times.breakStartTime &&
-		times.breakStartTime.hours &&
-		times.breakStartTime.minutes;
+		!isEmptyStoredValue(times.breakStartTime.hours) &&
+		!isEmptyStoredValue(times.breakStartTime.minutes);
 	const breakEndTime = times.breakEndTime &&
-		times.breakEndTime.hours &&
-		times.breakEndTime.minutes;
+		!isEmptyStoredValue(times.breakEndTime.hours) &&
+		!isEmptyStoredValue(times.breakEndTime.minutes);
 	const endTime = times.endTime &&
-		times.endTime.hours &&
-		times.endTime.minutes;
+		!isEmptyStoredValue(times.endTime.hours) &&
+		!isEmptyStoredValue(times.endTime.minutes);
 	return Boolean(startTime && endTime &&
 		(
 			(breakStartTime && breakEndTime) ||

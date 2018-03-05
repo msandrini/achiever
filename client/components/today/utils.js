@@ -4,7 +4,7 @@ export const isEmptyObject = obj => (
 	Object.keys(obj).length === 0
 );
 
-export const isValidTimeObject = obj => Boolean(obj.minutes && obj.hours);
+export const isActivyDayOjbect = obj => Boolean(obj.minutes !== null && obj.hours !== null);
 
 export const getNextEmptyObjectOnArray = (arr) => {
 	if (arr) {
