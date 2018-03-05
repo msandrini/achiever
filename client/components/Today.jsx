@@ -17,7 +17,7 @@ import {
 	allTimesAreFilled
 } from '../utils';
 import {
-	isActivyDayOjbect,
+	isActiveDayOjbect,
 	goBack
 } from './today/utils';
 
@@ -289,7 +289,7 @@ class Today extends React.Component {
 								key={value}
 								time={this._getTime(value)}
 								label={strings.times[index].label}
-								emphasis={isActivyDayOjbect(storedTimes[value])}
+								emphasis={isActiveDayOjbect(storedTimes[value])}
 							/>
 						))}
 					</div>
