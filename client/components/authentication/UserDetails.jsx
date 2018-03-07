@@ -13,7 +13,8 @@ import './UserDetails.styl';
 const _logout = async (event) => {
 	event.preventDefault();
 	removeAuthToken();
-	await DB('entries', 'date').then((db) => { db.flush(); });
+	const db = await DB('entries', 'date');
+	await db.flush();
 	window.location.reload();
 };
 
