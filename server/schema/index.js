@@ -31,15 +31,13 @@ const typeDefs = `
 
 	type TimeData {
 		date: String
-		dayOfWeek: String
 		contractedTime: String
 		startTime: String
 		endTime: String
-		paidTime: String
-		breakStartTime: String
-		breakEndTime: String
-		balanceTime: String
-		remarks: String
+		startBreakTime: String
+		endBreakTime: String
+		total: String
+		balance: String
 	}
 
 	type AllEntries {

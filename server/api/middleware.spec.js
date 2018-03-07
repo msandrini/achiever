@@ -1,16 +1,18 @@
 const cheerio = require('cheerio');
 const {
-	getBalance
+	getBalance,
+	extractBreakTime,
+	allTimesTableToData
 } = require('./middleware');
 
-const generateTableLine = (date, balance) => (`
+const generateTableLine = (date, balance, contractedTime, startTime, endTime, startBreakTime, endBreakTime, total) => (`
 <tr>
 	<td>${date}</td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
+	<td>${contractedTime}</td>
+	<td>${startTime}</td>
+	<td>${total}</td>
+	<td>My break started at ${startBreakTime} and finished at ${endBreakTime}</td>
+	<td>${endTime}</td>
 	<td></td>
 	<td></td>
 	<td>&nbsp;${balance}</td>
@@ -75,6 +77,54 @@ describe('middleware', () => {
 			const $ = cheerio.load(baseHtml);
 			const result = getBalance($);
 			expect(result).toEqual(targetBalance);
+		});
+	});
+
+	describe('extractBreakTime()', () => {
+		it('should extract the time from a given string', () => {
+			const breakTime = 'You have started your break time at 11:30:00 and have finished it by 12:34:56';
+			expect(extractBreakTime(breakTime)).toEqual({
+				startBreakTime: '11:30:00',
+				endBreakTime: '12:34:56'
+			});
+		});
+
+		it('should return empty strings when no break time is defined', () => {
+			const breakTime = 'You have no break time by the moment';
+			expect(extractBreakTime(breakTime)).toEqual({
+				startBreakTime: '',
+				endBreakTime: ''
+			});
+		});
+	});
+
+	describe('allTimesTableToData()', () => {
+		it('should return the report HTML as object', () => {
+			const expected = {
+				date: '2018-03-06',
+				contractedTime: '8:00',
+				startTime: '7:00',
+				endTime: '16:00',
+				startBreakTime: '11:45:00',
+				endBreakTime: '12:45:00',
+				total: '8:00',
+				balance: '34:56'
+			};
+			const baseHtml = `<table>
+				${generateTableLine(
+					`${expected.date} Tue`,
+					expected.balance,
+					expected.contractedTime,
+					expected.startTime,
+					expected.endTime,
+					expected.startBreakTime,
+					expected.endBreakTime,
+					expected.total)}
+			</table>`;
+
+			const $ = cheerio.load(baseHtml);
+			const result = allTimesTableToData($);
+			expect(result).toEqual([expected]);
 		});
 	});
 });

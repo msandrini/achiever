@@ -55,15 +55,13 @@ query allEntries {
         admission
         timeData {
             date
-            dayOfWeek
             contractedTime
             startTime
             endTime
-            paidTime
-            breakStartTime
-            breakEndTime
-            balanceTime
-            remarks
+            startBreakTime
+            endBreakTime
+            total
+            balance
         }
     }
 }
