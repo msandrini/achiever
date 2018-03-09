@@ -10,10 +10,11 @@ import { getAuthToken, removeAuthToken } from './token';
 
 import './UserDetails.styl';
 
-const _logout = (event) => {
+const _logout = async (event) => {
 	event.preventDefault();
 	removeAuthToken();
-	DB('entries', 'date').then((db) => { db.flush(); });
+	const db = await DB('entries', 'date');
+	await db.flush();
 	window.location.reload();
 };
 

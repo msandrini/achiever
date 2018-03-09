@@ -20,9 +20,7 @@ import {
 	areTheSameDay,
 	calculateHoursBalanceUpToDate,
 	calculateLabouredHours,
-	// dismemberTimeString,
 	isDayAfterToday,
-	// replacingValueInsideArray,
 	submitToServer,
 	timesAreValid,
 	getTimeEntriesForWeek,
@@ -41,7 +39,7 @@ class Edit extends React.Component {
 			controlDate: moment(),
 			controlDateIsValid: true,
 			controlDateIsPersisted: false,
-			labouredHoursOnDay: null,
+			labouredHoursOnDay: '0:00',
 			hoursBalanceUpToDate: {},
 			storedTimes: {
 				breakEndTime: { hours: null, minutes: null },
@@ -103,10 +101,6 @@ class Edit extends React.Component {
 		}
 
 		if (this.props.dayEntryQuery.loading && !dayEntryQuery.loading) {
-			// MAYBE: Do the two lines below
-			// const storedTimesAndInfos = await this._storedTimeFromDate(this.state.controlDate);
-			// this.setState(storedTimesAndInfos);
-			// Populate the phases and activity from the dayEntry.
 			await this._populateProjectPhaseAndActivity(projectPhasesQuery, dayEntryQuery);
 		}
 	}
@@ -125,8 +119,16 @@ class Edit extends React.Component {
 			return;
 		}
 
+		// If today, get from localStorage
+		// 		but WHAT IF its already in archivo?
+		// So, first check indexedDB:
+		//	 Is it there?
+		// 		-> No : So fetch from localStorage
+		//			-> Not there: empty
+		//		-> Yes: Fetch from indexedDB
+
 		// Get { persisted, labouredHoursOnDay, hoursBalanceUpToDate } for the selected day
-		const storedTimesAndInfos = await this._storedTimeFromDate(date);
+		const storedTimesAndInfos = await this._timeFromDate(date);
 		const controlDateIsPersisted = await isControlDatePersisted(date);
 
 		this.setState({
@@ -161,7 +163,7 @@ class Edit extends React.Component {
 			this.setState((currentState) => {
 				const storedTimes = {
 					...currentState.storedTimes,
-					[storedTimePosition[groupIndex]]: composedTime				// THIS IS WRONG ??
+					[storedTimePosition[groupIndex]]: composedTime
 				};
 
 				const labouredHoursOnDay = (timesAreValid(storedTimes) &&
@@ -184,7 +186,9 @@ class Edit extends React.Component {
 					hoursBalanceUpToDate
 				};
 
-				if (areTheSameDay(currentState.controlDate, moment())) {
+				// Change local DB (indexedDB) only if not persisted. The local change, if persisted,
+				// is only made on submit success :-)
+				if (!currentState.persisted) {
 					shouldUpdateIndexedDB = { ...newState };
 				}
 
@@ -195,12 +199,8 @@ class Edit extends React.Component {
 					const db = await DB('entries', 'date');
 					await db.put({
 						date: this.state.controlDate.format('YYYY-MM-DD'),
-						startTime: shouldUpdateIndexedDB.storedTimes.startTime,
-						breakStartTime: shouldUpdateIndexedDB.storedTimes.breakStartTime,
-						breakEndTime: shouldUpdateIndexedDB.storedTimes.breakEndTime,
-						endTime: shouldUpdateIndexedDB.storedTimes.endTime,
-						paidTime: shouldUpdateIndexedDB.labouredHoursOnDay,
-						persisted: shouldUpdateIndexedDB.persisted
+						persisted: shouldUpdateIndexedDB.persisted,
+						...shouldUpdateIndexedDB.storedTimes
 					});
 				} catch (e) {
 					console.error(e);
@@ -213,19 +213,19 @@ class Edit extends React.Component {
 		return async (event) => {
 			const _this = this;
 			event.preventDefault();
-			const { storedTimes, phase, activity } = { ...this.state };
-			const date = this.state.controlDate;
-			const ret = await submitToServer(date, storedTimes, callback, phase, activity);
+			const { controlDate, storedTimes, phase, activity } = { ...this.state };
+			const ret = await submitToServer(controlDate, storedTimes, callback, phase, activity);
 			if (ret.successMessage) {
-				this.setState({ ...this.state, ...ret, persisted: true });
 				try {
 					const db = await DB('entries', 'date');
 					await db.put({
-						date: date.format('YYYY-MM-DD'),
-						storedTimes,
+						date: controlDate.format('YYYY-MM-DD'),
+						...storedTimes,
 						persisted: true
 					});
-					_this.dayEntryQuery(date);
+					_this.dayEntryQuery(controlDate);
+
+					this.setState({ ...this.state, ...ret, persisted: true });
 				} catch (e) {
 					console.error(e);
 				}
@@ -282,8 +282,11 @@ class Edit extends React.Component {
 	/**
 	 * Return state hoursBalanceUpToDate based on weekentries
 	 * @param {Object} date is a Moment() of the selected day.
-	 * @param {Object} labouredHoursOnDay is how many hours the user has worked that day
-	 * @return {Object} { contractedHoursUpToDate, labouredHoursUpToDate }.
+	 * @param {Object} labouredHoursOnDay is how many hours the user worked that day
+	 * @return {Object} {
+	 * 	contractedHoursUpToDate		// This is how many hours the user should have worked
+	 * 	labouredHoursUpToDate 		// This is how many hours the user worked based on localStorage
+	 * }
 	 */
 	async _getHoursBalanceValues(date, labouredHoursOnDay) {
 		const weekTimeEntries = await getTimeEntriesForWeek(date);
@@ -299,11 +302,11 @@ class Edit extends React.Component {
 	}
 
 	/**
-	 * Given a date, select and propagate it from indexedDB
+	 * Given a date, select and return it from indexedDB
 	 * @param {Object} date - a moment date object
 	 * @return {storedTimes, persisted, labouredHoursOnDay, hoursBalanceUpToDate}
 	 */
-	async _storedTimeFromDate(date) {
+	async _timeFromDate(date) {
 		const db = await DB('entries', 'date');
 		const timeEntry = await db.getEntry(date.format('YYYY-MM-DD'));
 
@@ -314,7 +317,7 @@ class Edit extends React.Component {
 				breakStartTime: timeEntry.breakStartTime,
 				breakEndTime: timeEntry.breakEndTime,
 				endTime: timeEntry.endTime
-			} 
+			};
 			const labouredHoursOnDay = timeEntry.paidTime ||
 				calculateLabouredHours(timeEntriesStoredTimes);
 			const hoursBalanceUpToDate = await this._getHoursBalanceValues(
@@ -325,12 +328,8 @@ class Edit extends React.Component {
 			if (isToday) {
 				return ({
 					storedTimes: timeEntriesStoredTimes,
-					sent: timeEntry.sent,
-					labouredHoursOnDay: (
-						timeEntry.storedTimes &&
-						timesAreValid(timeEntry.storedTimes) &&
-						calculateLabouredHours(timeEntry.storedTimes)
-					) || '',
+					persisted: timeEntry.persisted,
+					labouredHoursOnDay,
 					hoursBalanceUpToDate
 				});
 			}
@@ -342,6 +341,12 @@ class Edit extends React.Component {
 				hoursBalanceUpToDate
 			});
 		}
+
+		// Default return;
+		const hoursBalanceUpToDate = await this._getHoursBalanceValues(
+			date,
+			'00:00'
+		);
 		return {
 			storedTimes: {
 				startTime: { hours: null, minutes: null },
@@ -350,8 +355,8 @@ class Edit extends React.Component {
 				endTime: { hours: null, minutes: null }
 			},
 			persisted: false,
-			labouredHoursOnDay: '0',
-			hoursBalanceUpToDate: '0'
+			labouredHoursOnDay: '00:00',
+			hoursBalanceUpToDate
 		};
 	}
 

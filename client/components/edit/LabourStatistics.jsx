@@ -70,9 +70,9 @@ LabourStatistics.propTypes = {
 LabourStatistics.defaultProps = {
 	dayHoursLaboured: '0:00',
 	dayHoursEntitled: '8:00',
+	rawBalance: '0:00',
 	weekHoursLaboured: new TimeDuration(),
-	weekHoursEntitled: new TimeDuration('40:00'),
-	rawBalance: '0:00'
+	weekHoursEntitled: new TimeDuration('40:00')
 };
 
 export default LabourStatistics;
