@@ -9,7 +9,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import strings from '../../../shared/strings';
 import {
 	timesAreValid,
-	getTimeEntriesForWeek
+	getTimeEntriesForWeek,
+	getTodayStorage
 } from '../../utils';
 
 import './WeeklyCalendar.styl';
@@ -24,7 +25,9 @@ const noOp = () => () => {};
 
 const _getDateFromComposedObj = (dateObj, entryType) => {
 	const dateFormatSent = 'YYYY-MM-DD H:mm';
-	return moment(`${dateObj.date} ${dateObj[entryType]}`, dateFormatSent).toDate();
+	const HH = dateObj[entryType].hours;
+	const MM = dateObj[entryType].minutes;
+	return moment(`${dateObj.date} ${HH}:${MM}`, dateFormatSent).toDate();
 };
 
 
@@ -39,10 +42,10 @@ const _storedTimesToDayEntry = (storedTimes, timeEntryAtIndex) => {
 	if (timesAreValid(storedTimes)) {
 		dayEntry = {
 			...timeEntryAtIndex,
-			startTime: new TimeDuration(storedTimes.startTime).toString(),
-			breakStartTime: new TimeDuration(storedTimes.breakStartTime).toString(),
-			breakEndTime: new TimeDuration(storedTimes.breakEndTime).toString(),
-			endTime: new TimeDuration(storedTimes.endTime).toString()
+			startTime: new TimeDuration(storedTimes.startTime).toObject(),
+			breakStartTime: new TimeDuration(storedTimes.breakStartTime).toObject(),
+			breakEndTime: new TimeDuration(storedTimes.breakEndTime).toObject(),
+			endTime: new TimeDuration(storedTimes.endTime).toObject()
 		};
 	}
 	return dayEntry;
@@ -53,16 +56,20 @@ const _convertweekEntriesToEvents = (timeEntries, controlDate, storedTimes) => {
 	if (timeEntries) {
 		const events = [];
 		[0, 1, 2, 3, 4, 5, 6].forEach((index) => {
-			const dayEntry = timeEntries[index].date === controlDate.format('YYYY-MM-DD') ?
-				_storedTimesToDayEntry(storedTimes, timeEntries[index]) :
-				timeEntries[index];
+			let dayEntry = timeEntries[index];
+			if (timeEntries[index].date === controlDate.format('YYYY-MM-DD')) {
+				dayEntry = _storedTimesToDayEntry(storedTimes, timeEntries[index]);
+			} else if (timeEntries[index].date === moment().format('YYYY-MM-DD') &&
+				timeEntries[index].total === '') {
+				dayEntry = 	getTodayStorage();
+			}
 
 			if (dayEntry) {
 				const hasBreak = Boolean((
 					dayEntry.breakStartTime &&
-					dayEntry.breakStartTime !== '0:00' &&
+					dayEntry.breakStartTime === { hours: 0, minute: 0 } &&
 					dayEntry.breakEndTime &&
-					dayEntry.breakEndTime !== '0:00'
+					dayEntry.breakEndTime === { hours: 0, minute: 0 }
 				));
 
 				if (hasBreak) {

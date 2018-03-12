@@ -16,6 +16,8 @@ const LabourStatistics = (props) => {
 		rawBalance
 	} = props;
 
+	const dayHoursLabouredTD = new TimeDuration(dayHoursLaboured);
+	const dayHoursEntitledTD = new TimeDuration(dayHoursEntitled);
 	const weekHoursBalance = new TimeDuration(weekHoursEntitled - weekHoursLaboured);
 	const weekHoursBalanceIndicatorString = (weekHoursBalance > 0) ?
 		strings.hoursBalanceOnWeekUpToNowDebt : strings.hoursBalanceOnWeekUpToNowSurplus;
@@ -23,15 +25,16 @@ const LabourStatistics = (props) => {
 	const weekHoursBalanceString = weekHoursBalanceIndicatorString
 		.replace('{0}', weekHoursBalanceNormalised.toString());
 	const rawBalanceDuration = new TimeDuration(rawBalance);
-	const totalBalance = new TimeDuration(rawBalanceDuration - weekHoursBalance);
+	const controlDateBalance = new TimeDuration(dayHoursLabouredTD - dayHoursEntitledTD);
+	const totalBalance = new TimeDuration(rawBalanceDuration - controlDateBalance);
 
 	return (
 		<div className="gauges">
 			{ dayHoursLaboured &&
 				<div className="day-hours">
 					<GaugeBar
-						currentValue={new TimeDuration(dayHoursLaboured).toMinutes()}
-						referenceValue={new TimeDuration(dayHoursEntitled).toMinutes()}
+						currentValue={dayHoursLabouredTD.toMinutes()}
+						referenceValue={dayHoursEntitledTD.toMinutes()}
 					/>
 					<span>
 						{strings.hoursLabouredOnThisDay}

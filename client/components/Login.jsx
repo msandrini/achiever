@@ -9,7 +9,7 @@ import * as queries from '../queries.graphql';
 import Panel from './ui/Panel';
 import strings from '../../shared/strings';
 import { setAuthToken, removeAuthToken } from './authentication/token';
-import { dismemberTimeString } from '../utils';
+import { dismemberTimeString, propagateQuery } from '../utils';
 
 import apolloClient from '../apolloClient';
 
@@ -65,20 +65,8 @@ class Login extends React.Component {
 				const allEntriesQuery = await apolloClient.query({
 					query: queries.allEntries
 				});
-				const timeData = [];
-				allEntriesQuery.data.allEntries.timeData.forEach((timeEntry) => {
-					timeData.push({
-						...timeEntry,
-						startTime: dismemberTimeString(timeEntry.startTime),
-						breakStartTime: dismemberTimeString(timeEntry.breakStartTime),
-						breakEndTime: dismemberTimeString(timeEntry.breakEndTime),
-						endTime: dismemberTimeString(timeEntry.endTime),
-						persisted: true
-					});
-				});
-				// Propagate the date to indexedDB
-				const db = await DB('entries', 'date');
-				await db.put(timeData);
+
+				await propagateQuery('allEntries', allEntriesQuery.data.allEntries);
 				window.location.reload();
 			}
 		} catch (error) {

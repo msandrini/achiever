@@ -25,28 +25,61 @@ export const SPECIAL_ACTIVITY_HOLIDAY = { id: 99999, name: 'Holiday' };
  * @param {Date} date2
  */
 export const areTheSameDay = (date1, date2) => (
-	date1.day() === date2.day() &&
-	date1.month() === date2.month() &&
-	date1.year() === date2.year()
+	date1.format('YYYY-MM-DD') === date2.format('YYYY-MM-DD')
 );
+
+const _setStorage = (key, data) => {
+	global.localStorage.setItem(key, JSON.stringify(data));
+};
+
+/**
+ * This function set at storage {key, value} {dayKey: today's date}
+ * @param {*} key to be used as a index key for data
+ * @param {*} dayKey to be used as index key for the day
+ * @param {*} data to be save as {key, data}
+ */
+export const setTodayStorage = (data, key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
+	const today = moment();
+	_setStorage(dayKey, today.valueOf());
+	_setStorage(key, data);
+};
+
+const _getStorage = key => (
+	JSON.parse(global.localStorage.getItem(key))
+);
+
+/**
+ * Get from storage {key, data} and {dayKey, dayOnLocalStorage}. If today's date is different from
+ * LocalStorage it will delete it all
+ * @param {*} key is the key to be used to get {key, data}
+ * @param {*} dayKey is the key to be used to get {dayKey, dayOnLocalStorage}
+ */
+export const getTodayStorage = (key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
+	const dayOnLocal = moment(_getStorage(dayKey));
+	const today = moment();
+	if (global.localStorage.getItem(dayKey)) {
+		if (areTheSameDay(dayOnLocal, today)) {
+			return _getStorage(key);
+		}
+	}
+	return null;
+};
+
+/**
+ * Remove from localStorage key, dayKey
+ * @param {*} key
+ * @param {*} dayKey
+ */
+export const clearTodayStorage = (key = STORAGEKEY, dayKey = STORAGEDAYKEY) => {
+	localStorage.removeItem(key);
+	localStorage.removeItem(dayKey);
+};
 
 /**
  * A storedValue is empty if null or 0
  * @param {*} key is a value
  */
 export const isEmptyStoredValue = key => ((key === null) || (typeof key === 'undefined'));
-
-/**
- * Replace the value of array[index] to be newValue
- * @param {[]} array to be replaced
- * @param {*} index of the element to be replaced
- * @param {*} newValue new value ot array[index]
- */
-export const replacingValueInsideArray = (array, index, newValue) => [
-	...array.slice(0, index),
-	newValue,
-	...array.slice(index + 1)
-];
 
 /**
  *
@@ -125,6 +158,9 @@ export const calculateLabouredHours = (storedTimes) => {
 	labouredHoursOnDay.add(breakStartTime);
 	labouredHoursOnDay.subtract(startTime);
 
+	if (labouredHoursOnDay.valueOf() < 0) {
+		return '00:00';
+	}
 	return labouredHoursOnDay.toString();
 };
 
@@ -148,6 +184,16 @@ const getLabouredHoursUpToDate = (controlDate, timeEntries, labouredHoursOnDay =
 	return new TimeDuration(minutesLabouredUpToDate);
 };
 
+/**
+ * Calculate how many hours the user should have worked and how many it worked until controlDate
+ * params:
+ *  - labouredHoursOnDay: String 'HH:MM' of how many hours the user worked on controlDate
+ *  - contractedHoursForADay: String 'HH:MM' how many hours the user should work on a day
+ *  - timeEntries: An array of timeEntry of the selected week (check getTimeEntriesForWeek)
+ * @param {Object} controlDate - moment object
+ * @param {Object} params - { labouredHoursOnDay, contractedHoursForADay, timeEntries}
+ * @returns {Object} - { contractedHoursUpToDate, labouredHoursUpToDate }
+ */
 export const calculateHoursBalanceUpToDate = (controlDate, params) => {
 	const {
 		labouredHoursOnDay,
@@ -174,6 +220,11 @@ export const calculateHoursBalanceUpToDate = (controlDate, params) => {
 	};
 };
 
+/**
+ * Given an string of HH:MM returns an object of it
+ * @param {string} timeString - "HH:MM"
+ * @returns {Object} {hours: Number(HH), minutes: (MM)}
+ */
 export const dismemberTimeString = (timeString) => {
 	const validStringTime = rawTime => (Number.isNaN(Number(rawTime)) ? null : Number(rawTime));
 
@@ -184,7 +235,9 @@ export const dismemberTimeString = (timeString) => {
 };
 
 /**
- * Given and array of times, check if it's completed and if hours are increasing
+ * Given and array of times, check if if hours are increasing and are a valid time for the app:
+ *  - All but lunch times
+ *  - All are complete
  * @param {Object[]} times is an obj of startTime, breakStartTime, breakEndTime, endTime
  * @return {bool} if it is a valid array
  */
@@ -206,7 +259,7 @@ export const timesAreValid = (times) => {
 	};
 
 	if (times) {
-		const sequence = []
+		const sequence = [];
 		if (times.startTime && times.startTime.hours && times.startTime.minutes) {
 			sequence.push('startTime');
 		}
@@ -224,6 +277,11 @@ export const timesAreValid = (times) => {
 	return false;
 };
 
+/**
+ * Check if all the fields of times are complete
+ * @param {Object} times - {startTime:{}, breakStartTime: {}, breakEndTime:{}, endTime: {}}
+ * @returns {Bool}
+ */
 export const allTimesAreFilled = (times) => {
 	const startTime = times.startTime &&
 		!isEmptyStoredValue(times.startTime.hours) &&
@@ -244,6 +302,11 @@ export const allTimesAreFilled = (times) => {
 		));
 };
 
+/**
+ * Check if a choosenDay is should appear as blocked following the rule:
+ *
+ * @param {Object} day - moment object
+ */
 export const isDayBlockedInPast = (day) => {
 	const today = moment();
 	if (day.isSameOrAfter(today, 'day')) {
@@ -259,8 +322,18 @@ export const isDayBlockedInPast = (day) => {
 	return day.isBefore(today, 'week');
 };
 
+/**
+ * Check if a choosen day is after the moment()
+ * @param {Object} day - moment object
+ * @returns {Bool}
+ */
 export const isDayAfterToday = day => day.isAfter(moment(), 'day');
 
+/**
+ * 
+ * @param {IndexedDB} database 
+ * @param {*} stringOfDateQuery - "YYYY-MM-DD"
+ */
 const indexedDBToTimeEntry = async (database, stringOfDateQuery) => {
 	const indexedDbQuery = await database.getEntry(stringOfDateQuery);
 	const timeEntry = indexedDbQuery ?
@@ -287,10 +360,21 @@ const indexedDBToTimeEntry = async (database, stringOfDateQuery) => {
 	return timeEntry;
 };
 
-export const getTimeEntriesForWeek = async (choosenDay) => {
+/**
+ * Given a day (moment), generates an array containing timeEntry for the week of the select day
+ * getting data from indexedDB
+ * @param {Object} choosenDay - moment object
+ * @param {IndexedDB} openendDB - a indexedDB afeter opened
+ */
+export const getTimeEntriesForWeek = async (choosenDay, openendDB = null) => {
+	let db;
+	if (openendDB) {
+		db = openendDB;
+	} else {
+		db = await DB('entries', 'date');
+	}
 	const momentChoosenDay = { ...choosenDay };
 	const firstDay = moment(momentChoosenDay).day(0);
-	const db = await DB('entries', 'date');
 	const promisses = [];
 
 	for (const weekDayIterator of [0, 1, 2, 3, 4, 5, 6]) {
@@ -301,16 +385,64 @@ export const getTimeEntriesForWeek = async (choosenDay) => {
 	return timeEntries;
 };
 
+/**
+ * check if the choosen day (controDate) is on indexedDB
+ * @param {Object} controlDate - a moment object
+ */
 export const isControlDatePersisted = async (controlDate) => {
 	try {
 		const db = await DB('entries', 'date');
 		const entry = await db.getEntry(controlDate.format('YYYY-MM-DD'));
 		if (areTheSameDay(controlDate, moment())) {
-			return Boolean(entry && entry.sentToday);
+			return Boolean(entry && entry.persisted);
 		}
 		return Boolean(entry && entry.contractedTime);
 	} catch (e) {
 		console.error(e);
 		return false;
 	}
+};
+
+
+/**
+ * Insert on indexedDB the desired query data
+ * @param {String} query - query type: allEntries or dayEntry
+ * @param {*} allEntries - for allEntriesQuery->allEntries and dayEntryQuery->dayEntry
+ */
+export const propagateQuery = async (query, data) => {
+	if (query === 'allEntries') {
+		const timeData = [];
+		data.timeData.forEach((timeEntry) => {
+			timeData.push({
+				...timeEntry,
+				startTime: dismemberTimeString(timeEntry.startTime),
+				breakStartTime: dismemberTimeString(timeEntry.breakStartTime),
+				breakEndTime: dismemberTimeString(timeEntry.breakEndTime),
+				endTime: dismemberTimeString(timeEntry.endTime),
+				persisted: true
+			});
+		});
+		// Propagate the date to indexedDB
+		const db = await DB('entries', 'date');
+		await db.put(timeData);
+	} else if (query === 'dayEntry') {
+		const db = await DB('entries', 'date');
+		await db.put({
+			...data,
+			persisted: true
+		});
+	}
+};
+
+/**
+ * Get the last balance from indexedDB
+ * @param {Object} date - moment.js object
+ */
+export const getLastBalance = async (date) => {
+	const lastDay = date.format('ddd') === 'Mon' ?
+		date.subtract(1, 'days').startOf('day') :
+		moment().day(-6); 		// Last Friday
+	const db = await DB('entries', 'date');
+	const query = db.getEntry(lastDay.format('YYYY-MM-DD'));
+	return query.balanceTime;
 };
