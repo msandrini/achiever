@@ -7,12 +7,14 @@ import * as queries from '../../queries.graphql';
 import Link from '../router/Link';
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
+import { clearTodayStorage } from '../../utils';
 
 import './UserDetails.styl';
 
 const _logout = async (event) => {
 	event.preventDefault();
 	removeAuthToken();
+	clearTodayStorage();
 	const db = await DB('entries', 'date');
 	await db.flush();
 	window.location.reload();

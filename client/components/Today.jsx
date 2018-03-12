@@ -12,9 +12,11 @@ import StaticTime from './today/StaticTime';
 import PageLoading from './genericPages/PageLoading';
 import strings from '../../shared/strings';
 import {
+	allTimesAreFilled,
+	getTodayStorage,
+	setTodayStorage,
 	submitToServer,
-	timesAreValid,
-	allTimesAreFilled
+	timesAreValid
 } from '../utils';
 import {
 	isActiveDayOjbect,
@@ -66,57 +68,58 @@ class Today extends React.Component {
 		}
 	}
 
+	/**
+	 * Function called on button click. It should fill the localStorage/state when clicked and
+	 * send the data to server on the last iteration
+	 * @param {*} event
+	 */
 	async onMark(event) {
 		event.preventDefault();
-		// const this = this;
+		// Should insert on localStorage...
+
 		const momentTime = {
 			hours: Number(moment().format('HH')),
 			minutes: Number(moment().format('mm'))
 		};
+
+		const date = moment();
 		const index = this._getNextTimeEntryPoint();
 		const storedTimes = { ...this.state.storedTimes };
-		let { persisted } = this.state;
 		storedTimes[index] = momentTime;
 
 		if (timesAreValid(storedTimes)) {
+			if (index === 'endTime') {
+				try {
+					// Send it and push from dayEntry to indexedDB
+					// (do not need to insert on localStorage)
+					const submited = await submitToServer(date, storedTimes, this.props.addTimeEntry);
+					if (submited) {
+						// Insert it on storedTimes
+						this.setState({
+							storedTimes,
+							persisted: true
+						});
+
+						// fetch day entry
+						// insert it on indexedDB
+					}
+					return;
+				} catch (e) {
+					console.error(e);
+					return;
+				}
+			}
+
 			setTimeout(() => {
 				this.setState({ buttonDisabled: false });
 			}, 60000);
 			this.setState({ buttonDisabled: true });
 
-			const db = await DB('entries', 'date');
-			// Insert it to indexedDB and then insert set state. Also, if needed, send to server;
-			let submited = false;
-			this.setState((prevState) => {
-				const newState = { ...prevState, storedTimes, persisted };
-				if (index === 3) {
-					const date = moment();
-					submited = submitToServer(date, storedTimes, this.props.addTimeEntry);
-				}
-				return newState;
-			});
-
-			if (submited) {
-				try {
-					await submited;
-					if (submited.successMessage) {
-						persisted = true;
-					} else {
-						persisted = false;
-					}
-				} catch (e) {
-					persisted = false;
-				}
-			}
-			await db.put({
-				date: moment().format('YYYY-MM-DD'),
-				startTime: storedTimes.startTime,
-				breakStartTime: storedTimes.breakStartTime,
-				breakEndTime: storedTimes.breakEndTime,
-				endTime: storedTimes.endTime,
-				persisted
-			});
+			// Insert info
+			this.setState({ storedTimes });
+			setTodayStorage(storedTimes);
 		} else {
+			// Alert that times are not valid
 			this.setState({
 				alertInfo: {
 					content: strings.invalidAddTime,
@@ -128,95 +131,74 @@ class Today extends React.Component {
 	}
 
 	async _onConfirmSubmit() {
+		this.setState({});
+
+		// Send it and push from dayEntry to indexedDB
+		// (do not need to insert on localStorage)
+		// fetch day entry
+		// insert it on indexedDB
+	}
+
+	/**
+	 * Check if today data is in indexedDB,
+	 * if so, propagate it to state
+	 * if not:
+	 *  Check localStorage:
+	 * 	if so, propagate it to state
+	 *	if not, propagate empty state.
+	 */
+	async _checkEnteredValues() {
 		try {
+			// First fetch from DB and check if it's already there
 			const db = await DB('entries', 'date');
 			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
-			const {
-				startTime,
-				breakStartTime,
-				breakEndTime,
-				endTime
-			} = todayEntry;
-			const storedTimes = {
-				startTime,
-				breakStartTime,
-				breakEndTime,
-				endTime
-			};
-			const date = moment();
-			const ret = await submitToServer(date, storedTimes, this.props.addTimeEntry);
 
-			if (ret.successMessage) {
-				this.setState({ storedTimes, persisted: true });
-				await db.put({
-					date: moment().format('YYYY-MM-DD'),
-					persisted: true,
+			if (todayEntry) {
+				// Fill the fields using this info
+				const {
 					startTime,
 					breakStartTime,
 					breakEndTime,
 					endTime
-				});
-			} else {
-				// Was not able to send to server even if user said to send
-				goBack();
+				} = todayEntry;
+				const storedTimes = {
+					startTime,
+					breakStartTime,
+					breakEndTime,
+					endTime
+				};
+				this.setState({ storedTimes, persisted: true });
+				return;
 			}
 		} catch (e) {
 			console.error(e);
 		}
-	}
 
-	async _checkEnteredValues() {
-		try {
-			const db = await DB('entries', 'date');
-			// First fetch from DB and check if it's already there
-			const todayEntry = await db.getEntry(moment().format('YYYY-MM-DD'));
-			const {
-				startTime,
-				breakStartTime,
-				breakEndTime,
-				endTime,
-				persisted
-			} = todayEntry || {
-				startTime: { hours: null, minutes: null },
-				breakStartTime: { hours: null, minutes: null },
-				breakEndTime: { hours: null, minutes: null },
-				endTime: { hours: null, minutes: null }
-			};
-
-			const storedTimes = {
-				startTime,
-				breakStartTime,
-				breakEndTime,
-				endTime
-			};
-
-			if (storedTimes) {
-				this.setState({
-					storedTimes,
-					persisted
-				});
-			}
-
-			if (!persisted) {
-				if (allTimesAreFilled(storedTimes)) {
-					if (timesAreValid(storedTimes)) {
-						this.setState({
-							showModal: MODAL_CONFIRM
-						});
-					} else {
-						this.setState({
-							alertInfo: {
-								content: strings.invalidTime,
-								onClose: () => goBack()
-							},
-							showModal: MODAL_ALERT
-						});
-					}
+		// If not in indexedDB, check localStorage.
+		const storedTimes = getTodayStorage();
+		if (storedTimes) {
+			if (allTimesAreFilled(storedTimes)) {
+				if (timesAreValid(storedTimes)) {
+					// Confirm send modal
+					this.setState({
+						showModal: MODAL_CONFIRM
+					});
+				} else {
+					// Invald times modal
+					this.setState({
+						alertInfo: {
+							content: strings.invalidTime,
+							onClose: () => goBack()
+						},
+						showModal: MODAL_ALERT
+					});
 				}
+			} else {
+				this.setState({ storedTimes, persisted: false });
 			}
-		} catch (e) {
-			console.error(e);
 		}
+
+		// If not in localStorage - do nothing :-)
 	}
 
 	_getTime(index) {
