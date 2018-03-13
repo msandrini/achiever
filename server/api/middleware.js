@@ -3,6 +3,7 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment');
 const jwt = require('jwt-simple');
+const TimeDuration = require('time-duration');
 
 const logger = require('../logger');
 const {
@@ -139,37 +140,7 @@ const getBalance = ($) => {
 	return lastFridayBalance;
 };
 
-const allTimesTableToData = ($) => {
-	const data = [];
-	const trimmedText = element => $(element).text().trim();
-	$('#all_records table tr').each((i, tr) => {
-		const tds = $(tr).find('td');
-		if (tds.length) {
-			const [date, dayOfWeek] = trimmedText(tds[0]).split(' ');
-			const breaksText = trimmedText($(tds[4]).find('div'));
-			const breaksRegExp = /Break from (\d{1,2}:\d{1,2}):00 to (\d{1,2}:\d{1,2}):00/;
-			const breaksMatch = breaksText.match(breaksRegExp);
-			const breakStartTime = breaksMatch ? breaksMatch[1] : '';
-			const breakEndTime = breaksMatch ? breaksMatch[2] : '';
-
-			data.push({
-				date,
-				dayOfWeek,
-				contractedTime: trimmedText(tds[1]),
-				startTime: trimmedText(tds[2]),
-				endTime: trimmedText(tds[5]),
-				paidTime: trimmedText(tds[3]),
-				breakStartTime,
-				breakEndTime,
-				balanceTime: trimmedText(tds[8]),
-				remarks: trimmedText(tds[9])
-			});
-		}
-	});
-	return data;
-};
-
-const userDetails = () => async (token) => {
+const reportHistory = async (token) => {
 	const cookieJar = cookieJarFactory(token);
 	const { personId } = await getUserDetails(cookieJar);
 	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/report.php`, cookieJar);
@@ -178,6 +149,11 @@ const userDetails = () => async (token) => {
 	};
 
 	const responseHtml = await rp(options);
+	return responseHtml;
+};
+
+const userDetails = () => async (token) => {
+	const responseHtml = await reportHistory(token);
 	const error = extractError(responseHtml);
 	if (error) {
 		throw error;
@@ -257,25 +233,86 @@ const dailyEntries = date => async (token) => {
 	return timeEntry;
 };
 
-const allEntries = () => async (token) => {
-	const cookieJar = cookieJarFactory(token);
-	const { personId } = await getUserDetails(cookieJar);
-	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/report.php`, cookieJar);
-	options.qs = {
-		init_userid: personId
+const extractBreakTime = breakTime => {
+	const regex = /(\d{1,2}:\d{1,2}:\d{1,2})/g;
+	const matches = breakTime.match(regex);
+	const [startBreakTime = '', endBreakTime = '']  = matches || [];
+	
+	return {
+		startBreakTime,
+		endBreakTime
 	};
+};
 
-	const responseHtml = await rp(options);
+const headers = {
+	DATE: 0,
+	CONTRACTED_TIME: 1,
+	START_TIME: 2,
+	WORKED_TIME: 3,
+	BREAK_TIME: 4,
+	END_TIME: 5,
+	BALANCE: 8
+};
+
+const allTimesTableToData = ($) => {
+	const data = [];
+	const trimmedText = element => $(element).text().trim();
+	$('table tr').each((i, tr) => {
+		const tds = $(tr).find('td');
+		if (tds.length) {
+			const [date] = trimmedText(tds[headers.DATE]).split(' ');
+			const breakTime = trimmedText($(tds[headers.BREAK_TIME]));
+
+			data.push({
+				date,
+				contractedTime: trimmedText(tds[headers.CONTRACTED_TIME]),
+				startTime: trimmedText(tds[headers.START_TIME]),
+				endTime: trimmedText(tds[headers.END_TIME]),
+				...extractBreakTime(breakTime),
+				total: trimmedText(tds[headers.WORKED_TIME]),
+				balance: trimmedText(tds[headers.BALANCE])
+			});
+		}
+	});
+
+	return data;
+};
+
+const getTodayEntries = async(token, { contractedTime, balance }) => {
+	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);	
+
+	if (!!todayEntry.id) {
+		const balanceDuration = new TimeDuration(balance);
+		balanceDuration.subtract(contractedTime).add(todayEntry.total);
+
+		return [{
+			contractedTime,
+			...todayEntry,
+			balance: balanceDuration.toString()
+		}];
+	}
+
+	return [];
+};
+
+const allEntries = () => async (token) => {
+	const responseHtml = await reportHistory(token);
 	const error = extractError(responseHtml);
 	if (error) {
 		throw error;
 	}
 
+	logger.info('All entries called');
+
 	const $ = cheerio.load(responseHtml);
 	const name = $('h4').eq(0).text().trim();
 	const admissionRaw = $('h4').eq(1).text();
 	const admission = admissionRaw.replace('Admission:', '').trim();
-	const timeData = allTimesTableToData($);
+	const allEntries = allTimesTableToData($);
+	const todayEntry = await getTodayEntries(token, allEntries[0]);
+	const timeData = [...todayEntry, ...allEntries];
+
+	logger.info('All entries finished');
 
 	return {
 		name,
@@ -412,5 +449,7 @@ module.exports = {
 	activities,
 	phases,
 	userDetails,
-	getBalance
+	getBalance,
+	extractBreakTime,
+	allTimesTableToData
 };

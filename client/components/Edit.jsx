@@ -502,6 +502,7 @@ export default compose(
 	graphql(queries.updateTimeEntry, { name: 'updateTimeEntry' }),
 	graphql(queries.projectPhases, { name: 'projectPhasesQuery' }),
 	graphql(queries.userDetails, { name: 'userDetailsQuery' }),
+	graphql(queries.allEntries, { name: 'allEntriesQuery' }),
 	graphql(queries.weekEntries, {
 		name: 'weekEntriesQuery',
 		options: {
