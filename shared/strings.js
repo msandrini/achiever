@@ -75,6 +75,8 @@ const strings = {
 	cancelled: 'Cancelado',
 	todayPage: 'Horas de hoje',
 	editPage: 'Editar horários',
+	timeEntryPage: 'Apontamento de horas',
+	selectedDate: 'Dia selecionado',
 	dateBeingEdited: 'Dia sendo editado',
 	todayDate: 'Dia de hoje',
 	login: 'Entrada',

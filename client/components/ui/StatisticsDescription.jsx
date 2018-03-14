@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import strings from '../../../shared/strings';
 import './StatisticsDescription.styl';
 
 const StatisticsDescription = ({ description, value }) => (
-	<span className='StatisticsDescription'>
+	<span className="StatisticsDescription">
 		{description} <strong>{value}</strong>
 	</span>
 );

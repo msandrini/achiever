@@ -1,0 +1,23 @@
+@import "../../styles/_colours.styl"
+@import "../../styles/_standards.styl"
+
+.Button[disabled]
+	opacity: 0.5
+
+.Button
+	font-size: 24px
+	display: block
+	font-weight: bold
+	margin: 10px 0 0 70px
+	width: 230px
+	height: 64px
+	background-color: darkBlueColour
+	color: #fff
+	border-radius: 5px
+	cursor: pointer
+	&:focus
+		outline: none
+		border: focusInputColour solid 2px;
+		text-shadow: 0 0 10px rgba(255,255,255, .6)
+	&:hover
+		background-color: transitionColour1

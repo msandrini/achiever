@@ -1,0 +1,54 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import './InputTime.styl';
+
+const _getHours = value => value ? value.split(':')[0] : '';
+const _getMinutes = value => value ? value.split(':')[1] : '';
+
+const InputTime = ({
+	label,
+	value,
+	isDisabled,
+	onChangeTime
+}) => (
+	<fieldset className="InputTime">
+		<label>
+			<span className="label">{label}</span>
+			<input
+				type="number"
+				value={_getHours(value)}
+				min={0}
+				max={23}
+				placeholder="0"
+				disabled={isDisabled}
+				onChange={event => onChangeTime(event.target.value)}
+			/>
+			<span className="separator">:</span>
+			<input
+				type="number"
+				value={_getMinutes(value)}
+				min={0}
+				max={59}
+				placeholder="00"
+				disabled={isDisabled}
+				onChange={event => onChangeTime(event.target.value)}
+			/>
+		</label>
+	</fieldset>
+);
+
+export default InputTime;
+
+InputTime.propTypes = {
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	isDisabled: PropTypes.bool,
+	onChangeTime: PropTypes.func
+};
+
+InputTime.defaultProps = {
+	value: '0:00',
+	isDisabled: false,
+	onChangeTime: () => {}
+};
