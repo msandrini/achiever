@@ -14,7 +14,7 @@ class TimeEntryContainer extends React.Component {
 		super(props);
 
 		this.state = {
-			selectedDate: moment(),
+			selectedDate: moment().format('YYYY-MM-DD'),
 			selectedEntry: null,
 			activites: null
 		};
@@ -27,7 +27,7 @@ class TimeEntryContainer extends React.Component {
 
 		const selectedEntry = this.state.selectedEntry ||
 			timeData.find(data =>
-				data.date === this.state.selectedDate.format('YYYY-MM-DD')) || {};
+				data.date === this.state.selectedDate) || {};
 
 		const activities = this.state.activites ||
 			this.props.phasesQuery.phases ?
@@ -36,7 +36,7 @@ class TimeEntryContainer extends React.Component {
 
 		return (<TimeEntry
 			entries={timeData}
-			selectedDate={this.state.selectedDate}
+			selectedDate={moment(this.state.selectedDate)}
 			selectedEntry={selectedEntry}
 			phases={this.props.phasesQuery.phases}
 			activities={activities}
