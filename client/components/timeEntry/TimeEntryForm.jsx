@@ -9,9 +9,6 @@ import SelectGroup from '../ui/SelectGroup';
 import strings from '../../../shared/strings';
 import { Entries } from '../../PropTypes';
 
-const _isSpecialCases = (activities, selectedActivity) =>
-	!activities.includes(selectedActivity);
-
 const TimeEntryForm = ({
 	data,
 	phases,
@@ -19,6 +16,7 @@ const TimeEntryForm = ({
 	selectedPhase,
 	selectedActivity,
 	isDisabled,
+	isSpecialCase,
 	onChangePhase,
 	onChangeActivity
 }) => (
@@ -38,34 +36,34 @@ const TimeEntryForm = ({
 			options={activities}
 			selected={selectedActivity}
 			onChange={onChangeActivity}
-			showTextInstead={_isSpecialCases(activities, selectedActivity) ? selectedActivity : null}
+			showTextInstead={isSpecialCase ? selectedActivity : null}
 			isDisabled={isDisabled}
 		/>
 		<InputTime
 			label={strings.times[0].label}
 			value={data.startTime}
 			isDisabled={isDisabled}
-			isHidden={_isSpecialCases(activities, selectedActivity)}
+			isHidden={isSpecialCase}
 		/>
 		<InputTime
 			label={strings.times[1].label}
 			value={data.startBreakTime}
 			isDisabled={isDisabled}
-			isHidden={_isSpecialCases(activities, selectedActivity)}
+			isHidden={isSpecialCase}
 		/>
 		<InputTime
 			label={strings.times[2].label}
 			value={data.endBreakTime}
 			isDisabled={isDisabled}
-			isHidden={_isSpecialCases(activities, selectedActivity)}
+			isHidden={isSpecialCase}
 		/>
 		<InputTime
 			label={strings.times[3].label}
 			value={data.endTime}
 			isDisabled={isDisabled}
-			isHidden={_isSpecialCases(activities, selectedActivity)}
+			isHidden={isSpecialCase}
 		/>
-		<Button label={strings.send} isHidden={_isSpecialCases(activities, selectedActivity)} />
+		<Button label={strings.send} isHidden={isSpecialCase} />
 	</div>
 );
 
@@ -78,6 +76,7 @@ TimeEntryForm.propTypes = {
 	selectedPhase: PropTypes.string,
 	selectedActivity: PropTypes.string,
 	isDisabled: PropTypes.bool,
+	isSpecialCase: PropTypes.bool,
 	onChangePhase: PropTypes.func,
 	onChangeActivity: PropTypes.func
 };
@@ -89,6 +88,7 @@ TimeEntryForm.defaultProps = {
 	selectedPhase: null,
 	selectedActivity: null,
 	isDisabled: false,
+	isSpecialCase: false,
 	onChangePhase: () => {},
 	onChangeActivity: () => {}
 };

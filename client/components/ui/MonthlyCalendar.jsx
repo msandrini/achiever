@@ -54,12 +54,13 @@ const MonthlyCalendar = ({ selectedDate, onDateChange, timeEntries }) => (
 );
 
 MonthlyCalendar.propTypes = {
-	selectedDate: PropTypes.object.isRequired,
+	selectedDate: PropTypes.object,
 	onDateChange: PropTypes.func,
 	timeEntries: PropTypes.array
 };
 
 MonthlyCalendar.defaultProps = {
+	selectedDate: {},
 	onDateChange: () => {},
 	timeEntries: []
 };

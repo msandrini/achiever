@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TimeDuration from 'time-duration';
 
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
@@ -9,21 +8,21 @@ import TimeEntryForm from './TimeEntryForm';
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
 
-const formatValue = value => (new TimeDuration(value)).toMinutes();
-
 const TimeEntry = ({
 	entries,
 	selectedDate,
 	selectedEntry,
 	selectedPhase,
 	selectedActivity,
+	statistics,
 	phases,
 	activities,
-	onDateChange
+	onDateChange,
+	isSpecialCase
 }) => (
 	<div className="TimeEntry">
 		<h2 className="current-date">
-			{strings.selectedDate}: <strong>{selectedDate.format('L')}</strong>
+			{strings.selectedDate}: <strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
 		</h2>
 
 		<div className="columns">
@@ -34,11 +33,11 @@ const TimeEntry = ({
 					onDateChange={onDateChange}
 				/>
 				<LabourStatistics
-					dayBalance={formatValue(selectedEntry.total)}
-					weekBalance={formatValue(selectedEntry.weekBalance)}
-					totalBalance={formatValue(selectedEntry.balance)}
-					contractedTime={formatValue(selectedEntry.contractedTime)}
-					weekDay={selectedDate.isoWeekday()}
+					dayBalance={statistics.dayBalance}
+					weekBalance={statistics.weekBalance}
+					totalBalance={statistics.totalBalance}
+					contractedTime={statistics.contractedTime}
+					weekDay={statistics.weekDay}
 				/>
 			</div>
 			<div className="column column-half">
@@ -49,6 +48,7 @@ const TimeEntry = ({
 					selectedPhase={selectedPhase}
 					selectedActivity={selectedActivity}
 					isDisabled={false}
+					isSpecialCase={isSpecialCase}
 					onChangePhase={() => {}}
 					onChangeActivity={() => {}}
 				/>
@@ -57,16 +57,22 @@ const TimeEntry = ({
 	</div>
 );
 
-export default TimeEntry;
-
 TimeEntry.propTypes = {
 	entries: PropTypes.arrayOf(Entries),
 	selectedDate: PropTypes.object,
 	selectedEntry: Entries,
 	selectedPhase: PropTypes.string,
 	selectedActivity: PropTypes.string,
+	statistics: PropTypes.shape({
+		dayBalance: PropTypes.number,
+		weekBalance: PropTypes.number,
+		totalBalance: PropTypes.number,
+		contractedTime: PropTypes.number,
+		weekDay: PropTypes.number
+	}),
 	phases: PropTypes.arrayOf(PropTypes.string),
 	activities: PropTypes.arrayOf(PropTypes.string),
+	isSpecialCase: PropTypes.bool,
 	onDateChange: PropTypes.func
 };
 
@@ -76,6 +82,8 @@ TimeEntry.defaultProps = {
 	selectedEntry: {},
 	selectedPhase: null,
 	selectedActivity: null,
+	statistics: {},
+	isSpecialCase: false,
 	phases: {
 		default: 0,
 		options: []
@@ -86,3 +94,5 @@ TimeEntry.defaultProps = {
 	},
 	onDateChange: null
 };
+
+export default TimeEntry;
