@@ -37,7 +37,7 @@ const TimeEntry = ({
 				/>
 				<LabourStatistics
 					dayBalance={formatValue(selectedEntry.total)}
-					weekBalance={formatValue(selectedEntry.total)}
+					weekBalance={formatValue(selectedEntry.weekBalance)}
 					totalBalance={formatValue(selectedEntry.balance)}
 					contractedTime={formatValue(selectedEntry.contractedTime)}
 					weekDay={selectedDate.isoWeekday()}

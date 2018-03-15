@@ -279,7 +279,7 @@ const allTimesTableToData = ($) => {
 };
 
 const getTodayEntries = async (token, { contractedTime, balance }) => {
-	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);	
+	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);
 
 	if (todayEntry.id) {
 		const balanceDuration = new TimeDuration(balance);
@@ -293,6 +293,31 @@ const getTodayEntries = async (token, { contractedTime, balance }) => {
 	}
 
 	return [];
+};
+
+const calculateWeekBalance = (entries) => {
+	let lastWeeksInYear = -1;
+	let weekBalance = new TimeDuration('0:00');
+
+	const result = [];
+	for (let i = 0; i < entries.length; i++) { // eslint-disable-line
+		const index = entries.length - i - 1;
+		const entry = entries[index];
+		const weeksInYear = moment(entry.date).isoWeeks();
+
+		if (weeksInYear !== lastWeeksInYear) {
+			weekBalance = new TimeDuration('0:00');
+		}
+
+		lastWeeksInYear = weeksInYear;
+		if (entry.total) {
+			weekBalance.add(entry.total);
+		}
+
+		result[index] = ({ ...entry, weekBalance: weekBalance.toString() });
+	}
+
+	return result;
 };
 
 const allEntries = () => async (token) => {
@@ -310,7 +335,7 @@ const allEntries = () => async (token) => {
 	const admission = admissionRaw.replace('Admission:', '').trim();
 	const allEntriesData = allTimesTableToData($);
 	const todayEntry = await getTodayEntries(token, allEntriesData[0]);
-	const entries = [...todayEntry, ...allEntriesData];
+	const entries = calculateWeekBalance([...todayEntry, ...allEntriesData]);
 
 	logger.info('All entries finished');
 

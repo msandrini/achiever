@@ -8,6 +8,7 @@ export const Entries = PropTypes.shape({
 	endTime: PropTypes.string,
 	total: PropTypes.string,
 	contractedTime: PropTypes.string,
+	weekBalance: PropTypes.string,
 	balance: PropTypes.string,
 	phase: PropTypes.string,
 	activity: PropTypes.string
