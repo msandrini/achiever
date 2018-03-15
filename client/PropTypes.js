@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const TimeData = PropTypes.shape({
+export const Entries = PropTypes.shape({
 	date: PropTypes.string,
 	startTime: PropTypes.string,
 	startBreakTime: PropTypes.string,
@@ -34,7 +34,7 @@ export const AllEntriesQuery = PropTypes.shape({
 	allEntries: PropTypes.shape({
 		admission: PropTypes.string,
 		name: PropTypes.string,
-		timeData: PropTypes.arrayOf(TimeData)
+		entries: PropTypes.arrayOf(Entries)
 	}),
 	error: PropTypes.string,
 	loading: PropTypes.bool

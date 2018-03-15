@@ -53,7 +53,7 @@ query allEntries {
     allEntries {
         name
         admission
-        timeData {
+        entries {
             date
             contractedTime
             startTime
@@ -61,6 +61,7 @@ query allEntries {
             startBreakTime
             endBreakTime
             total
+			weekBalance
             balance
         }
     }

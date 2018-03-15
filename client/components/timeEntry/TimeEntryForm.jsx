@@ -7,7 +7,7 @@ import SelectGroup from '../ui/SelectGroup';
 
 import strings from '../../../shared/strings';
 import {
-	TimeData,
+	Entries,
 	Phases,
 	Activities
 } from '../../PropTypes';
@@ -57,7 +57,7 @@ const TimeEntryForm = ({ data, phases, activities }) => (
 export default TimeEntryForm;
 
 TimeEntryForm.propTypes = {
-	data: TimeData,
+	data: Entries,
 	phases: Phases,
 	activities: Activities
 };

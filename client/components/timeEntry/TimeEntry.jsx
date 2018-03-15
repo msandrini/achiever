@@ -7,7 +7,7 @@ import LabourStatistics from '../ui/LabourStatistics';
 import TimeEntryForm from './TimeEntryForm';
 
 import {
-	TimeData,
+	Entries,
 	Phases,
 	Activities
 } from '../../PropTypes';
@@ -57,9 +57,9 @@ const TimeEntry = ({
 export default TimeEntry;
 
 TimeEntry.propTypes = {
-	entries: PropTypes.arrayOf(TimeData),
+	entries: PropTypes.arrayOf(Entries),
 	selectedDate: PropTypes.object,
-	selectedEntry: TimeData,
+	selectedEntry: Entries,
 	phases: Phases,
 	activities: Activities,
 	onDateChange: PropTypes.func

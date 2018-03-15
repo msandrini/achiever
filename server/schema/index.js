@@ -29,7 +29,7 @@ const typeDefs = `
 		total: String
 	}
 
-	type TimeData {
+	type Entries {
 		date: String
 		contractedTime: String
 		startTime: String
@@ -37,13 +37,14 @@ const typeDefs = `
 		startBreakTime: String
 		endBreakTime: String
 		total: String
+		weekBalance: String
 		balance: String
 	}
 
 	type AllEntries {
 		name: String
 		admission: String
-		timeData: [TimeData]
+		entries: [Entries]
 	}
 
 	type WeekEntries {

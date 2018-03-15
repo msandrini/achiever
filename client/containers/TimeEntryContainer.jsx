@@ -9,9 +9,9 @@ import {
 	PhasesQuery
 } from '../PropTypes';
 
-const _changeDate = (timeData, date) => () => ({
+const _changeDate = (entries, date) => () => ({
 	selectedDate: date.format('YYYY-MM-DD'),
-	selectedEntry: timeData.find(data =>
+	selectedEntry: entries.find(data =>
 		data.date === date.format('YYYY-MM-DD'))
 });
 
@@ -28,11 +28,11 @@ class TimeEntryContainer extends React.Component {
 
 	render() {
 		const {
-			timeData
-		} = this.props.allEntriesQuery.allEntries || { timeData: [{}] };
+			entries
+		} = this.props.allEntriesQuery.allEntries || { entries: [{}] };
 
 		const selectedEntry = this.state.selectedEntry ||
-			timeData.find(data =>
+			entries.find(data =>
 				data.date === this.state.selectedDate) || {};
 
 		const activities = this.state.activites ||
@@ -41,12 +41,12 @@ class TimeEntryContainer extends React.Component {
 			{};
 
 		return (<TimeEntry
-			entries={timeData}
+			entries={entries}
 			selectedDate={moment(this.state.selectedDate)}
 			selectedEntry={selectedEntry}
 			phases={this.props.phasesQuery.phases}
 			activities={activities}
-			onDateChange={date => this.setState(_changeDate(timeData, date))}
+			onDateChange={date => this.setState(_changeDate(entries, date))}
 		/>);
 	}
 }

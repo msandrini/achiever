@@ -233,11 +233,11 @@ const dailyEntries = date => async (token) => {
 	return timeEntry;
 };
 
-const extractBreakTime = breakTime => {
+const extractBreakTime = (breakTime) => {
 	const regex = /(\d{1,2}:\d{1,2}:\d{1,2})/g;
 	const matches = breakTime.match(regex);
-	const [startBreakTime = '', endBreakTime = '']  = matches || [];
-	
+	const [startBreakTime = '', endBreakTime = ''] = matches || [];
+
 	return {
 		startBreakTime,
 		endBreakTime
@@ -278,10 +278,10 @@ const allTimesTableToData = ($) => {
 	return data;
 };
 
-const getTodayEntries = async(token, { contractedTime, balance }) => {
+const getTodayEntries = async (token, { contractedTime, balance }) => {
 	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);	
 
-	if (!!todayEntry.id) {
+	if (todayEntry.id) {
 		const balanceDuration = new TimeDuration(balance);
 		balanceDuration.subtract(contractedTime).add(todayEntry.total);
 
@@ -308,16 +308,16 @@ const allEntries = () => async (token) => {
 	const name = $('h4').eq(0).text().trim();
 	const admissionRaw = $('h4').eq(1).text();
 	const admission = admissionRaw.replace('Admission:', '').trim();
-	const allEntries = allTimesTableToData($);
-	const todayEntry = await getTodayEntries(token, allEntries[0]);
-	const timeData = [...todayEntry, ...allEntries];
+	const allEntriesData = allTimesTableToData($);
+	const todayEntry = await getTodayEntries(token, allEntriesData[0]);
+	const entries = [...todayEntry, ...allEntriesData];
 
 	logger.info('All entries finished');
 
 	return {
 		name,
 		admission,
-		timeData
+		entries
 	};
 };
 
