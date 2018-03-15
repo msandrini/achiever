@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StatisticsDescription should render with a properly 1`] = `
+exports[`GaugeDescription should render with a properly 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <StatisticsDescription
+  Symbol(enzyme.__unrendered__): <GaugeDescription
     description="Some description"
-    value="08:00"
+    value={480}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -24,10 +24,10 @@ ShallowWrapper {
         "Some description",
         " ",
         <strong>
-          08:00
+          8:00
         </strong>,
       ],
-      "className": "StatisticsDescription",
+      "className": "GaugeDescription",
     },
     "ref": null,
     "rendered": Array [
@@ -38,10 +38,10 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "host",
         "props": Object {
-          "children": "08:00",
+          "children": "8:00",
         },
         "ref": null,
-        "rendered": "08:00",
+        "rendered": "8:00",
         "type": "strong",
       },
     ],
@@ -57,10 +57,10 @@ ShallowWrapper {
           "Some description",
           " ",
           <strong>
-            08:00
+            8:00
           </strong>,
         ],
-        "className": "StatisticsDescription",
+        "className": "GaugeDescription",
       },
       "ref": null,
       "rendered": Array [
@@ -71,10 +71,10 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "host",
           "props": Object {
-            "children": "08:00",
+            "children": "8:00",
           },
           "ref": null,
-          "rendered": "08:00",
+          "rendered": "8:00",
           "type": "strong",
         },
       ],
