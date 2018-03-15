@@ -9,6 +9,12 @@ import {
 	PhasesQuery
 } from '../PropTypes';
 
+const _changeDate = (timeData, date) => () => ({
+	selectedDate: date.format('YYYY-MM-DD'),
+	selectedEntry: timeData.find(data =>
+		data.date === date.format('YYYY-MM-DD'))
+});
+
 class TimeEntryContainer extends React.Component {
 	constructor(props) {
 		super(props);
@@ -40,6 +46,7 @@ class TimeEntryContainer extends React.Component {
 			selectedEntry={selectedEntry}
 			phases={this.props.phasesQuery.phases}
 			activities={activities}
+			onDateChange={date => this.setState(_changeDate(timeData, date))}
 		/>);
 	}
 }

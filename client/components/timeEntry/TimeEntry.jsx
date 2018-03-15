@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import TimeDuration from 'time-duration';
 
 import MonthlyCalendar from '../ui/MonthlyCalendar';
@@ -14,21 +13,6 @@ import {
 } from '../../PropTypes';
 import strings from '../../../shared/strings';
 
-/*
-+---TimeEntry
-    +---MonthlyCalendar
-	+---LabourStatistics
-		+---Gauge
-        	+---GaugeBar
-        	+---GaugeDescription
-    +---TimeEntryForm
-        +---MessagePanel
-        +---SelectGroup
-		+---InputTime
-        +---Button
-    +---WeeklyCalendar
-*/
-
 const formatValue = value => (new TimeDuration(value)).toMinutes();
 
 const TimeEntry = ({
@@ -36,7 +20,8 @@ const TimeEntry = ({
 	selectedDate,
 	selectedEntry,
 	phases,
-	activities
+	activities,
+	onDateChange
 }) => (
 	<div className="TimeEntry">
 		<h2 className="current-date">
@@ -48,6 +33,7 @@ const TimeEntry = ({
 				<MonthlyCalendar
 					selectedDate={selectedDate}
 					timeEntries={entries}
+					onDateChange={onDateChange}
 				/>
 				<LabourStatistics
 					dayBalance={formatValue(selectedEntry.total)}
@@ -75,7 +61,8 @@ TimeEntry.propTypes = {
 	selectedDate: PropTypes.object,
 	selectedEntry: TimeData,
 	phases: Phases,
-	activities: Activities
+	activities: Activities,
+	onDateChange: PropTypes.func
 };
 
 TimeEntry.defaultProps = {
@@ -89,5 +76,6 @@ TimeEntry.defaultProps = {
 	activities: {
 		default: 0,
 		options: []
-	}
+	},
+	onDateChange: null
 };

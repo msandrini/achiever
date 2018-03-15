@@ -11,35 +11,35 @@ import {
 import './MonthlyCalendar.styl';
 
 const _getStyleClassForCalendarDays = (timeEntries) => {
-  const checked = [];
-  const unchecked = [];
-  const locked = [];
-  const futureDay = [];
+	const checked = [];
+	const unchecked = [];
+	const locked = [];
+	const futureDay = [];
 
-  timeEntries.forEach(dayEntry => {
-    const day = moment(dayEntry.date);
+	timeEntries.forEach((dayEntry) => {
+		const day = moment(dayEntry.date);
 
-    if (dayEntry.total) {
-      checked.push(day);
-    } else {
-      unchecked.push(day);
-    }
+		if (dayEntry.total) {
+			checked.push(day);
+		} else {
+			unchecked.push(day);
+		}
 
-    if (isDayBlockedInPast(day)) {
-      locked.push(day);
-    }
+		if (isDayBlockedInPast(day)) {
+			locked.push(day);
+		}
 
-    if (isDayAfterToday(day)) {
-      futureDay.push(day);
-    }
-  });
+		if (isDayAfterToday(day)) {
+			futureDay.push(day);
+		}
+	});
 
 	return [
-    { 'calendar-checked': checked },
+		{ 'calendar-checked': checked },
 		{ 'calendar-unchecked': unchecked },
 		{ 'calendar-locked': locked },
 		{ 'calendar-future-day': futureDay }
-  ];
+	];
 };
 
 const MonthlyCalendar = ({ selectedDate, onDateChange, timeEntries }) => (
