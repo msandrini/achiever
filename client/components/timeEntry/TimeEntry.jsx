@@ -54,7 +54,7 @@ const TimeEntry = ({
 					weekBalance={formatValue(selectedEntry.total)}
 					totalBalance={formatValue(selectedEntry.balance)}
 					contractedTime={formatValue(selectedEntry.contractedTime)}
-					weekDay={moment().isoWeekday()}
+					weekDay={selectedDate.isoWeekday()}
 				/>
 			</div>
 			<div className="column column-half">

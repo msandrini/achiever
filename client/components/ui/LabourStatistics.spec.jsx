@@ -14,11 +14,10 @@ const defaultProps = {
 describe('LabourStatistics', () => {
 	describe('render', () => {
 		it('should properly render with surplus or debit', () => {
-			const wrapperSurplus = shallow(<LabourStatistics />);
-			const wrapperDebt = shallow(<LabourStatistics />);
+			const props = { ...defaultProps, weekBalance: 8 * 60 * 4 };
+			const wrapperSurplus = shallow(<LabourStatistics {...props} />);
+			const wrapperDebt = shallow(<LabourStatistics {...defaultProps} />);
 
-			wrapperDebt.setProps(defaultProps);
-			wrapperSurplus.setProps({ ...defaultProps, weekBalance: 8 * 60 * 4 });
 			expect(wrapperDebt).toMatchSnapshot();
 			expect(wrapperSurplus).toMatchSnapshot();
 		});
