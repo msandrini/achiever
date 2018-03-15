@@ -6,11 +6,7 @@ import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
 import TimeEntryForm from './TimeEntryForm';
 
-import {
-	Entries,
-	Phases,
-	Activities
-} from '../../PropTypes';
+import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
 
 const formatValue = value => (new TimeDuration(value)).toMinutes();
@@ -19,6 +15,8 @@ const TimeEntry = ({
 	entries,
 	selectedDate,
 	selectedEntry,
+	selectedPhase,
+	selectedActivity,
 	phases,
 	activities,
 	onDateChange
@@ -48,6 +46,11 @@ const TimeEntry = ({
 					data={selectedEntry}
 					phases={phases}
 					activities={activities}
+					selectedPhase={selectedPhase}
+					selectedActivity={selectedActivity}
+					isDisabled={false}
+					onChangePhase={() => {}}
+					onChangeActivity={() => {}}
 				/>
 			</div>
 		</div>
@@ -60,8 +63,10 @@ TimeEntry.propTypes = {
 	entries: PropTypes.arrayOf(Entries),
 	selectedDate: PropTypes.object,
 	selectedEntry: Entries,
-	phases: Phases,
-	activities: Activities,
+	selectedPhase: PropTypes.string,
+	selectedActivity: PropTypes.string,
+	phases: PropTypes.arrayOf(PropTypes.string),
+	activities: PropTypes.arrayOf(PropTypes.string),
 	onDateChange: PropTypes.func
 };
 
@@ -69,6 +74,8 @@ TimeEntry.defaultProps = {
 	entries: [{}],
 	selectedDate: {},
 	selectedEntry: {},
+	selectedPhase: null,
+	selectedActivity: null,
 	phases: {
 		default: 0,
 		options: []

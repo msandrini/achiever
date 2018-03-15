@@ -31,6 +31,12 @@ export const Phases = PropTypes.shape({
 	}))
 });
 
+export const DayDetails = PropTypes.shape({
+	date: PropTypes.string,
+	phase: PropTypes.string,
+	activity: PropTypes.string
+});
+
 export const AllEntriesQuery = PropTypes.shape({
 	allEntries: PropTypes.shape({
 		admission: PropTypes.string,
@@ -43,6 +49,12 @@ export const AllEntriesQuery = PropTypes.shape({
 
 export const PhasesQuery = PropTypes.shape({
 	phases: Phases,
+	error: PropTypes.string,
+	loading: PropTypes.bool
+});
+
+export const DayDetailsQuery = PropTypes.shape({
+	dayDetails: DayDetails,
 	error: PropTypes.string,
 	loading: PropTypes.bool
 });

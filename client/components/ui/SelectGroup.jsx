@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import './SelectGroup.styl';
 
 const renderOptions = options => options.map(option => (
-	<option key={option.id} value={option.id}>
-		{option.name}
+	<option key={option} value={option}>
+		{option}
 	</option>
 ));
 
@@ -21,16 +21,15 @@ const SelectGroup = ({
 		<label>
 			<span className="label">{ label }</span>
 			{ showTextInstead ?
-				<div className="select-group-replacement">
+				<div>
 					{ showTextInstead }
 				</div> :
 				<select
-					className="detail-selector"
 					value={selected || ''}
 					onChange={event => onChange(event.target.value)}
 					disabled={isDisabled}
 				>
-					{ renderOptions(options, selected) }
+					{ renderOptions(options) }
 				</select>
 			}
 		</label>
@@ -39,11 +38,8 @@ const SelectGroup = ({
 
 SelectGroup.propTypes = {
 	label: PropTypes.string.isRequired,
-	options: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.number,
-		name: PropTypes.string
-	})),
-	selected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	options: PropTypes.arrayOf(PropTypes.string),
+	selected: PropTypes.string,
 	onChange: PropTypes.func,
 	showTextInstead: PropTypes.string,
 	isDisabled: PropTypes.bool

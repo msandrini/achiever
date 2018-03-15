@@ -3,11 +3,7 @@ import { shallow } from 'enzyme';
 
 import SelectGroup from './SelectGroup';
 
-const mockOptions = [
-	{ id: 1, name: 'one' },
-	{ id: 2, name: 'two' },
-	{ id: 3, name: 'three' }
-];
+const mockOptions = ['one', 'two', 'three'];
 
 describe('SelectGroup', () => {
 	describe('render', () => {

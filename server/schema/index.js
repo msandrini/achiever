@@ -87,11 +87,18 @@ const typeDefs = `
 		lastFridayBalance: String!
 	}
 
+	type DayDetails {
+		date: String!,
+		phase: String,
+		activity: String
+	}
+
 	type Query {
 		userDetails: UserDetails
 		weekEntries(date: String!): WeekEntries
 		allEntries: AllEntries
 		dayEntry(date: String!): DayEntry
+		dayDetails(date: String!): DayDetails
 		phases: PhaseList
 	}
 

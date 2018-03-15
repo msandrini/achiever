@@ -10,31 +10,34 @@ const InputTime = ({
 	label,
 	value,
 	isDisabled,
+	isHidden,
 	onChangeTime
 }) => (
 	<fieldset className="InputTime">
-		<label>
-			<span className="label">{label}</span>
-			<input
-				type="number"
-				value={_getHours(value)}
-				min={0}
-				max={23}
-				placeholder="0"
-				disabled={isDisabled}
-				onChange={event => onChangeTime(event.target.value)}
-			/>
-			<span className="separator">:</span>
-			<input
-				type="number"
-				value={_getMinutes(value)}
-				min={0}
-				max={59}
-				placeholder="00"
-				disabled={isDisabled}
-				onChange={event => onChangeTime(event.target.value)}
-			/>
-		</label>
+		{ !isHidden ?
+			<label>
+				<span className="label">{label}</span>
+				<input
+					type="number"
+					value={_getHours(value)}
+					min={0}
+					max={23}
+					placeholder="0"
+					disabled={isDisabled}
+					onChange={event => onChangeTime(event.target.value)}
+				/>
+				<span className="separator">:</span>
+				<input
+					type="number"
+					value={_getMinutes(value)}
+					min={0}
+					max={59}
+					placeholder="00"
+					disabled={isDisabled}
+					onChange={event => onChangeTime(event.target.value)}
+				/>
+			</label> : ''
+		}
 	</fieldset>
 );
 
@@ -44,11 +47,13 @@ InputTime.propTypes = {
 	label: PropTypes.string.isRequired,
 	value: PropTypes.string,
 	isDisabled: PropTypes.bool,
+	isHidden: PropTypes.bool,
 	onChangeTime: PropTypes.func
 };
 
 InputTime.defaultProps = {
 	value: '0:00',
 	isDisabled: false,
+	isHidden: false,
 	onChangeTime: () => {}
 };

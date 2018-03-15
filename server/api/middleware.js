@@ -171,6 +171,25 @@ const userDetails = () => async (token) => {
 	};
 };
 
+const dayDetails = date => async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/newhours_list.php`, cookieJar);
+	options.qs = { datei: date };
+
+	const responseHtml = await rp(options);
+	const $ = cheerio.load(responseHtml);
+	const {
+		phase,
+		activity
+	} = workTimeFromHtml($);
+
+	return {
+		date,
+		phase,
+		activity
+	};
+};
+
 const dailyEntries = date => async (token) => {
 	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/newhours_list.php`, cookieJar);
@@ -476,5 +495,6 @@ module.exports = {
 	userDetails,
 	getBalance,
 	extractBreakTime,
-	allTimesTableToData
+	allTimesTableToData,
+	dayDetails
 };

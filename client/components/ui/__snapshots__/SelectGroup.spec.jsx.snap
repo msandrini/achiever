@@ -32,7 +32,6 @@ ShallowWrapper {
           testLabel
         </span>
         <select
-          className="detail-selector"
           disabled={false}
           onChange={[Function]}
           value=""
@@ -53,7 +52,6 @@ ShallowWrapper {
             testLabel
           </span>,
           <select
-            className="detail-selector"
             disabled={false}
             onChange={[Function]}
             value=""
@@ -80,7 +78,6 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": Array [],
-            "className": "detail-selector",
             "disabled": false,
             "onChange": [Function],
             "value": "",
@@ -107,7 +104,6 @@ ShallowWrapper {
             testLabel
           </span>
           <select
-            className="detail-selector"
             disabled={false}
             onChange={[Function]}
             value=""
@@ -128,7 +124,6 @@ ShallowWrapper {
               testLabel
             </span>,
             <select
-              className="detail-selector"
               disabled={false}
               onChange={[Function]}
               value=""
@@ -155,7 +150,6 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": Array [],
-              "className": "detail-selector",
               "disabled": false,
               "onChange": [Function],
               "value": "",

@@ -67,6 +67,14 @@ query allEntries {
     }
 }
 
+query dayDetailsQuery($date: String!) {
+    dayDetails(date: $date) {
+        date
+		phase
+		activity
+    }
+}
+
 query weekEntries($date: String!) {
     weekEntries(date: $date) {
         timeEntries {
