@@ -6,7 +6,7 @@ import strings from '../shared/strings';
 import { timeIsValid } from '../shared/utils';
 
 moment.locale('pt-br');
-moment.tz.setDefault("America/Sao_Paulo");
+moment.tz.setDefault('America/Sao_Paulo');
 
 export const STORAGEKEY = 'storedTimes';
 export const STORAGEDAYKEY = 'storedMoment';

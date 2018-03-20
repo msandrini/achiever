@@ -46,24 +46,19 @@ module.exports = (app, compiler) => {
 	app.use('/assets', express.static(getFromRoot('client/assets')));
 	app.get('/*.js', serveGzipped('text/javascript'));
 
-	if (!isDevelopment) {
-		pageWhitelist.forEach((page) => {
-			app.get(`/${page}`, (req, res) => {
-				res.sendFile(htmlFile);
+	app.get('/', (req, res) => {
+		if (!isDevelopment) {
+			res.sendFile(htmlFile);
+		} else {
+			compiler.outputFileSystem.readFile(htmlFile, (err, result) => {
+				if (err) {
+					return next(err);
+				}
+				res.set('content-type', 'text/html');
+				res.send(result);
+				res.end();
+				return;
 			});
-		});
-	} else {
-		pageWhitelist.forEach((page) => {
-			app.get(`/${page}`, (req, res) => {
-				compiler.outputFileSystem.readFile(htmlFile, (err, result) => {
-					if (err) {
-						return next(err);
-					}
-					res.set('content-type', 'text/html');
-					res.send(result);
-					res.end();
-				});
-			});
-		});
-	}
+		}
+	});
 };

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import * as queries from '../../queries.graphql';
-import Link from '../router/Link';
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
 import { clearTodayStorage } from '../../utils';
@@ -62,13 +61,7 @@ class UserDetails extends Component {
 				</div>
 			);
 		}
-		return (
-			<div className="userDetails">
-				<Link to="/login" activeClassName="is-active">
-					{strings.login}
-				</Link>
-			</div>
-		);
+		return null;
 	}
 }
 

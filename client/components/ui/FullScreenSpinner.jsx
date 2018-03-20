@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import Spinner from '../ui/Spinner';
 
-import './PageLoading.styl';
+import './FullScreenSpinner.styl';
 
-const PageLoading = props => (
+const FullScreenSpinner = props => (
 	props.active ?
 		(
-			<div className="pageLoading-layer">
+			<div className="full-screen-spinner-layer">
 				<Spinner
 					class="loadingPage"
 				/>
@@ -17,12 +17,12 @@ const PageLoading = props => (
 		: ''
 );
 
-PageLoading.propTypes = {
+FullScreenSpinner.propTypes = {
 	active: PropTypes.bool
 };
 
-PageLoading.defaultProps = {
+FullScreenSpinner.defaultProps = {
 	active: false
 };
 
-export default PageLoading;
+export default FullScreenSpinner;

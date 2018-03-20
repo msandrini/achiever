@@ -9,9 +9,8 @@ import ActiveDayTimes from './edit/ActiveDayTimes';
 import AlertModal from './ui/modals/AlertModal';
 import LabourStatistics from './edit/LabourStatistics';
 import MonthlyCalendar from './edit/MonthlyCalendar';
+import FullScreenSpinner from './ui/FullScreenSpinner';
 import Panel from './ui/Panel';
-import PageLoading from './genericPages/PageLoading';
-import WeeklyCalendar from './edit/WeeklyCalendar';
 
 import strings from '../../shared/strings';
 import * as queries from '../queries.graphql';
@@ -420,7 +419,7 @@ class Edit extends React.Component {
 
 		return (
 			<div className="page-wrapper">
-				<PageLoading
+				<FullScreenSpinner
 					active={this.props.weekEntriesQuery.loading}
 				/>
 				<h2 className="current-date">
@@ -482,11 +481,6 @@ class Edit extends React.Component {
 						</button>
 					</div>
 				</form>
-				<WeeklyCalendar
-					controlDate={controlDate}
-					weekEntries={weekEntries}
-					storedTimes={storedTimes}
-				/>
 				<AlertModal
 					active={Boolean(alertMessage)}
 					content={alertMessage}
