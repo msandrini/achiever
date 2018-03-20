@@ -12,13 +12,8 @@ const TimeEntry = ({
 	entries,
 	selectedDate,
 	selectedEntry,
-	selectedPhase,
-	selectedActivity,
 	statistics,
-	phases,
-	activities,
-	onDateChange,
-	isSpecialCase
+	onDateChange
 }) => (
 	<div className="TimeEntry">
 		<h2 className="current-date">
@@ -43,12 +38,7 @@ const TimeEntry = ({
 			<div className="column column-half">
 				<TimeEntryForm
 					data={selectedEntry}
-					phases={phases}
-					activities={activities}
-					selectedPhase={selectedPhase}
-					selectedActivity={selectedActivity}
 					isDisabled={false}
-					isSpecialCase={isSpecialCase}
 					onChangePhase={() => {}}
 					onChangeActivity={() => {}}
 				/>
@@ -61,8 +51,6 @@ TimeEntry.propTypes = {
 	entries: PropTypes.arrayOf(Entries),
 	selectedDate: PropTypes.object,
 	selectedEntry: Entries,
-	selectedPhase: PropTypes.string,
-	selectedActivity: PropTypes.string,
 	statistics: PropTypes.shape({
 		dayBalance: PropTypes.number,
 		weekBalance: PropTypes.number,
@@ -70,9 +58,6 @@ TimeEntry.propTypes = {
 		contractedTime: PropTypes.number,
 		weekDay: PropTypes.number
 	}),
-	phases: PropTypes.arrayOf(PropTypes.string),
-	activities: PropTypes.arrayOf(PropTypes.string),
-	isSpecialCase: PropTypes.bool,
 	onDateChange: PropTypes.func
 };
 
@@ -80,18 +65,7 @@ TimeEntry.defaultProps = {
 	entries: [{}],
 	selectedDate: {},
 	selectedEntry: {},
-	selectedPhase: null,
-	selectedActivity: null,
 	statistics: {},
-	isSpecialCase: false,
-	phases: {
-		default: 0,
-		options: []
-	},
-	activities: {
-		default: 0,
-		options: []
-	},
 	onDateChange: null
 };
 

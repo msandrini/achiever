@@ -4,66 +4,44 @@ import PropTypes from 'prop-types';
 import Panel from '../ui/Panel';
 import Button from '../ui/Button';
 import InputTime from '../ui/InputTime';
-import SelectGroup from '../ui/SelectGroup';
 
 import strings from '../../../shared/strings';
 import { Entries } from '../../PropTypes';
 
 const TimeEntryForm = ({
 	data,
-	phases,
-	activities,
-	selectedPhase,
-	selectedActivity,
-	isDisabled,
-	isSpecialCase,
-	onChangePhase,
-	onChangeActivity
+	isDisabled
 }) => (
 	<div className="TimeEntryForm">
 		<Panel message="Success message" type="success" />
 		<Panel message="Error message" type="error" />
-		<SelectGroup
-			label={strings.projectPhase}
-			options={phases}
-			selected={selectedPhase}
-			onChange={onChangePhase}
-			showTextInstead={phases.length <= 1 ? selectedPhase : null}
-			isDisabled={isDisabled}
-		/>
-		<SelectGroup
-			label={strings.activity}
-			options={activities}
-			selected={selectedActivity}
-			onChange={onChangeActivity}
-			showTextInstead={isSpecialCase ? selectedActivity : null}
-			isDisabled={isDisabled}
-		/>
+		<p>{data.isVacation ? strings.vacation : ''}</p>
+		<p>{data.holiday ? data.holiday : ''}</p>
 		<InputTime
 			label={strings.times[0].label}
 			value={data.startTime}
 			isDisabled={isDisabled}
-			isHidden={isSpecialCase}
+			isHidden={data.isHoliday || data.isVacation}
 		/>
 		<InputTime
 			label={strings.times[1].label}
 			value={data.startBreakTime}
 			isDisabled={isDisabled}
-			isHidden={isSpecialCase}
+			isHidden={data.isHoliday || data.isVacation}
 		/>
 		<InputTime
 			label={strings.times[2].label}
 			value={data.endBreakTime}
 			isDisabled={isDisabled}
-			isHidden={isSpecialCase}
+			isHidden={data.isHoliday || data.isVacation}
 		/>
 		<InputTime
 			label={strings.times[3].label}
 			value={data.endTime}
 			isDisabled={isDisabled}
-			isHidden={isSpecialCase}
+			isHidden={data.isHoliday || data.isVacation}
 		/>
-		<Button label={strings.send} isHidden={isSpecialCase} />
+		<Button label={strings.send} isHidden={data.isHoliday || data.isVacation} />
 	</div>
 );
 
@@ -71,24 +49,10 @@ export default TimeEntryForm;
 
 TimeEntryForm.propTypes = {
 	data: Entries,
-	phases: PropTypes.arrayOf(PropTypes.string),
-	activities: PropTypes.arrayOf(PropTypes.string),
-	selectedPhase: PropTypes.string,
-	selectedActivity: PropTypes.string,
-	isDisabled: PropTypes.bool,
-	isSpecialCase: PropTypes.bool,
-	onChangePhase: PropTypes.func,
-	onChangeActivity: PropTypes.func
+	isDisabled: PropTypes.bool
 };
 
 TimeEntryForm.defaultProps = {
 	data: {},
-	phases: {},
-	activities: {},
-	selectedPhase: null,
-	selectedActivity: null,
-	isDisabled: false,
-	isSpecialCase: false,
-	onChangePhase: () => {},
-	onChangeActivity: () => {}
+	isDisabled: false
 };

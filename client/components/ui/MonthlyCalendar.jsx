@@ -19,7 +19,7 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 	timeEntries.forEach((dayEntry) => {
 		const day = moment(dayEntry.date);
 
-		if (dayEntry.total) {
+		if (dayEntry.total && dayEntry.total !== '0:00') {
 			checked.push(day);
 		} else {
 			unchecked.push(day);

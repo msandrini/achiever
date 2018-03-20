@@ -84,6 +84,7 @@ const strings = {
 	logoutConfirm: 'Quer mesmo sair do sistema?',
 	username: 'Usuário',
 	password: 'Senha',
+	vacation: 'Férias',
 	authenticationError: 'Credenciais inválidas.',
 	pageNotFound: 'Página não encontrada',
 	pageLoading: 'Carregando...',
