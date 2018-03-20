@@ -6,6 +6,9 @@ import './InputTime.styl';
 const _getHours = value => value ? value.split(':')[0] : '';
 const _getMinutes = value => value ? value.split(':')[1] : '';
 
+const _mergeHours = (value, changedHours) => `${changedHours}:${_getMinutes(value)}`;
+const _mergeMinutes = (value, changedMinutes) => `${_getHours(value)}:${changedMinutes}`;
+
 const InputTime = ({
 	label,
 	value,
@@ -24,7 +27,7 @@ const InputTime = ({
 					max={23}
 					placeholder="0"
 					disabled={isDisabled}
-					onChange={event => onChangeTime(event.target.value)}
+					onChange={event => onChangeTime(_mergeHours(value, event.target.value))}
 				/>
 				<span className="separator">:</span>
 				<input
@@ -34,7 +37,7 @@ const InputTime = ({
 					max={59}
 					placeholder="00"
 					disabled={isDisabled}
-					onChange={event => onChangeTime(event.target.value)}
+					onChange={event => onChangeTime(_mergeMinutes(value, event.target.value))}
 				/>
 			</label> : ''
 		}

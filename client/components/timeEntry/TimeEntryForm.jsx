@@ -8,51 +8,65 @@ import InputTime from '../ui/InputTime';
 import strings from '../../../shared/strings';
 import { Entries } from '../../PropTypes';
 
+const headers = {
+	START_TIME: 0,
+	START_BREAK_TIME: 1,
+	END_BREAK_TIME: 2,
+	END_TIME: 3
+};
+
 const TimeEntryForm = ({
-	data,
-	isDisabled
+	entry,
+	isDisabled,
+	onChangeEntry
 }) => (
 	<div className="TimeEntryForm">
 		<Panel message="Success message" type="success" />
 		<Panel message="Error message" type="error" />
-		<p>{data.isVacation ? strings.vacation : ''}</p>
-		<p>{data.holiday ? data.holiday : ''}</p>
+		<p>{entry.isVacation ? strings.vacation : ''}</p>
+		<p>{entry.holiday ? entry.holiday : ''}</p>
 		<InputTime
-			label={strings.times[0].label}
-			value={data.startTime}
+			label={strings.times[headers.START_TIME].label}
+			value={entry.startTime}
 			isDisabled={isDisabled}
-			isHidden={data.isHoliday || data.isVacation}
+			isHidden={entry.isHoliday || entry.isVacation}
+			onChangeTime={startTime => onChangeEntry({ ...entry, startTime })}
 		/>
 		<InputTime
-			label={strings.times[1].label}
-			value={data.startBreakTime}
+			label={strings.times[headers.START_BREAK_TIME].label}
+			value={entry.startBreakTime}
 			isDisabled={isDisabled}
-			isHidden={data.isHoliday || data.isVacation}
+			isHidden={entry.isHoliday || entry.isVacation}
+			onChangeTime={startBreakTime => onChangeEntry({ ...entry, startBreakTime })}
 		/>
 		<InputTime
-			label={strings.times[2].label}
-			value={data.endBreakTime}
+			label={strings.times[headers.END_BREAK_TIME].label}
+			value={entry.endBreakTime}
 			isDisabled={isDisabled}
-			isHidden={data.isHoliday || data.isVacation}
+			isHidden={entry.isHoliday || entry.isVacation}
+			onChangeTime={endBreakTime => onChangeEntry({ ...entry, endBreakTime })}
 		/>
 		<InputTime
-			label={strings.times[3].label}
-			value={data.endTime}
+			label={strings.times[headers.END_TIME].label}
+			value={entry.endTime}
 			isDisabled={isDisabled}
-			isHidden={data.isHoliday || data.isVacation}
+			isHidden={entry.isHoliday || entry.isVacation}
+			onChangeTime={endTime => onChangeEntry({ ...entry, endTime })}
 		/>
-		<Button label={strings.send} isHidden={data.isHoliday || data.isVacation} />
+		<Button label={strings.send} isHidden={entry.isHoliday || entry.isVacation} />
 	</div>
 );
 
 export default TimeEntryForm;
 
 TimeEntryForm.propTypes = {
-	data: Entries,
-	isDisabled: PropTypes.bool
+	entry: Entries,
+	isDisabled: PropTypes.bool,
+	onChangeEntry: PropTypes.func
 };
 
 TimeEntryForm.defaultProps = {
-	data: {},
-	isDisabled: false
+	entry: {},
+	isDisabled: false,
+	onChangeEntry: () => {}
 };

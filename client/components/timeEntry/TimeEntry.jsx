@@ -13,7 +13,8 @@ const TimeEntry = ({
 	selectedDate,
 	selectedEntry,
 	statistics,
-	onDateChange
+	onDateChange,
+	onChangeEntry
 }) => (
 	<div className="TimeEntry">
 		<h2 className="current-date">
@@ -37,10 +38,9 @@ const TimeEntry = ({
 			</div>
 			<div className="column column-half">
 				<TimeEntryForm
-					data={selectedEntry}
+					entry={selectedEntry}
 					isDisabled={false}
-					onChangePhase={() => {}}
-					onChangeActivity={() => {}}
+					onChangeEntry={value => onChangeEntry(value)}
 				/>
 			</div>
 		</div>
@@ -58,7 +58,8 @@ TimeEntry.propTypes = {
 		contractedTime: PropTypes.number,
 		weekDay: PropTypes.number
 	}),
-	onDateChange: PropTypes.func
+	onDateChange: PropTypes.func,
+	onChangeEntry: PropTypes.func
 };
 
 TimeEntry.defaultProps = {
@@ -66,7 +67,8 @@ TimeEntry.defaultProps = {
 	selectedDate: {},
 	selectedEntry: {},
 	statistics: {},
-	onDateChange: null
+	onDateChange: () => {},
+	onChangeEntry: () => {}
 };
 
 export default TimeEntry;
