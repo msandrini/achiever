@@ -18,11 +18,15 @@ const headers = {
 const TimeEntryForm = ({
 	entry,
 	isDisabled,
-	onChangeEntry
+	successMessage,
+	errorMessage,
+	onChangeEntry,
+	isPersisted,
+	onSubmit
 }) => (
-	<div className="TimeEntryForm">
-		<Panel message="Success message" type="success" />
-		<Panel message="Error message" type="error" />
+	<form className="TimeEntryForm" onSubmit={onSubmit}>
+		<Panel message={successMessage} type="success" />
+		<Panel message={errorMessage} type="error" />
 		<p>{entry.isVacation ? strings.vacation : ''}</p>
 		<p>{entry.holiday ? entry.holiday : ''}</p>
 		<InputTime
@@ -53,8 +57,11 @@ const TimeEntryForm = ({
 			isHidden={entry.isHoliday || entry.isVacation}
 			onChangeTime={endTime => onChangeEntry({ ...entry, endTime })}
 		/>
-		<Button label={strings.send} isHidden={entry.isHoliday || entry.isVacation} />
-	</div>
+		<Button
+			label={isPersisted ? strings.update : strings.send}
+			isHidden={entry.isHoliday || entry.isVacation}
+		/>
+	</form>
 );
 
 export default TimeEntryForm;
@@ -62,11 +69,19 @@ export default TimeEntryForm;
 TimeEntryForm.propTypes = {
 	entry: Entries,
 	isDisabled: PropTypes.bool,
-	onChangeEntry: PropTypes.func
+	isPersisted: PropTypes.bool,
+	successMessage: PropTypes.string,
+	errorMessage: PropTypes.string,
+	onChangeEntry: PropTypes.func,
+	onSubmit: PropTypes.func
 };
 
 TimeEntryForm.defaultProps = {
 	entry: {},
 	isDisabled: false,
-	onChangeEntry: () => {}
+	isPersisted: false,
+	successMessage: '',
+	errorMessage: '',
+	onChangeEntry: () => {},
+	onSubmit: () => {}
 };

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
 import TimeEntryForm from './TimeEntryForm';
+import PageLoading from '../genericPages/PageLoading';
 
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
@@ -13,10 +14,17 @@ const TimeEntry = ({
 	selectedDate,
 	selectedEntry,
 	statistics,
+	successMessage,
+	errorMessage,
+	isPersisted,
+	isLoading,
 	onDateChange,
-	onChangeEntry
+	onChangeEntry,
+	onSubmit
 }) => (
 	<div className="TimeEntry">
+		<PageLoading active={isLoading} />
+
 		<h2 className="current-date">
 			{strings.selectedDate}: <strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
 		</h2>
@@ -40,7 +48,11 @@ const TimeEntry = ({
 				<TimeEntryForm
 					entry={selectedEntry}
 					isDisabled={false}
-					onChangeEntry={value => onChangeEntry(value)}
+					isPersisted={isPersisted}
+					successMessage={successMessage}
+					errorMessage={errorMessage}
+					onChangeEntry={onChangeEntry}
+					onSubmit={onSubmit}
 				/>
 			</div>
 		</div>
@@ -58,8 +70,13 @@ TimeEntry.propTypes = {
 		contractedTime: PropTypes.number,
 		weekDay: PropTypes.number
 	}),
+	successMessage: PropTypes.string,
+	errorMessage: PropTypes.string,
+	isPersisted: PropTypes.bool,
+	isLoading: PropTypes.bool,
 	onDateChange: PropTypes.func,
-	onChangeEntry: PropTypes.func
+	onChangeEntry: PropTypes.func,
+	onSubmit: PropTypes.func
 };
 
 TimeEntry.defaultProps = {
@@ -67,8 +84,13 @@ TimeEntry.defaultProps = {
 	selectedDate: {},
 	selectedEntry: {},
 	statistics: {},
+	successMessage: '',
+	errorMessage: '',
+	isPersisted: false,
+	isLoading: false,
 	onDateChange: () => {},
-	onChangeEntry: () => {}
+	onChangeEntry: () => {},
+	onSubmit: () => {}
 };
 
 export default TimeEntry;
