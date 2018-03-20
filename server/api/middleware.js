@@ -270,7 +270,8 @@ const headers = {
 	WORKED_TIME: 3,
 	BREAK_TIME: 4,
 	END_TIME: 5,
-	BALANCE: 8
+	BALANCE: 8,
+	REMARKS: 9
 };
 
 const allTimesTableToData = ($) => {
@@ -279,8 +280,10 @@ const allTimesTableToData = ($) => {
 	$('table tr').each((i, tr) => {
 		const tds = $(tr).find('td');
 		if (tds.length) {
-			const [date] = trimmedText(tds[headers.DATE]).split(' ');
+			const [date,,, holiday] = trimmedText(tds[headers.DATE]).split(' ');
 			const breakTime = trimmedText($(tds[headers.BREAK_TIME]));
+			const isVacation = breakTime === 'Vacation';
+			const isHoliday = Boolean(holiday && !isVacation);
 
 			data.push({
 				date,
@@ -289,7 +292,10 @@ const allTimesTableToData = ($) => {
 				endTime: trimmedText(tds[headers.END_TIME]),
 				...extractBreakTime(breakTime),
 				total: trimmedText(tds[headers.WORKED_TIME]),
-				balance: trimmedText(tds[headers.BALANCE])
+				balance: trimmedText(tds[headers.BALANCE]),
+				isVacation,
+				isHoliday,
+				holiday: isHoliday ? trimmedText(tds[headers.REMARKS]) : null
 			});
 		}
 	});

@@ -63,6 +63,9 @@ query allEntries {
             total
 			weekBalance
             balance
+			isHoliday
+			holiday
+			isVacation
         }
     }
 }

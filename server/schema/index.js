@@ -39,6 +39,9 @@ const typeDefs = `
 		total: String
 		weekBalance: String
 		balance: String
+		isHoliday: Boolean
+		holiday: String
+		isVacation: Boolean
 	}
 
 	type AllEntries {
