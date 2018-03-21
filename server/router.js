@@ -57,7 +57,12 @@ module.exports = (app, compiler) => {
 			app.get(`/${page}`, (req, res) => {
 				compiler.outputFileSystem.readFile(htmlFile, (err, result) => {
 					if (err) {
-						return next(err);
+						res.status(err.status || 500);
+						res.render('error', {
+							message: err.message,
+							error: {}
+						});
+						return;
 					}
 					res.set('content-type', 'text/html');
 					res.send(result);

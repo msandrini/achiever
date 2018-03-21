@@ -1,7 +1,6 @@
-import {	
+import {
 	checkValidity,
 	timeIsValid,
-	getTimeFromDate,
 	buildDateFromTimeString
 } from './utils';
 

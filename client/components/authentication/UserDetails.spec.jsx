@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import UserDetails from './UserDetails';
 
@@ -68,6 +68,6 @@ describe('UserDetails', () => {
 			wrapper.setProps({ userDetailsQuery: defaultUserDetailsQuery });
 
 			expect(wrapper.state('authenticated')).toBeTruthy();
-		})
+		});
 	});
 });

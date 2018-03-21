@@ -7,9 +7,7 @@ import TimeDuration from 'time-duration';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import strings from '../../../shared/strings';
-import {
-	timesAreValid
-} from '../../utils';
+import { timesAreValid } from '../../utils';
 
 import './WeeklyCalendar.styl';
 
