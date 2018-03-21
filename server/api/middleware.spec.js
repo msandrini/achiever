@@ -5,7 +5,17 @@ const {
 	allTimesTableToData
 } = require('./middleware');
 
-const generateTableLine = (date, balance, contractedTime, startTime, endTime, startBreakTime, endBreakTime, total) => (`
+const generateTableLine = (
+	date,
+	balance,
+	contractedTime,
+	startTime,
+	endTime,
+	startBreakTime,
+	endBreakTime,
+	total,
+	remarks
+) => (`
 <tr>
 	<td>${date}</td>
 	<td>${contractedTime}</td>
@@ -16,7 +26,7 @@ const generateTableLine = (date, balance, contractedTime, startTime, endTime, st
 	<td></td>
 	<td></td>
 	<td>&nbsp;${balance}</td>
-	<td></td>
+	<td>${remarks}</td>
 </tr>
 `);
 
@@ -108,19 +118,60 @@ describe('middleware', () => {
 				startBreakTime: '11:45:00',
 				endBreakTime: '12:45:00',
 				total: '8:00',
-				balance: '34:56'
+				balance: '34:56',
+				holiday: null,
+				isHoliday: false,
+				isVacation: false
 			};
-			const baseHtml = `<table>
-				${generateTableLine(
-					`${expected.date} Tue`,
-					expected.balance,
-					expected.contractedTime,
-					expected.startTime,
-					expected.endTime,
-					expected.startBreakTime,
-					expected.endBreakTime,
-					expected.total)}
-			</table>`;
+			const baseHtml = `
+<table>
+	${generateTableLine(
+		`${expected.date} Tue`,
+		expected.balance,
+		expected.contractedTime,
+		expected.startTime,
+		expected.endTime,
+		expected.startBreakTime,
+		expected.endBreakTime,
+		expected.total
+	)}
+</table>
+			`;
+
+			const $ = cheerio.load(baseHtml);
+			const result = allTimesTableToData($);
+			expect(result).toEqual([expected]);
+		});
+
+		it('should return have the flag isHoliday', () => {
+			const expected = {
+				date: '2017-12-25',
+				contractedTime: '8:00',
+				startTime: '8:00',
+				endTime: '17:00',
+				startBreakTime: '',
+				endBreakTime: '',
+				total: '8:00',
+				balance: '34:56',
+				holiday: 'Xmas',
+				isHoliday: true,
+				isVacation: false
+			};
+			const baseHtml = `
+<table>
+	${generateTableLine(
+		`${expected.date} Tue  Holiday`,
+		expected.balance,
+		expected.contractedTime,
+		expected.startTime,
+		expected.endTime,
+		expected.startBreakTime,
+		expected.endBreakTime,
+		expected.total,
+		expected.holiday
+	)}
+</table>
+			`;
 
 			const $ = cheerio.load(baseHtml);
 			const result = allTimesTableToData($);

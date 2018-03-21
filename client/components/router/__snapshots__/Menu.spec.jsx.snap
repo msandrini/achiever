@@ -30,6 +30,14 @@ ShallowWrapper {
     >
       Editar horários
     </Link>,
+    <Link
+      activeClassName="is-active"
+      className=""
+      isActive={false}
+      to="/time-entry"
+    >
+      Apontamento de horas
+    </Link>,
   ],
   Symbol(enzyme.__nodes__): Array [
     Array [
@@ -49,6 +57,14 @@ ShallowWrapper {
         to="/edit"
       >
         Editar horários
+      </Link>,
+      <Link
+        activeClassName="is-active"
+        className=""
+        isActive={false}
+        to="/time-entry"
+      >
+        Apontamento de horas
       </Link>,
     ],
   ],
@@ -78,9 +94,11 @@ ShallowWrapper {
     null,
     null,
     null,
+    null,
   ],
   Symbol(enzyme.__nodes__): Array [
     Array [
+      null,
       null,
       null,
       null,

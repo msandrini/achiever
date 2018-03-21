@@ -1,0 +1,325 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LabourStatistics render should properly render with surplus or debit 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <LabourStatistics
+    contractedTime={480}
+    dayBalance={480}
+    totalBalance={0}
+    weekBalance={960}
+    weekDay={3}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <Gauge
+          description="Horas trabalhadas no dia:"
+          expected={480}
+          value={480}
+        />,
+        <Gauge
+          description="Na semana até esse dia"
+          expected={1440}
+          value={960}
+        />,
+        <GaugeDescription
+          description="Balanço de horas atual:"
+          value={0}
+        />,
+      ],
+      "className": "LabourStatistics",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Horas trabalhadas no dia:",
+          "expected": 480,
+          "value": 480,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Na semana até esse dia",
+          "expected": 1440,
+          "value": 960,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Balanço de horas atual:",
+          "value": 0,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <Gauge
+            description="Horas trabalhadas no dia:"
+            expected={480}
+            value={480}
+          />,
+          <Gauge
+            description="Na semana até esse dia"
+            expected={1440}
+            value={960}
+          />,
+          <GaugeDescription
+            description="Balanço de horas atual:"
+            value={0}
+          />,
+        ],
+        "className": "LabourStatistics",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Horas trabalhadas no dia:",
+            "expected": 480,
+            "value": 480,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Na semana até esse dia",
+            "expected": 1440,
+            "value": 960,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Balanço de horas atual:",
+            "value": 0,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`LabourStatistics render should properly render with surplus or debit 2`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <LabourStatistics
+    contractedTime={480}
+    dayBalance={480}
+    totalBalance={0}
+    weekBalance={1920}
+    weekDay={3}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <Gauge
+          description="Horas trabalhadas no dia:"
+          expected={480}
+          value={480}
+        />,
+        <Gauge
+          description="Na semana até esse dia"
+          expected={1440}
+          value={1920}
+        />,
+        <GaugeDescription
+          description="Balanço de horas atual:"
+          value={0}
+        />,
+      ],
+      "className": "LabourStatistics",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Horas trabalhadas no dia:",
+          "expected": 480,
+          "value": 480,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Na semana até esse dia",
+          "expected": 1440,
+          "value": 1920,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "description": "Balanço de horas atual:",
+          "value": 0,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <Gauge
+            description="Horas trabalhadas no dia:"
+            expected={480}
+            value={480}
+          />,
+          <Gauge
+            description="Na semana até esse dia"
+            expected={1440}
+            value={1920}
+          />,
+          <GaugeDescription
+            description="Balanço de horas atual:"
+            value={0}
+          />,
+        ],
+        "className": "LabourStatistics",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Horas trabalhadas no dia:",
+            "expected": 480,
+            "value": 480,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Na semana até esse dia",
+            "expected": 1440,
+            "value": 1920,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "description": "Balanço de horas atual:",
+            "value": 0,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

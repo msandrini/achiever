@@ -47,7 +47,7 @@ describe('Login', () => {
 
 				expect(wrapper.state('errorMessage')).toEqual(strings.authenticationError);
 				expect(window.localtion.reload).not.toHaveBeenCalled();
-			}
+			};
 			throwWrapper();
 			done();
 		});

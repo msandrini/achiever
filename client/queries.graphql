@@ -53,7 +53,7 @@ query allEntries {
     allEntries {
         name
         admission
-        timeData {
+        entries {
             date
             contractedTime
             startTime
@@ -61,8 +61,20 @@ query allEntries {
             startBreakTime
             endBreakTime
             total
+			weekBalance
             balance
+			isHoliday
+			holiday
+			isVacation
         }
+    }
+}
+
+query dayDetailsQuery($date: String!) {
+    dayDetails(date: $date) {
+        date
+		phase
+		activity
     }
 }
 
