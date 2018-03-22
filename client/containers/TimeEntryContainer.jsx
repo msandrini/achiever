@@ -167,19 +167,21 @@ class TimeEntryContainer extends React.Component {
 		const isPersisted = Boolean(persisted && persisted.total !== '0:00');
 		const selectedEntry = { ...persisted, ...entry };
 
-		return (<TimeEntry
-			entries={entries}
-			selectedDate={selectedDate ? moment(selectedDate) : null}
-			selectedEntry={selectedEntry}
-			statistics={selectedEntry ? _getStatistics(selectedDate, selectedEntry) : {}}
-			successMessage={successMessage}
-			errorMessage={errorMessage}
-			isPersisted={isPersisted}
-			isLoading={this.props.allEntriesQuery.loading}
-			onDateChange={this.handleDateChange}
-			onChangeEntry={this.handleEntryChange(entries)}
-			onSubmit={this.handleSubmit}
-		/>);
+		return (
+			<TimeEntry
+				entries={entries}
+				selectedDate={selectedDate ? moment(selectedDate) : null}
+				selectedEntry={selectedEntry}
+				statistics={selectedEntry ? _getStatistics(selectedDate, selectedEntry) : {}}
+				successMessage={successMessage}
+				errorMessage={errorMessage}
+				isPersisted={isPersisted}
+				isLoading={this.props.allEntriesQuery.loading}
+				onDateChange={this.handleDateChange}
+				onChangeEntry={this.handleEntryChange(entries)}
+				onSubmit={this.handleSubmit}
+			/>
+		);
 	}
 }
 

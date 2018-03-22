@@ -65,15 +65,15 @@ class Login extends React.Component {
 
 	render() {
 		return (
-			<div className="page-wrapper">
-				<form onSubmit={this.onSubmit}>
+			<React.Fragment>
+				<div className="column column-nav" />
+				<div className="column column-actions">
 					<h2 className="current-date">
 						<strong>{strings.login}</strong>
 					</h2>
-					<div className="columns">
-						<div className="column column-half" />
-						<div className="column column-half">
-							<Panel type="error" message={this.state.errorMessage} />
+					<main>
+						<Panel type="error" message={this.state.errorMessage} />
+						<form onSubmit={this.onSubmit}>
 							<div className="login-field">
 								<input
 									type="text"
@@ -97,10 +97,10 @@ class Login extends React.Component {
 							>
 								{strings.send}
 							</button>
-						</div>
-					</div>
-				</form>
-			</div>
+						</form>
+					</main>
+				</div>
+			</React.Fragment>
 		);
 	}
 }

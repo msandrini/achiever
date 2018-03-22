@@ -41,7 +41,6 @@ module.exports = (app, compiler) => {
 	// static
 	const isDevelopment = process.env.NODE_ENV !== 'production';
 	const htmlFile = getFromRoot('client/dist/index.html');
-	const pageWhitelist = ['', 'time-entry', 'edit', 'today', 'login', 'advanced'];
 
 	app.use('/assets', express.static(getFromRoot('client/assets')));
 	app.get('/*.js', serveGzipped('text/javascript'));
@@ -62,7 +61,6 @@ module.exports = (app, compiler) => {
 				res.set('content-type', 'text/html');
 				res.send(result);
 				res.end();
-				return;
 			});
 		}
 	});

@@ -1,16 +1,16 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import PageLoading from './PageLoading';
+import FullScreenSpinner from './FullScreenSpinner';
 
-describe('PageLoading', () => {
+describe('FullScreenSpinner', () => {
 	it('should render properly withouth props', () => {
-		const wrapper = shallow(<PageLoading />);
+		const wrapper = shallow(<FullScreenSpinner />);
 		expect(wrapper).toMatchSnapshot();
 	});
 
 	it('should render properly with active', () => {
-		const wrapper = shallow(<PageLoading active />);
+		const wrapper = shallow(<FullScreenSpinner active />);
 		expect(wrapper).toMatchSnapshot();
 	});
 });

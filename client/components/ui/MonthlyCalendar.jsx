@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 import DatePicker from 'react-datepicker';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 import {
 	isDayBlockedInPast,
 	isDayAfterToday

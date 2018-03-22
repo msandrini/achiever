@@ -1,12 +1,24 @@
+/* work colour and variants */
+
+superDarkBlueColour = darken(#254356, 30%)
 darkBlueColour = #254356
 transitionColour1 = #5A717F
 transitionColour2 = #909FA8
 transitionColour3 = #C5CCD1
-backgroundColour = #FAFAFA
-commonTextColour = #777
-secondaryTextColour = #AAA
-fadedTextColour = #DDD
-focusInputColour = #990
+
+/* focus colour */
+
+focusColour = #F93
+
+/* derivations */
+
+highlightColour = #FFF
+commonTextColour = darkBlueColour
+secondaryTextColour = transitionColour1
+fadedTextColour = alpha(secondaryTextColour, .5)
+
+/* error and success colours */
+
 errorPanelColour = #DC3545
 successPanelColour = #479030
 errorDarkColour = mix(darkBlueColour, errorPanelColour)

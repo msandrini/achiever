@@ -8,48 +8,74 @@
 	padding: 0
 	border: 0
 	vertical-align: baseline
+	box-sizing border-box
+
+html,body
+	height 100%
 
 body
-	background-color: backgroundColour
+	background-color: transitionColour3
 
 a, button
 	transition linear all .2s
 
 input, select
-	box-style()
+	border: 2px solid #fff
 	transition: background linear .2s, border linear .2s
 	&:focus
 		outline: none
-		border-color: focusInputColour
+		border-color: focusColour
 	&[disabled]
 		background: white
 		opacity: .6
 
-.columns
+#root
+	height: 100%
+
+.root-container
 	display: flex
-	width: 80%;
-	margin: 0 auto;
+	flex-direction: row
+	height 100%
 	@media (max-width: 775px)
 		flex-direction: column
 
 	.column
-		padding-bottom: 30px;
-		&-half
-			width: 50%;
+		justify-content: center
+		&-nav
+			height 100%
+			width: 30%
+			background: transitionColour2
 			@media (max-width: 775px)
-				width: 100%;
-		&-right-aligned
-			display: flex
-			flex-direction: column
-			justify-content: flex-start
-			align-items: flex-end
-			padding-right: 40px
+				width: 100%
+			&:before
+				content ' '
+				display block
+				background transitionColour1
+				width 100%
+				height topBarWidth
+		&-actions
+			height 100%
+			width: 70%
 			@media (max-width: 775px)
-				display:block
-		
+				width: 100%
+			&:before
+				content ' '
+				display block
+				background transitionColour2
+				width 100%
+				height topBarWidth
 
-.send[disabled]
-	opacity: 0.5
+h2
+	font-size 18px
+	//background transitionColour2
+	color transitionColour1
+	margin 40px 10%
+	strong
+		color white
+		font-size 24px
+
+main
+	margin 0 10%;
 
 .send
 	font-size: 24px
@@ -60,14 +86,15 @@ input, select
 	height: 64px
 	background-color: darkBlueColour
 	color: #fff
-	border-radius: 5px
 	cursor: pointer
 	&:focus
 		outline: none
-		border: focusInputColour solid 2px;
+		border: focusColour solid 2px;
 		text-shadow: 0 0 10px rgba(255,255,255, .6)
 	&:hover
 		background-color: transitionColour1
+	&[disabled]
+		opacity: .5
 
 button.send-login
 	padding: 11px;

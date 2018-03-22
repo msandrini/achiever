@@ -1,10 +1,10 @@
 @import "../../styles/_colours.styl"
 @import "../../styles/_standards.styl"
 
-.Button[disabled]
+.button[disabled]
 	opacity: 0.5
 
-.Button
+.button
 	font-size: 24px
 	display: block
 	font-weight: bold
@@ -13,11 +13,10 @@
 	height: 64px
 	background-color: darkBlueColour
 	color: #fff
-	border-radius: 5px
 	cursor: pointer
 	&:focus
 		outline: none
-		border: focusInputColour solid 2px;
+		border: focusColour solid 2px;
 		text-shadow: 0 0 10px rgba(255,255,255, .6)
 	&:hover
 		background-color: transitionColour1

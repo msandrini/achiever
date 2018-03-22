@@ -5,10 +5,8 @@ import { graphql } from 'react-apollo';
 import * as queries from '../queries.graphql';
 import FullScreenSpinner from './ui/FullScreenSpinner';
 import Login from './Login';
-import Edit from './Edit';
+import TimeEntry from '../containers/TimeEntryContainer';
 import { getAuthToken, removeAuthToken } from './authentication/token';
-
-const PATH_ROOT = '/';
 
 const _checkAuth = () => Boolean(getAuthToken());
 
@@ -39,7 +37,7 @@ class AuthRedirect extends React.Component {
 		if (this.props.userDetailsQuery.loading) {
 			return <FullScreenSpinner active={this.props.userDetailsQuery.loading} />;
 		}
-		const Component = this.state.authenticated ? Edit : Login;
+		const Component = this.state.authenticated ? TimeEntry : Login;
 		return Component ? <Component /> : null;
 	}
 }

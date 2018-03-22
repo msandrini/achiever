@@ -8,9 +8,7 @@ import './Main.styl';
 const Main = () => (
 	<div className="root-container">
 		<Header />
-		<div className="content-container">
-			<AuthRedirect />
-		</div>
+		<AuthRedirect />
 	</div>
 );
 

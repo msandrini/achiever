@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
 import TimeEntryForm from './TimeEntryForm';
-import PageLoading from '../genericPages/PageLoading';
+import FullScreenSpinner from '../ui/FullScreenSpinner';
 
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
@@ -22,29 +22,29 @@ const TimeEntry = ({
 	onChangeEntry,
 	onSubmit
 }) => (
-	<div className="TimeEntry">
-		<PageLoading active={isLoading} />
+	<React.Fragment>
+		<FullScreenSpinner active={isLoading} />
 
-		<h2 className="current-date">
-			{strings.selectedDate}: <strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
-		</h2>
-
-		<div className="columns">
-			<div className="column column-half column-right-aligned">
-				<MonthlyCalendar
-					selectedDate={selectedDate}
-					timeEntries={entries}
-					onDateChange={onDateChange}
-				/>
-				<LabourStatistics
-					dayBalance={statistics.dayBalance}
-					weekBalance={statistics.weekBalance}
-					totalBalance={statistics.totalBalance}
-					contractedTime={statistics.contractedTime}
-					weekDay={statistics.weekDay}
-				/>
-			</div>
-			<div className="column column-half">
+		<div className="column column-nav">
+			<MonthlyCalendar
+				selectedDate={selectedDate}
+				timeEntries={entries}
+				onDateChange={onDateChange}
+			/>
+			<LabourStatistics
+				dayBalance={statistics.dayBalance}
+				weekBalance={statistics.weekBalance}
+				totalBalance={statistics.totalBalance}
+				contractedTime={statistics.contractedTime}
+				weekDay={statistics.weekDay}
+			/>
+		</div>
+		<div className="column column-actions">
+			<h2 className="current-date">
+				{strings.selectedDate}:{' '}
+				<strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
+			</h2>
+			<main>
 				<TimeEntryForm
 					entry={selectedEntry}
 					isDisabled={false}
@@ -54,9 +54,9 @@ const TimeEntry = ({
 					onChangeEntry={onChangeEntry}
 					onSubmit={onSubmit}
 				/>
-			</div>
+			</main>
 		</div>
-	</div>
+	</React.Fragment>
 );
 
 TimeEntry.propTypes = {

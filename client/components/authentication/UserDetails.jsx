@@ -51,8 +51,8 @@ class UserDetails extends Component {
 			const [firstName] = userDetails.name.split(' ');
 
 			return (
-				<div className="userDetails">
-					<div className="employeeName">
+				<div className="user-details">
+					<div className="employee-name">
 						{`${strings.helloName} ${firstName}`}
 					</div>
 					<button className="logout" onClick={_logout}>
