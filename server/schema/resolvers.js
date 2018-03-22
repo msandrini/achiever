@@ -9,7 +9,8 @@ const {
 	allEntries,
 	activities,
 	phases,
-	userDetails
+	userDetails,
+	dayDetails
 } = require('../api/middleware');
 const { tokenFactory } = require('../api/utils');
 
@@ -39,6 +40,9 @@ const resolvers = {
 		),
 		allEntries: async (_, __, { token }) => (
 			callWithAuth(allEntries(), token)
+		),
+		dayDetails: async (_, { date }, { token }) => (
+			callWithAuth(dayDetails(date), token)
 		),
 		dayEntry: async (_, { date }, { token }) => (
 			{ timeEntry: callWithAuth(dailyEntries(date), token) }

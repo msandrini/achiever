@@ -5,7 +5,7 @@ import Modal from '../Modal';
 import Spinner from '../Spinner';
 import strings from '../../../../shared/strings';
 
-import '../../../styles/pageLoading.styl';
+import '../../genericPages/PageLoading.styl';
 
 const LoadingModal = props => (
 	<Modal

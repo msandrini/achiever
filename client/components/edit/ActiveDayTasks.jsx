@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 import SelectGroup from './SelectGroup';
 
-import {
-	SPECIAL_ACTIVITY_HOLIDAY
-} from '../../utils';
+import { SPECIAL_ACTIVITY_HOLIDAY } from '../../utils';
 
 import strings from '../../../shared/strings';
 

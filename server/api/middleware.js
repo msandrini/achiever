@@ -171,6 +171,25 @@ const userDetails = () => async (token) => {
 	};
 };
 
+const dayDetails = date => async (token) => {
+	const cookieJar = cookieJarFactory(token);
+	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/newhours_list.php`, cookieJar);
+	options.qs = { datei: date };
+
+	const responseHtml = await rp(options);
+	const $ = cheerio.load(responseHtml);
+	const {
+		phase,
+		activity
+	} = workTimeFromHtml($);
+
+	return {
+		date,
+		phase,
+		activity
+	};
+};
+
 const dailyEntries = date => async (token) => {
 	const cookieJar = cookieJarFactory(token);
 	const options = getOptions('GET', `${ACHIEVO_URL}/dlabs/timereg/newhours_list.php`, cookieJar);
@@ -233,11 +252,11 @@ const dailyEntries = date => async (token) => {
 	return timeEntry;
 };
 
-const extractBreakTime = breakTime => {
+const extractBreakTime = (breakTime) => {
 	const regex = /(\d{1,2}:\d{1,2}:\d{1,2})/g;
 	const matches = breakTime.match(regex);
-	const [startBreakTime = '', endBreakTime = '']  = matches || [];
-	
+	const [startBreakTime = '', endBreakTime = ''] = matches || [];
+
 	return {
 		startBreakTime,
 		endBreakTime
@@ -251,7 +270,8 @@ const headers = {
 	WORKED_TIME: 3,
 	BREAK_TIME: 4,
 	END_TIME: 5,
-	BALANCE: 8
+	BALANCE: 8,
+	REMARKS: 9
 };
 
 const allTimesTableToData = ($) => {
@@ -260,8 +280,10 @@ const allTimesTableToData = ($) => {
 	$('table tr').each((i, tr) => {
 		const tds = $(tr).find('td');
 		if (tds.length) {
-			const [date] = trimmedText(tds[headers.DATE]).split(' ');
+			const [date,,, holiday] = trimmedText(tds[headers.DATE]).split(' ');
 			const breakTime = trimmedText($(tds[headers.BREAK_TIME]));
+			const isVacation = breakTime === 'Vacation';
+			const isHoliday = Boolean(holiday && !isVacation);
 
 			data.push({
 				date,
@@ -270,7 +292,10 @@ const allTimesTableToData = ($) => {
 				endTime: trimmedText(tds[headers.END_TIME]),
 				...extractBreakTime(breakTime),
 				total: trimmedText(tds[headers.WORKED_TIME]),
-				balance: trimmedText(tds[headers.BALANCE])
+				balance: trimmedText(tds[headers.BALANCE]),
+				isVacation,
+				isHoliday,
+				holiday: isHoliday ? trimmedText(tds[headers.REMARKS]) : null
 			});
 		}
 	});
@@ -278,10 +303,10 @@ const allTimesTableToData = ($) => {
 	return data;
 };
 
-const getTodayEntries = async(token, { contractedTime, balance }) => {
-	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);	
+const getTodayEntries = async (token, { contractedTime, balance }) => {
+	const todayEntry = await dailyEntries(moment().format('YYYY-MM-DD'))(token);
 
-	if (!!todayEntry.id) {
+	if (todayEntry.id) {
 		const balanceDuration = new TimeDuration(balance);
 		balanceDuration.subtract(contractedTime).add(todayEntry.total);
 
@@ -293,6 +318,31 @@ const getTodayEntries = async(token, { contractedTime, balance }) => {
 	}
 
 	return [];
+};
+
+const calculateWeekBalance = (entries) => {
+	let lastWeeksInYear = -1;
+	let weekBalance = new TimeDuration('0:00');
+
+	const result = [];
+	for (let i = 0; i < entries.length; i++) { // eslint-disable-line
+		const index = entries.length - i - 1;
+		const entry = entries[index];
+		const weeksInYear = moment(entry.date).isoWeeks();
+
+		if (weeksInYear !== lastWeeksInYear) {
+			weekBalance = new TimeDuration('0:00');
+		}
+
+		lastWeeksInYear = weeksInYear;
+		if (entry.total) {
+			weekBalance.add(entry.total);
+		}
+
+		result[index] = ({ ...entry, weekBalance: weekBalance.toString() });
+	}
+
+	return result;
 };
 
 const allEntries = () => async (token) => {
@@ -308,16 +358,16 @@ const allEntries = () => async (token) => {
 	const name = $('h4').eq(0).text().trim();
 	const admissionRaw = $('h4').eq(1).text();
 	const admission = admissionRaw.replace('Admission:', '').trim();
-	const allEntries = allTimesTableToData($);
-	const todayEntry = await getTodayEntries(token, allEntries[0]);
-	const timeData = [...todayEntry, ...allEntries];
+	const allEntriesData = allTimesTableToData($);
+	const todayEntry = await getTodayEntries(token, allEntriesData[0]);
+	const entries = calculateWeekBalance([...todayEntry, ...allEntriesData]);
 
 	logger.info('All entries finished');
 
 	return {
 		name,
 		admission,
-		timeData
+		entries
 	};
 };
 
@@ -451,5 +501,6 @@ module.exports = {
 	userDetails,
 	getBalance,
 	extractBreakTime,
-	allTimesTableToData
+	allTimesTableToData,
+	dayDetails
 };

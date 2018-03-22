@@ -29,7 +29,7 @@ const typeDefs = `
 		total: String
 	}
 
-	type TimeData {
+	type Entries {
 		date: String
 		contractedTime: String
 		startTime: String
@@ -37,13 +37,17 @@ const typeDefs = `
 		startBreakTime: String
 		endBreakTime: String
 		total: String
+		weekBalance: String
 		balance: String
+		isHoliday: Boolean
+		holiday: String
+		isVacation: Boolean
 	}
 
 	type AllEntries {
 		name: String
 		admission: String
-		timeData: [TimeData]
+		entries: [Entries]
 	}
 
 	type WeekEntries {
@@ -86,11 +90,18 @@ const typeDefs = `
 		lastFridayBalance: String!
 	}
 
+	type DayDetails {
+		date: String!,
+		phase: String,
+		activity: String
+	}
+
 	type Query {
 		userDetails: UserDetails
 		weekEntries(date: String!): WeekEntries
 		allEntries: AllEntries
 		dayEntry(date: String!): DayEntry
+		dayDetails(date: String!): DayDetails
 		phases: PhaseList
 	}
 

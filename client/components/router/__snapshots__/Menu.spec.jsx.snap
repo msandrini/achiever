@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Menu should render a menu based on path and authenticated 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Menu />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Array [
+    null,
+    <Link
+      activeClassName="is-active"
+      className=""
+      isActive={false}
+      to="/today"
+    >
+      Horas de hoje
+    </Link>,
+    <Link
+      activeClassName="is-active"
+      className=""
+      isActive={false}
+      to="/edit"
+    >
+      Editar horários
+    </Link>,
+    <Link
+      activeClassName="is-active"
+      className=""
+      isActive={false}
+      to="/time-entry"
+    >
+      Apontamento de horas
+    </Link>,
+  ],
+  Symbol(enzyme.__nodes__): Array [
+    Array [
+      null,
+      <Link
+        activeClassName="is-active"
+        className=""
+        isActive={false}
+        to="/today"
+      >
+        Horas de hoje
+      </Link>,
+      <Link
+        activeClassName="is-active"
+        className=""
+        isActive={false}
+        to="/edit"
+      >
+        Editar horários
+      </Link>,
+      <Link
+        activeClassName="is-active"
+        className=""
+        isActive={false}
+        to="/time-entry"
+      >
+        Apontamento de horas
+      </Link>,
+    ],
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`Menu should render a menu based on path and not authenticated 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Menu />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Array [
+    null,
+    null,
+    null,
+    null,
+  ],
+  Symbol(enzyme.__nodes__): Array [
+    Array [
+      null,
+      null,
+      null,
+      null,
+    ],
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

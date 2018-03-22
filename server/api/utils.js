@@ -66,7 +66,7 @@ const extractSelectOptions = (id, response) => {
 	if (!isOptionList) {
 		const options = [{
 			id: parseInt($(`#${id}`).val(), 10),
-			name: $('span').text().trim()
+			name: $('span').text().trim().replace(/\//, ' / ')
 		}];
 
 		return {
