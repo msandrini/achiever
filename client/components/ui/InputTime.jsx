@@ -16,8 +16,8 @@ const InputTime = ({
 	isHidden,
 	onChangeTime
 }) => (
-	<fieldset className="InputTime">
-		{ !isHidden ?
+	!isHidden ?
+		<fieldset className="InputTime">
 			<label>
 				<span className="label">{label}</span>
 				<input
@@ -39,9 +39,8 @@ const InputTime = ({
 					disabled={isDisabled}
 					onChange={event => onChangeTime(_mergeMinutes(value, event.target.value))}
 				/>
-			</label> : ''
-		}
-	</fieldset>
+			</label>
+		</fieldset> : null
 );
 
 export default InputTime;

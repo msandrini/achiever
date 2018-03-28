@@ -17,355 +17,14 @@ ShallowWrapper {
   Symbol(enzyme.__node__): Object {
     "instance": null,
     "key": undefined,
-    "nodeType": "host",
+    "nodeType": "function",
     "props": Object {
-      "children": <form
-        onSubmit={[Function]}
-      >
-        <h2
-          className="current-date"
-        >
-          <strong>
-            Entrada
-          </strong>
-        </h2>
+      "children": Array [
         <div
-          className="columns"
-        >
-          <div
-            className="column column-half"
-          />
-          <div
-            className="column column-half"
-          >
-            <Panel
-              message=""
-              type="error"
-            />
-            <div
-              className="login-field"
-            >
-              <input
-                name="username"
-                onChange={[Function]}
-                placeholder="Usuário"
-                type="text"
-              />
-            </div>
-            <div
-              className="login-field"
-            >
-              <input
-                name="password"
-                onChange={[Function]}
-                placeholder="Senha"
-                type="password"
-              />
-            </div>
-            <button
-              className="send send-login"
-              disabled={true}
-              type="submit"
-            >
-              Enviar
-            </button>
-          </div>
-        </div>
-      </form>,
-      "className": "page-wrapper",
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": Array [
-          <h2
-            className="current-date"
-          >
-            <strong>
-              Entrada
-            </strong>
-          </h2>,
-          <div
-            className="columns"
-          >
-            <div
-              className="column column-half"
-            />
-            <div
-              className="column column-half"
-            >
-              <Panel
-                message=""
-                type="error"
-              />
-              <div
-                className="login-field"
-              >
-                <input
-                  name="username"
-                  onChange={[Function]}
-                  placeholder="Usuário"
-                  type="text"
-                />
-              </div>
-              <div
-                className="login-field"
-              >
-                <input
-                  name="password"
-                  onChange={[Function]}
-                  placeholder="Senha"
-                  type="password"
-                />
-              </div>
-              <button
-                className="send send-login"
-                disabled={true}
-                type="submit"
-              >
-                Enviar
-              </button>
-            </div>
-          </div>,
-        ],
-        "onSubmit": [Function],
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": <strong>
-              Entrada
-            </strong>,
-            "className": "current-date",
-          },
-          "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": "Entrada",
-            },
-            "ref": null,
-            "rendered": "Entrada",
-            "type": "strong",
-          },
-          "type": "h2",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": Array [
-              <div
-                className="column column-half"
-              />,
-              <div
-                className="column column-half"
-              >
-                <Panel
-                  message=""
-                  type="error"
-                />
-                <div
-                  className="login-field"
-                >
-                  <input
-                    name="username"
-                    onChange={[Function]}
-                    placeholder="Usuário"
-                    type="text"
-                  />
-                </div>
-                <div
-                  className="login-field"
-                >
-                  <input
-                    name="password"
-                    onChange={[Function]}
-                    placeholder="Senha"
-                    type="password"
-                  />
-                </div>
-                <button
-                  className="send send-login"
-                  disabled={true}
-                  type="submit"
-                >
-                  Enviar
-                </button>
-              </div>,
-            ],
-            "className": "columns",
-          },
-          "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "className": "column column-half",
-              },
-              "ref": null,
-              "rendered": null,
-              "type": "div",
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": Array [
-                  <Panel
-                    message=""
-                    type="error"
-                  />,
-                  <div
-                    className="login-field"
-                  >
-                    <input
-                      name="username"
-                      onChange={[Function]}
-                      placeholder="Usuário"
-                      type="text"
-                    />
-                  </div>,
-                  <div
-                    className="login-field"
-                  >
-                    <input
-                      name="password"
-                      onChange={[Function]}
-                      placeholder="Senha"
-                      type="password"
-                    />
-                  </div>,
-                  <button
-                    className="send send-login"
-                    disabled={true}
-                    type="submit"
-                  >
-                    Enviar
-                  </button>,
-                ],
-                "className": "column column-half",
-              },
-              "ref": null,
-              "rendered": Array [
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "function",
-                  "props": Object {
-                    "message": "",
-                    "type": "error",
-                  },
-                  "ref": null,
-                  "rendered": null,
-                  "type": [Function],
-                },
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "children": <input
-                      name="username"
-                      onChange={[Function]}
-                      placeholder="Usuário"
-                      type="text"
-                    />,
-                    "className": "login-field",
-                  },
-                  "ref": null,
-                  "rendered": Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "host",
-                    "props": Object {
-                      "name": "username",
-                      "onChange": [Function],
-                      "placeholder": "Usuário",
-                      "type": "text",
-                    },
-                    "ref": null,
-                    "rendered": null,
-                    "type": "input",
-                  },
-                  "type": "div",
-                },
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "children": <input
-                      name="password"
-                      onChange={[Function]}
-                      placeholder="Senha"
-                      type="password"
-                    />,
-                    "className": "login-field",
-                  },
-                  "ref": null,
-                  "rendered": Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "host",
-                    "props": Object {
-                      "name": "password",
-                      "onChange": [Function],
-                      "placeholder": "Senha",
-                      "type": "password",
-                    },
-                    "ref": null,
-                    "rendered": null,
-                    "type": "input",
-                  },
-                  "type": "div",
-                },
-                Object {
-                  "instance": null,
-                  "key": undefined,
-                  "nodeType": "host",
-                  "props": Object {
-                    "children": "Enviar",
-                    "className": "send send-login",
-                    "disabled": true,
-                    "type": "submit",
-                  },
-                  "ref": null,
-                  "rendered": "Enviar",
-                  "type": "button",
-                },
-              ],
-              "type": "div",
-            },
-          ],
-          "type": "div",
-        },
-      ],
-      "type": "form",
-    },
-    "type": "div",
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": <form
-          onSubmit={[Function]}
+          className="column column-nav"
+        />,
+        <div
+          className="column column-actions"
         >
           <h2
             className="current-date"
@@ -374,19 +33,14 @@ ShallowWrapper {
               Entrada
             </strong>
           </h2>
-          <div
-            className="columns"
-          >
-            <div
-              className="column column-half"
+          <main>
+            <Panel
+              message=""
+              type="error"
             />
-            <div
-              className="column column-half"
+            <form
+              onSubmit={[Function]}
             >
-              <Panel
-                message=""
-                type="error"
-              />
               <div
                 className="login-field"
               >
@@ -414,13 +68,25 @@ ShallowWrapper {
               >
                 Enviar
               </button>
-            </div>
-          </div>
-        </form>,
-        "className": "page-wrapper",
+            </form>
+          </main>
+        </div>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "className": "column column-nav",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": "div",
       },
-      "ref": null,
-      "rendered": Object {
+      Object {
         "instance": null,
         "key": undefined,
         "nodeType": "host",
@@ -433,19 +99,14 @@ ShallowWrapper {
                 Entrada
               </strong>
             </h2>,
-            <div
-              className="columns"
-            >
-              <div
-                className="column column-half"
+            <main>
+              <Panel
+                message=""
+                type="error"
               />
-              <div
-                className="column column-half"
+              <form
+                onSubmit={[Function]}
               >
-                <Panel
-                  message=""
-                  type="error"
-                />
                 <div
                   className="login-field"
                 >
@@ -473,10 +134,10 @@ ShallowWrapper {
                 >
                   Enviar
                 </button>
-              </div>
-            </div>,
+              </form>
+            </main>,
           ],
-          "onSubmit": [Function],
+          "className": "column column-actions",
         },
         "ref": null,
         "rendered": Array [
@@ -510,16 +171,13 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": Array [
-                <div
-                  className="column column-half"
+                <Panel
+                  message=""
+                  type="error"
                 />,
-                <div
-                  className="column column-half"
+                <form
+                  onSubmit={[Function]}
                 >
-                  <Panel
-                    message=""
-                    type="error"
-                  />
                   <div
                     className="login-field"
                   >
@@ -547,22 +205,22 @@ ShallowWrapper {
                   >
                     Enviar
                   </button>
-                </div>,
+                </form>,
               ],
-              "className": "columns",
             },
             "ref": null,
             "rendered": Array [
               Object {
                 "instance": null,
                 "key": undefined,
-                "nodeType": "host",
+                "nodeType": "function",
                 "props": Object {
-                  "className": "column column-half",
+                  "message": "",
+                  "type": "error",
                 },
                 "ref": null,
                 "rendered": null,
-                "type": "div",
+                "type": [Function],
               },
               Object {
                 "instance": null,
@@ -570,10 +228,6 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": Array [
-                    <Panel
-                      message=""
-                      type="error"
-                    />,
                     <div
                       className="login-field"
                     >
@@ -602,22 +256,10 @@ ShallowWrapper {
                       Enviar
                     </button>,
                   ],
-                  "className": "column column-half",
+                  "onSubmit": [Function],
                 },
                 "ref": null,
                 "rendered": Array [
-                  Object {
-                    "instance": null,
-                    "key": undefined,
-                    "nodeType": "function",
-                    "props": Object {
-                      "message": "",
-                      "type": "error",
-                    },
-                    "ref": null,
-                    "rendered": null,
-                    "type": [Function],
-                  },
                   Object {
                     "instance": null,
                     "key": undefined,
@@ -693,15 +335,349 @@ ShallowWrapper {
                     "type": "button",
                   },
                 ],
-                "type": "div",
+                "type": "form",
               },
             ],
-            "type": "div",
+            "type": "main",
           },
         ],
-        "type": "form",
+        "type": "div",
       },
-      "type": "div",
+    ],
+    "type": Symbol(react.fragment),
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <div
+            className="column column-nav"
+          />,
+          <div
+            className="column column-actions"
+          >
+            <h2
+              className="current-date"
+            >
+              <strong>
+                Entrada
+              </strong>
+            </h2>
+            <main>
+              <Panel
+                message=""
+                type="error"
+              />
+              <form
+                onSubmit={[Function]}
+              >
+                <div
+                  className="login-field"
+                >
+                  <input
+                    name="username"
+                    onChange={[Function]}
+                    placeholder="Usuário"
+                    type="text"
+                  />
+                </div>
+                <div
+                  className="login-field"
+                >
+                  <input
+                    name="password"
+                    onChange={[Function]}
+                    placeholder="Senha"
+                    type="password"
+                  />
+                </div>
+                <button
+                  className="send send-login"
+                  disabled={true}
+                  type="submit"
+                >
+                  Enviar
+                </button>
+              </form>
+            </main>
+          </div>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "className": "column column-nav",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <h2
+                className="current-date"
+              >
+                <strong>
+                  Entrada
+                </strong>
+              </h2>,
+              <main>
+                <Panel
+                  message=""
+                  type="error"
+                />
+                <form
+                  onSubmit={[Function]}
+                >
+                  <div
+                    className="login-field"
+                  >
+                    <input
+                      name="username"
+                      onChange={[Function]}
+                      placeholder="Usuário"
+                      type="text"
+                    />
+                  </div>
+                  <div
+                    className="login-field"
+                  >
+                    <input
+                      name="password"
+                      onChange={[Function]}
+                      placeholder="Senha"
+                      type="password"
+                    />
+                  </div>
+                  <button
+                    className="send send-login"
+                    disabled={true}
+                    type="submit"
+                  >
+                    Enviar
+                  </button>
+                </form>
+              </main>,
+            ],
+            "className": "column column-actions",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <strong>
+                  Entrada
+                </strong>,
+                "className": "current-date",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Entrada",
+                },
+                "ref": null,
+                "rendered": "Entrada",
+                "type": "strong",
+              },
+              "type": "h2",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Panel
+                    message=""
+                    type="error"
+                  />,
+                  <form
+                    onSubmit={[Function]}
+                  >
+                    <div
+                      className="login-field"
+                    >
+                      <input
+                        name="username"
+                        onChange={[Function]}
+                        placeholder="Usuário"
+                        type="text"
+                      />
+                    </div>
+                    <div
+                      className="login-field"
+                    >
+                      <input
+                        name="password"
+                        onChange={[Function]}
+                        placeholder="Senha"
+                        type="password"
+                      />
+                    </div>
+                    <button
+                      className="send send-login"
+                      disabled={true}
+                      type="submit"
+                    >
+                      Enviar
+                    </button>
+                  </form>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "message": "",
+                    "type": "error",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <div
+                        className="login-field"
+                      >
+                        <input
+                          name="username"
+                          onChange={[Function]}
+                          placeholder="Usuário"
+                          type="text"
+                        />
+                      </div>,
+                      <div
+                        className="login-field"
+                      >
+                        <input
+                          name="password"
+                          onChange={[Function]}
+                          placeholder="Senha"
+                          type="password"
+                        />
+                      </div>,
+                      <button
+                        className="send send-login"
+                        disabled={true}
+                        type="submit"
+                      >
+                        Enviar
+                      </button>,
+                    ],
+                    "onSubmit": [Function],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": <input
+                          name="username"
+                          onChange={[Function]}
+                          placeholder="Usuário"
+                          type="text"
+                        />,
+                        "className": "login-field",
+                      },
+                      "ref": null,
+                      "rendered": Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "name": "username",
+                          "onChange": [Function],
+                          "placeholder": "Usuário",
+                          "type": "text",
+                        },
+                        "ref": null,
+                        "rendered": null,
+                        "type": "input",
+                      },
+                      "type": "div",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": <input
+                          name="password"
+                          onChange={[Function]}
+                          placeholder="Senha"
+                          type="password"
+                        />,
+                        "className": "login-field",
+                      },
+                      "ref": null,
+                      "rendered": Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "name": "password",
+                          "onChange": [Function],
+                          "placeholder": "Senha",
+                          "type": "password",
+                        },
+                        "ref": null,
+                        "rendered": null,
+                        "type": "input",
+                      },
+                      "type": "div",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": "Enviar",
+                        "className": "send send-login",
+                        "disabled": true,
+                        "type": "submit",
+                      },
+                      "ref": null,
+                      "rendered": "Enviar",
+                      "type": "button",
+                    },
+                  ],
+                  "type": "form",
+                },
+              ],
+              "type": "main",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": Symbol(react.fragment),
     },
   ],
   Symbol(enzyme.__options__): Object {

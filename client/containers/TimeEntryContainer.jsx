@@ -26,6 +26,8 @@ const _handleDateChange = date => () => ({
 	errorMessage: null
 });
 
+const _handleModeChange = mode => () => ({ mode });
+
 const _recalculateBalance = (entry, persisted) => {
 	const DEFAULT_TIME = '0:00';
 
@@ -72,13 +74,15 @@ class TimeEntryContainer extends React.Component {
 
 		this.handleDateChange = this.handleDateChange.bind(this);
 		this.handleEntryChange = this.handleEntryChange.bind(this);
+		this.handleModeChange = this.handleModeChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
 			selectedDate: null,
 			entry: {},
 			successMessage: null,
-			errorMessage: null
+			errorMessage: null,
+			mode: ''
 		};
 	}
 
@@ -106,6 +110,10 @@ class TimeEntryContainer extends React.Component {
 		return (entry) => {
 			this.setState(_handleEntryChange(entries, entry));
 		};
+	}
+
+	handleModeChange(modeSelected) {
+		this.setState(_handleModeChange(modeSelected));
 	}
 
 	handleSubmit(event) {
@@ -155,6 +163,7 @@ class TimeEntryContainer extends React.Component {
 		const {
 			selectedDate,
 			entry,
+			mode,
 			successMessage,
 			errorMessage
 		} = this.state;
@@ -170,6 +179,7 @@ class TimeEntryContainer extends React.Component {
 		return (
 			<TimeEntry
 				entries={entries}
+				mode={mode}
 				selectedDate={selectedDate ? moment(selectedDate) : null}
 				selectedEntry={selectedEntry}
 				statistics={selectedEntry ? _getStatistics(selectedDate, selectedEntry) : {}}
@@ -178,6 +188,7 @@ class TimeEntryContainer extends React.Component {
 				isPersisted={isPersisted}
 				isLoading={this.props.allEntriesQuery.loading}
 				onDateChange={this.handleDateChange}
+				onChangeMode={this.handleModeChange}
 				onChangeEntry={this.handleEntryChange(entries)}
 				onSubmit={this.handleSubmit}
 			/>

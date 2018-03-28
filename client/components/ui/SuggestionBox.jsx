@@ -14,7 +14,8 @@ class SuggestionBox extends React.Component {
 				0,
 				15,
 				30,
-				45];
+				45
+			];
 		} else {
 			this.valueList = [];
 			const refHour = props.referenceHour;

@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
-import TimeEntryForm from './TimeEntryForm';
 import FullScreenSpinner from '../ui/FullScreenSpinner';
+
+import TimeEntryForm from './TimeEntryForm';
+import SpecialDayPanel from './SpecialDayPanel';
 
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
 
 const TimeEntry = ({
 	entries,
+	mode,
 	selectedDate,
 	selectedEntry,
 	statistics,
@@ -20,6 +23,7 @@ const TimeEntry = ({
 	isLoading,
 	onDateChange,
 	onChangeEntry,
+	onChangeMode,
 	onSubmit
 }) => (
 	<React.Fragment>
@@ -45,15 +49,23 @@ const TimeEntry = ({
 				<strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
 			</h2>
 			<main>
-				<TimeEntryForm
-					entry={selectedEntry}
-					isDisabled={false}
-					isPersisted={isPersisted}
-					successMessage={successMessage}
-					errorMessage={errorMessage}
-					onChangeEntry={onChangeEntry}
-					onSubmit={onSubmit}
-				/>
+				{(selectedEntry.isHoliday || selectedEntry.isVacation) ?
+					<SpecialDayPanel
+						entry={selectedEntry}
+					/>
+					:
+					<TimeEntryForm
+						mode={mode}
+						entry={selectedEntry}
+						isDisabled={false}
+						isPersisted={isPersisted}
+						successMessage={successMessage}
+						errorMessage={errorMessage}
+						onChangeEntry={onChangeEntry}
+						onChangeMode={onChangeMode}
+						onSubmit={onSubmit}
+					/>
+				}
 			</main>
 		</div>
 	</React.Fragment>
@@ -61,6 +73,7 @@ const TimeEntry = ({
 
 TimeEntry.propTypes = {
 	entries: PropTypes.arrayOf(Entries),
+	mode: PropTypes.string,
 	selectedDate: PropTypes.object,
 	selectedEntry: Entries,
 	statistics: PropTypes.shape({
@@ -76,11 +89,13 @@ TimeEntry.propTypes = {
 	isLoading: PropTypes.bool,
 	onDateChange: PropTypes.func,
 	onChangeEntry: PropTypes.func,
+	onChangeMode: PropTypes.func,
 	onSubmit: PropTypes.func
 };
 
 TimeEntry.defaultProps = {
 	entries: [{}],
+	mode: '',
 	selectedDate: {},
 	selectedEntry: {},
 	statistics: {},
@@ -90,6 +105,7 @@ TimeEntry.defaultProps = {
 	isLoading: false,
 	onDateChange: () => {},
 	onChangeEntry: () => {},
+	onChangeMode: () => {},
 	onSubmit: () => {}
 };
 
