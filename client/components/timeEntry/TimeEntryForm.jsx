@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 
 import Panel from '../ui/Panel';
 import Button from '../ui/Button';
-import InputTime from '../ui/InputTime';
+import InputTimeGroup from '../ui/InputTimeGroup';
 import ModeSelect from './ModeSelect';
 
 import strings from '../../../shared/strings';
 import { Entries } from '../../PropTypes';
 
 const HEADERS = {
-	startTime: 0,
-	startBreakTime: 1,
-	endBreakTime: 2,
-	endTime: 3
+	startTime: { key: 0, referenceHour: 8 },
+	startBreakTime: { key: 1, referenceHour: 12 },
+	endBreakTime: { key: 2, referenceHour: 13 },
+	endTime: { key: 3, referenceHour: 17 }
 };
 
 const TimeEntryForm = ({
@@ -35,14 +35,15 @@ const TimeEntryForm = ({
 		<Panel message={successMessage} type="success" />
 		<Panel message={errorMessage} type="error" />
 		{
-			Object.keys(HEADERS).map(key => (
-				<InputTime
-					key={key}
+			Object.keys(HEADERS).map(phase => (
+				<InputTimeGroup
+					key={phase}
 					isHidden={Boolean(mode)}
-					label={strings.times[HEADERS[key]].label}
-					value={entry[key]}
+					label={strings.times[HEADERS[phase].key].label}
+					value={entry[phase]}
 					isDisabled={isDisabled}
-					onChangeTime={time => onChangeEntry({ ...entry, [key]: time })}
+					onChangeTime={time => onChangeEntry({ ...entry, [phase]: time })}
+					referenceHour={HEADERS[phase].referenceHour}
 				/>
 			))
 		}

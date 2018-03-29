@@ -30,7 +30,8 @@ class SuggestionBox extends React.Component {
 
 	_actionCall(value) {
 		return () => {
-			this.props.onChoose(withLeadingZero(value));
+			const valueToSend = this.mode === 'hours' ? value : withLeadingZero(value);
+			this.props.onChoose(valueToSend);
 		};
 	}
 
@@ -38,18 +39,19 @@ class SuggestionBox extends React.Component {
 		return (
 			<li key={value}>
 				<button type="button" onClick={this._actionCall(value)}>
-					{withLeadingZero(value)}
+					{this.mode === 'hours' ? value : withLeadingZero(value)}
 				</button>
 			</li>
 		);
 	}
 
 	render() {
-		if (!this.props.show) {
+		const { show, mode } = this.props;
+		if (!show) {
 			return null;
 		}
 		return (
-			<ul className={`suggestion-box ${this.props.mode}`}>
+			<ul className={`suggestion-box ${mode}`}>
 				{this.valueList.map(this._individualSuggestion)}
 			</ul>
 		);

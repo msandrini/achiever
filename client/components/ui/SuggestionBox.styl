@@ -1,8 +1,10 @@
+@import "../../styles/_colours.styl"
+    
 ul.suggestion-box
     position: absolute;
     background: white;
     list-style: none;
-    border: 1px solid #777;
+    border: 2px solid focusColour;
     box-shadow: 2px 2px 8px rgba(0,0,0,.4);
     margin: 45px 0 0 70px;
     padding: 0;
@@ -10,7 +12,6 @@ ul.suggestion-box
     display: flex;
     flex-direction: row;
     font-size: 12px;
-    border-radius: 0 5px 5px 5px;
 
     &.minutes
         margin-left: 199px;

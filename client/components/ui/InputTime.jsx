@@ -1,61 +1,90 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SuggestionBox from './SuggestionBox';
 
-import './InputTime.styl';
+const _getUnit = (mode, value) => value ? value.split(':')[mode === 'hours' ? 0 : 1] : '';
 
-const _getHours = value => value ? value.split(':')[0] : '';
-const _getMinutes = value => value ? value.split(':')[1] : '';
-
-const _mergeHours = (value, changedHours) => `${changedHours}:${_getMinutes(value)}`;
-const _mergeMinutes = (value, changedMinutes) => `${_getHours(value)}:${changedMinutes}`;
-
-const InputTime = ({
-	label,
-	value,
-	isDisabled,
-	isHidden,
-	onChangeTime
-}) => (
-	!isHidden ?
-		<fieldset className="InputTime">
-			<label>
-				<span className="label">{label}</span>
-				<input
-					type="number"
-					value={_getHours(value)}
-					min={0}
-					max={23}
-					placeholder="0"
-					disabled={isDisabled}
-					onChange={event => onChangeTime(_mergeHours(value, event.target.value))}
-				/>
-				<span className="separator">:</span>
-				<input
-					type="number"
-					value={_getMinutes(value)}
-					min={0}
-					max={59}
-					placeholder="00"
-					disabled={isDisabled}
-					onChange={event => onChangeTime(_mergeMinutes(value, event.target.value))}
-				/>
-			</label>
-		</fieldset> : null
-);
-
-export default InputTime;
-
-InputTime.propTypes = {
-	label: PropTypes.string.isRequired,
-	value: PropTypes.string,
-	isDisabled: PropTypes.bool,
-	isHidden: PropTypes.bool,
-	onChangeTime: PropTypes.func
+const _merge = (mode, value, changedUnitValue) => {
+	if (mode === 'hours') return `${changedUnitValue}:${_getUnit('minutes', value)}`;
+	if (mode === 'minutes') return `${_getUnit('hours', value)}:${changedUnitValue}`;
+	return '';
 };
 
-InputTime.defaultProps = {
+const preventFillOverMaxLength = (event) => {
+	const isNumberPressed = /[0-9]/.test(event.key);
+	if (event.target.value.length >= 2 && isNumberPressed) {
+		event.preventDefault();
+	}
+};
+
+class InputTimeGroup extends React.Component {
+	constructor() {
+		super();
+
+		this.state = {
+			focused: false
+		};
+
+		this.handleFocus = this.handleFocus.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
+	}
+
+	handleFocus() {
+		this.setState({ focused: true });
+	}
+
+	handleBlur() {
+		setTimeout(() => this.setState({ focused: false }), 100);
+	}
+
+	render() {
+		const {
+			mode,
+			value,
+			disabled,
+			onChangeTime,
+			referenceHour
+		} = this.props;
+
+		return [
+			<input
+				key={0}
+				type="number"
+				value={_getUnit(mode, value)}
+				min={0}
+				max={mode === 'minutes' ? 59 : 23}
+				placeholder={mode === 'minutes' ? '00' : '0'}
+				onFocus={this.handleFocus}
+				onBlur={this.handleBlur}
+				disabled={disabled}
+				onKeyDown={preventFillOverMaxLength}
+				onChange={event => onChangeTime(_merge(mode, value, event.target.value))}
+			/>,
+			<SuggestionBox
+				key={1}
+				show={this.state.focused}
+				mode={mode}
+				onChoose={chosenValue => onChangeTime(_merge(mode, value, chosenValue))}
+				referenceHour={referenceHour}
+			/>
+		];
+	}
+}
+
+export default InputTimeGroup;
+
+InputTimeGroup.propTypes = {
+	mode: PropTypes.oneOf(['hours', 'minutes']),
+	value: PropTypes.string,
+	disabled: PropTypes.bool,
+	onChangeTime: PropTypes.func,
+	referenceHour: PropTypes.number
+};
+
+InputTimeGroup.defaultProps = {
 	value: '0:00',
-	isDisabled: false,
-	isHidden: false,
-	onChangeTime: () => {}
+	mode: 'minutes',
+	disabled: false,
+	onChangeTime: () => {},
+	referenceHour: null
 };
