@@ -34,11 +34,14 @@ ShallowWrapper {
             </strong>
           </h2>
           <main>
-            <Panel
-              message=""
-              type="error"
+            <AlertModal
+              active={false}
+              content=""
+              onClose={[Function]}
+              title="Erro!"
             />
             <form
+              className="login-form"
               onSubmit={[Function]}
             >
               <div
@@ -100,11 +103,14 @@ ShallowWrapper {
               </strong>
             </h2>,
             <main>
-              <Panel
-                message=""
-                type="error"
+              <AlertModal
+                active={false}
+                content=""
+                onClose={[Function]}
+                title="Erro!"
               />
               <form
+                className="login-form"
                 onSubmit={[Function]}
               >
                 <div
@@ -171,11 +177,14 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": Array [
-                <Panel
-                  message=""
-                  type="error"
+                <AlertModal
+                  active={false}
+                  content=""
+                  onClose={[Function]}
+                  title="Erro!"
                 />,
                 <form
+                  className="login-form"
                   onSubmit={[Function]}
                 >
                   <div
@@ -215,8 +224,10 @@ ShallowWrapper {
                 "key": undefined,
                 "nodeType": "function",
                 "props": Object {
-                  "message": "",
-                  "type": "error",
+                  "active": false,
+                  "content": "",
+                  "onClose": [Function],
+                  "title": "Erro!",
                 },
                 "ref": null,
                 "rendered": null,
@@ -256,6 +267,7 @@ ShallowWrapper {
                       Enviar
                     </button>,
                   ],
+                  "className": "login-form",
                   "onSubmit": [Function],
                 },
                 "ref": null,
@@ -367,11 +379,14 @@ ShallowWrapper {
               </strong>
             </h2>
             <main>
-              <Panel
-                message=""
-                type="error"
+              <AlertModal
+                active={false}
+                content=""
+                onClose={[Function]}
+                title="Erro!"
               />
               <form
+                className="login-form"
                 onSubmit={[Function]}
               >
                 <div
@@ -433,11 +448,14 @@ ShallowWrapper {
                 </strong>
               </h2>,
               <main>
-                <Panel
-                  message=""
-                  type="error"
+                <AlertModal
+                  active={false}
+                  content=""
+                  onClose={[Function]}
+                  title="Erro!"
                 />
                 <form
+                  className="login-form"
                   onSubmit={[Function]}
                 >
                   <div
@@ -504,11 +522,14 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": Array [
-                  <Panel
-                    message=""
-                    type="error"
+                  <AlertModal
+                    active={false}
+                    content=""
+                    onClose={[Function]}
+                    title="Erro!"
                   />,
                   <form
+                    className="login-form"
                     onSubmit={[Function]}
                   >
                     <div
@@ -548,8 +569,10 @@ ShallowWrapper {
                   "key": undefined,
                   "nodeType": "function",
                   "props": Object {
-                    "message": "",
-                    "type": "error",
+                    "active": false,
+                    "content": "",
+                    "onClose": [Function],
+                    "title": "Erro!",
                   },
                   "ref": null,
                   "rendered": null,
@@ -589,6 +612,7 @@ ShallowWrapper {
                         Enviar
                       </button>,
                     ],
+                    "className": "login-form",
                     "onSubmit": [Function],
                   },
                   "ref": null,

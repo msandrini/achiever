@@ -18,7 +18,7 @@
 
 describe('Router', () => {
 	describe('render', () => {
-		// it('should render page loagind if loading', () => {
+		it('should render page loagind if loading', () => {
 		// 	const loadingUserDetailsQuery = { ...defaultUserDetailsQuery, loading: true };
 		// 	const wrapper = mount(<Router
 		// 		path="/"
@@ -36,7 +36,7 @@ describe('Router', () => {
 		// 	wrapper.setState({ path: '/notfound-blablabla' });
 		// 	expect(wrapper).toMatchSnapshot();
 		// 	wrapper.unmount();
-		// });
+		});
 	});
 	describe('componentWillUpdate', () => {
 		// pages.routeDefinitions = mockRouteDefinitions;

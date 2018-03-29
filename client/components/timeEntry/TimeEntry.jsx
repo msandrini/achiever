@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
 import FullScreenSpinner from '../ui/FullScreenSpinner';
+import AlertModal from '../ui/modals/AlertModal';
 
 import TimeEntryForm from './TimeEntryForm';
 import SpecialDayPanel from './SpecialDayPanel';
@@ -24,6 +25,7 @@ const TimeEntry = ({
 	onDateChange,
 	onChangeEntry,
 	onChangeMode,
+	onCloseAlert,
 	onSubmit
 }) => (
 	<React.Fragment>
@@ -68,6 +70,20 @@ const TimeEntry = ({
 				}
 			</main>
 		</div>
+		<AlertModal
+			title={strings.success}
+			active={Boolean(successMessage)}
+			content={successMessage}
+			onClose={onCloseAlert}
+			type="success"
+		/>
+		<AlertModal
+			title={strings.error}
+			active={Boolean(errorMessage)}
+			content={errorMessage}
+			onClose={onCloseAlert}
+			type="error"
+		/>
 	</React.Fragment>
 );
 
@@ -90,6 +106,7 @@ TimeEntry.propTypes = {
 	onDateChange: PropTypes.func,
 	onChangeEntry: PropTypes.func,
 	onChangeMode: PropTypes.func,
+	onCloseAlert: PropTypes.func,
 	onSubmit: PropTypes.func
 };
 
@@ -106,6 +123,7 @@ TimeEntry.defaultProps = {
 	onDateChange: () => {},
 	onChangeEntry: () => {},
 	onChangeMode: () => {},
+	onCloseAlert: () => {},
 	onSubmit: () => {}
 };
 

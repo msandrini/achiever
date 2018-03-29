@@ -75,6 +75,7 @@ class TimeEntryContainer extends React.Component {
 		this.handleDateChange = this.handleDateChange.bind(this);
 		this.handleEntryChange = this.handleEntryChange.bind(this);
 		this.handleModeChange = this.handleModeChange.bind(this);
+		this.handleCloseAlert = this.handleCloseAlert.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
@@ -116,6 +117,10 @@ class TimeEntryContainer extends React.Component {
 		this.setState(_handleModeChange(modeSelected));
 	}
 
+	handleCloseAlert() {
+		this.setState({ successMessage: '', errorMessage: '' });
+	}
+
 	handleSubmit(event) {
 		event.preventDefault();
 		if (!this.state.entry) {
@@ -155,7 +160,8 @@ class TimeEntryContainer extends React.Component {
 			this.props.allEntriesQuery.refetch();
 			this.setState({ successMessage: strings.submitTimeSuccess });
 		}).catch((error) => {
-			this.setState({ errorMessage: error.graphQLErrors[0].message });
+			const errorMessage = error.message || error.graphQLErrors[0].message;
+			this.setState({ errorMessage });
 		});
 	}
 
@@ -190,6 +196,7 @@ class TimeEntryContainer extends React.Component {
 				onDateChange={this.handleDateChange}
 				onChangeMode={this.handleModeChange}
 				onChangeEntry={this.handleEntryChange(entries)}
+				onCloseAlert={this.handleCloseAlert}
 				onSubmit={this.handleSubmit}
 			/>
 		);

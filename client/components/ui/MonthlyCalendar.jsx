@@ -5,10 +5,7 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import {
-	isDayBlockedInPast,
-	isDayAfterToday
-} from '../../utils';
+import { isDayAfterToday } from '../../utils';
 
 import './MonthlyCalendar.styl';
 
@@ -25,10 +22,6 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 			checked.push(day);
 		} else {
 			unchecked.push(day);
-		}
-
-		if (isDayBlockedInPast(day)) {
-			locked.push(day);
 		}
 
 		if (isDayAfterToday(day)) {
