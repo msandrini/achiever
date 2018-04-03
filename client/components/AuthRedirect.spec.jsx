@@ -16,7 +16,7 @@ const defaultUserDetailsQuery = {
 	error: false
 };
 
-function shallowComponent(userDetailsQuery) {
+const shallowComponent = (userDetailsQuery) => {
 	const wrapper = shallow(<AuthRedirect
 		userDetailsQuery={userDetailsQuery}
 		signIn={{}}
@@ -25,7 +25,6 @@ function shallowComponent(userDetailsQuery) {
 	/>);
 	return wrapper;
 };
-
 
 describe('AuthRedirect', () => {
 	describe('render', () => {
