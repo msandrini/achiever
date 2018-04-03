@@ -46,14 +46,6 @@ ShallowWrapper {
           mode=""
           onSelect={[Function]}
         />,
-        <Panel
-          message=""
-          type="success"
-        />,
-        <Panel
-          message=""
-          type="error"
-        />,
         Array [
           <InputTimeGroup
             isDisabled={false}
@@ -106,30 +98,6 @@ ShallowWrapper {
         "props": Object {
           "mode": "",
           "onSelect": [Function],
-        },
-        "ref": null,
-        "rendered": null,
-        "type": [Function],
-      },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "message": "",
-          "type": "success",
-        },
-        "ref": null,
-        "rendered": null,
-        "type": [Function],
-      },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "message": "",
-          "type": "error",
         },
         "ref": null,
         "rendered": null,
@@ -226,14 +194,6 @@ ShallowWrapper {
             mode=""
             onSelect={[Function]}
           />,
-          <Panel
-            message=""
-            type="success"
-          />,
-          <Panel
-            message=""
-            type="error"
-          />,
           Array [
             <InputTimeGroup
               isDisabled={false}
@@ -286,30 +246,6 @@ ShallowWrapper {
           "props": Object {
             "mode": "",
             "onSelect": [Function],
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "message": "",
-            "type": "success",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "message": "",
-            "type": "error",
           },
           "ref": null,
           "rendered": null,

@@ -16,6 +16,7 @@ ShallowWrapper {
     mode=""
     onChangeEntry={[Function]}
     onChangeMode={[Function]}
+    onCloseAlert={[Function]}
     onDateChange={[Function]}
     onSubmit={[Function]}
     selectedDate={"2018-04-03T14:22:06.038Z"}
@@ -94,6 +95,20 @@ ShallowWrapper {
             />
           </main>
         </div>,
+        <AlertModal
+          active={false}
+          content=""
+          onClose={[Function]}
+          title="👍"
+          type="success"
+        />,
+        <AlertModal
+          active={false}
+          content=""
+          onClose={[Function]}
+          title="Erro!"
+          type="error"
+        />,
       ],
     },
     "ref": null,
@@ -279,6 +294,36 @@ ShallowWrapper {
         ],
         "type": "div",
       },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "active": false,
+          "content": "",
+          "onClose": [Function],
+          "title": "👍",
+          "type": "success",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "active": false,
+          "content": "",
+          "onClose": [Function],
+          "title": "Erro!",
+          "type": "error",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
     ],
     "type": Symbol(react.fragment),
   },
@@ -339,6 +384,20 @@ ShallowWrapper {
               />
             </main>
           </div>,
+          <AlertModal
+            active={false}
+            content=""
+            onClose={[Function]}
+            title="👍"
+            type="success"
+          />,
+          <AlertModal
+            active={false}
+            content=""
+            onClose={[Function]}
+            title="Erro!"
+            type="error"
+          />,
         ],
       },
       "ref": null,
@@ -523,6 +582,36 @@ ShallowWrapper {
             },
           ],
           "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "active": false,
+            "content": "",
+            "onClose": [Function],
+            "title": "👍",
+            "type": "success",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "active": false,
+            "content": "",
+            "onClose": [Function],
+            "title": "Erro!",
+            "type": "error",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
         },
       ],
       "type": Symbol(react.fragment),
