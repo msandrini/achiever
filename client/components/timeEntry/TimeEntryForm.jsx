@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Panel from '../ui/Panel';
 import Button from '../ui/Button';
 import InputTimeGroup from '../ui/InputTimeGroup';
 import ModeSelect from './ModeSelect';
@@ -20,8 +19,6 @@ const TimeEntryForm = ({
 	entry,
 	mode,
 	isDisabled,
-	successMessage,
-	errorMessage,
 	onChangeEntry,
 	onChangeMode,
 	isPersisted,
@@ -32,8 +29,6 @@ const TimeEntryForm = ({
 			mode={mode}
 			onSelect={onChangeMode}
 		/>
-		<Panel message={successMessage} type="success" />
-		<Panel message={errorMessage} type="error" />
 		{
 			Object.keys(HEADERS).map(phase => (
 				<InputTimeGroup
@@ -60,8 +55,6 @@ TimeEntryForm.propTypes = {
 	mode: PropTypes.string,
 	isDisabled: PropTypes.bool,
 	isPersisted: PropTypes.bool,
-	successMessage: PropTypes.string,
-	errorMessage: PropTypes.string,
 	onChangeEntry: PropTypes.func,
 	onChangeMode: PropTypes.func,
 	onSubmit: PropTypes.func
@@ -72,8 +65,6 @@ TimeEntryForm.defaultProps = {
 	mode: '',
 	isDisabled: false,
 	isPersisted: false,
-	successMessage: '',
-	errorMessage: '',
 	onChangeEntry: () => {},
 	onChangeMode: () => {},
 	onSubmit: () => {}

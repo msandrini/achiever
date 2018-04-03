@@ -4,13 +4,18 @@ import PropTypes from 'prop-types';
 import Modal from '../Modal';
 import strings from '../../../../shared/strings';
 
-const AlertModal = props => (
+const AlertModal = ({
+	active,
+	title,
+	content,
+	onClose
+}) => (
 	<Modal
-		active={props.active}
-		title={props.title ? props.title : strings.warning}
-		content={props.content}
+		active={active}
+		title={title}
+		content={content}
 		buttons={[
-			{ action: props.onClose, label: strings.ok }
+			{ action: onClose, label: strings.ok }
 		]}
 	/>
 );
@@ -27,7 +32,7 @@ AlertModal.propTypes = {
 
 AlertModal.defaultProps = {
 	active: false,
-	title: '',
+	title: strings.warning,
 	content: '',
 	onClose: () => {}
 };

@@ -105,7 +105,9 @@ const strings = {
 	specialDays: {
 		medical: 'Dispensa médica',
 		birthdayLeave: 'O-tanjoubi'
-	}
+	},
+	success: '👍',
+	error: 'Erro!'
 };
 
 module.exports = strings;
