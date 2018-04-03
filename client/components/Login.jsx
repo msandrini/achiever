@@ -108,5 +108,9 @@ class Login extends React.Component {
 export default graphql(queries.signIn, { name: 'signIn' })(Login);
 
 Login.propTypes = {
-	signIn: PropTypes.func.isRequired
+	signIn: PropTypes.func
+};
+
+Login.defaultProps = {
+	signIn: () => {}
 };

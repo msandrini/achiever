@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthRedirect render should load Login if not loading and not authenticated 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <AuthRedirect
+    addTimeEntryMutation={[Function]}
+    signIn={Object {}}
+    updateTimeEntryMutation={[Function]}
+    userDetailsQuery={
+      Object {
+        "error": false,
+        "loading": false,
+        "userDetails": Object {
+          "__typename": "UserDetails",
+          "dailyContractedHours": "8:00",
+          "lastFridayBalance": " 2:20",
+          "name": "JOHN DOE",
+        },
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "signIn": [Function],
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "signIn": [Function],
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`AuthRedirect render should load TimeEntry if not loading and if authenticated 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <AuthRedirect
+    addTimeEntryMutation={[Function]}
+    signIn={Object {}}
+    updateTimeEntryMutation={[Function]}
+    userDetailsQuery={
+      Object {
+        "error": false,
+        "loading": false,
+        "userDetails": Object {
+          "__typename": "UserDetails",
+          "dailyContractedHours": "8:00",
+          "lastFridayBalance": " 2:20",
+          "name": "JOHN DOE",
+        },
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "addTimeEntryMutation": [Function],
+      "allEntriesQuery": Object {
+        "allEntries": Object {
+          "admission": "",
+          "entries": Array [],
+          "name": "",
+        },
+        "error": "",
+        "loading": false,
+      },
+      "updateTimeEntryMutation": [Function],
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "addTimeEntryMutation": [Function],
+        "allEntriesQuery": Object {
+          "allEntries": Object {
+            "admission": "",
+            "entries": Array [],
+            "name": "",
+          },
+          "error": "",
+          "loading": false,
+        },
+        "updateTimeEntryMutation": [Function],
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`AuthRedirect render should render page loading if loading 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <AuthRedirect
+    addTimeEntryMutation={[Function]}
+    signIn={Object {}}
+    updateTimeEntryMutation={[Function]}
+    userDetailsQuery={
+      Object {
+        "error": false,
+        "loading": true,
+        "userDetails": Object {
+          "__typename": "UserDetails",
+          "dailyContractedHours": "8:00",
+          "lastFridayBalance": " 2:20",
+          "name": "JOHN DOE",
+        },
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "active": true,
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "active": true,
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

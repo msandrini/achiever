@@ -1,0 +1,539 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimeEntry render should render MonthlyCalendar and LabourStatistics 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TimeEntry
+    entries={
+      Array [
+        Object {},
+      ]
+    }
+    errorMessage=""
+    isLoading={false}
+    isPersisted={false}
+    mode=""
+    onChangeEntry={[Function]}
+    onChangeMode={[Function]}
+    onDateChange={[Function]}
+    onSubmit={[Function]}
+    selectedDate={"2018-04-03T14:22:06.038Z"}
+    selectedEntry={Object {}}
+    statistics={
+      Object {
+        "contractedTime": 0,
+        "dayBalance": 0,
+        "totalBalance": 0,
+        "weekBalance": 0,
+        "weekDay": 0,
+      }
+    }
+    successMessage=""
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <FullScreenSpinner
+          active={false}
+        />,
+        <div
+          className="column column-nav"
+        >
+          <MonthlyCalendar
+            onDateChange={[Function]}
+            selectedDate={"2018-04-03T14:22:06.038Z"}
+            timeEntries={
+              Array [
+                Object {},
+              ]
+            }
+          />
+          <LabourStatistics
+            contractedTime={0}
+            dayBalance={0}
+            totalBalance={0}
+            weekBalance={0}
+            weekDay={0}
+          />
+        </div>,
+        <div
+          className="column column-actions"
+        >
+          <h2
+            className="current-date"
+          >
+            Dia selecionado
+            :
+             
+            <strong>
+              03/04/2018
+            </strong>
+          </h2>
+          <main>
+            <TimeEntryForm
+              entry={Object {}}
+              errorMessage=""
+              isDisabled={false}
+              isPersisted={false}
+              mode=""
+              onChangeEntry={[Function]}
+              onChangeMode={[Function]}
+              onSubmit={[Function]}
+              successMessage=""
+            />
+          </main>
+        </div>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "active": false,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <MonthlyCalendar
+              onDateChange={[Function]}
+              selectedDate={"2018-04-03T14:22:06.038Z"}
+              timeEntries={
+                Array [
+                  Object {},
+                ]
+              }
+            />,
+            <LabourStatistics
+              contractedTime={0}
+              dayBalance={0}
+              totalBalance={0}
+              weekBalance={0}
+              weekDay={0}
+            />,
+          ],
+          "className": "column column-nav",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "onDateChange": [Function],
+              "selectedDate": "2018-04-03T14:22:06.038Z",
+              "timeEntries": Array [
+                Object {},
+              ],
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "contractedTime": 0,
+              "dayBalance": 0,
+              "totalBalance": 0,
+              "weekBalance": 0,
+              "weekDay": 0,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+        ],
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <h2
+              className="current-date"
+            >
+              Dia selecionado
+              :
+               
+              <strong>
+                03/04/2018
+              </strong>
+            </h2>,
+            <main>
+              <TimeEntryForm
+                entry={Object {}}
+                errorMessage=""
+                isDisabled={false}
+                isPersisted={false}
+                mode=""
+                onChangeEntry={[Function]}
+                onChangeMode={[Function]}
+                onSubmit={[Function]}
+                successMessage=""
+              />
+            </main>,
+          ],
+          "className": "column column-actions",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                "Dia selecionado",
+                ":",
+                " ",
+                <strong>
+                  03/04/2018
+                </strong>,
+              ],
+              "className": "current-date",
+            },
+            "ref": null,
+            "rendered": Array [
+              "Dia selecionado",
+              ":",
+              " ",
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "03/04/2018",
+                },
+                "ref": null,
+                "rendered": "03/04/2018",
+                "type": "strong",
+              },
+            ],
+            "type": "h2",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <TimeEntryForm
+                entry={Object {}}
+                errorMessage=""
+                isDisabled={false}
+                isPersisted={false}
+                mode=""
+                onChangeEntry={[Function]}
+                onChangeMode={[Function]}
+                onSubmit={[Function]}
+                successMessage=""
+              />,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "entry": Object {},
+                "errorMessage": "",
+                "isDisabled": false,
+                "isPersisted": false,
+                "mode": "",
+                "onChangeEntry": [Function],
+                "onChangeMode": [Function],
+                "onSubmit": [Function],
+                "successMessage": "",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": "main",
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": Symbol(react.fragment),
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <FullScreenSpinner
+            active={false}
+          />,
+          <div
+            className="column column-nav"
+          >
+            <MonthlyCalendar
+              onDateChange={[Function]}
+              selectedDate={"2018-04-03T14:22:06.038Z"}
+              timeEntries={
+                Array [
+                  Object {},
+                ]
+              }
+            />
+            <LabourStatistics
+              contractedTime={0}
+              dayBalance={0}
+              totalBalance={0}
+              weekBalance={0}
+              weekDay={0}
+            />
+          </div>,
+          <div
+            className="column column-actions"
+          >
+            <h2
+              className="current-date"
+            >
+              Dia selecionado
+              :
+               
+              <strong>
+                03/04/2018
+              </strong>
+            </h2>
+            <main>
+              <TimeEntryForm
+                entry={Object {}}
+                errorMessage=""
+                isDisabled={false}
+                isPersisted={false}
+                mode=""
+                onChangeEntry={[Function]}
+                onChangeMode={[Function]}
+                onSubmit={[Function]}
+                successMessage=""
+              />
+            </main>
+          </div>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "active": false,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <MonthlyCalendar
+                onDateChange={[Function]}
+                selectedDate={"2018-04-03T14:22:06.038Z"}
+                timeEntries={
+                  Array [
+                    Object {},
+                  ]
+                }
+              />,
+              <LabourStatistics
+                contractedTime={0}
+                dayBalance={0}
+                totalBalance={0}
+                weekBalance={0}
+                weekDay={0}
+              />,
+            ],
+            "className": "column column-nav",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "onDateChange": [Function],
+                "selectedDate": "2018-04-03T14:22:06.038Z",
+                "timeEntries": Array [
+                  Object {},
+                ],
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "contractedTime": 0,
+                "dayBalance": 0,
+                "totalBalance": 0,
+                "weekBalance": 0,
+                "weekDay": 0,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <h2
+                className="current-date"
+              >
+                Dia selecionado
+                :
+                 
+                <strong>
+                  03/04/2018
+                </strong>
+              </h2>,
+              <main>
+                <TimeEntryForm
+                  entry={Object {}}
+                  errorMessage=""
+                  isDisabled={false}
+                  isPersisted={false}
+                  mode=""
+                  onChangeEntry={[Function]}
+                  onChangeMode={[Function]}
+                  onSubmit={[Function]}
+                  successMessage=""
+                />
+              </main>,
+            ],
+            "className": "column column-actions",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  "Dia selecionado",
+                  ":",
+                  " ",
+                  <strong>
+                    03/04/2018
+                  </strong>,
+                ],
+                "className": "current-date",
+              },
+              "ref": null,
+              "rendered": Array [
+                "Dia selecionado",
+                ":",
+                " ",
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "03/04/2018",
+                  },
+                  "ref": null,
+                  "rendered": "03/04/2018",
+                  "type": "strong",
+                },
+              ],
+              "type": "h2",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <TimeEntryForm
+                  entry={Object {}}
+                  errorMessage=""
+                  isDisabled={false}
+                  isPersisted={false}
+                  mode=""
+                  onChangeEntry={[Function]}
+                  onChangeMode={[Function]}
+                  onSubmit={[Function]}
+                  successMessage=""
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "entry": Object {},
+                  "errorMessage": "",
+                  "isDisabled": false,
+                  "isPersisted": false,
+                  "mode": "",
+                  "onChangeEntry": [Function],
+                  "onChangeMode": [Function],
+                  "onSubmit": [Function],
+                  "successMessage": "",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "main",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": Symbol(react.fragment),
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

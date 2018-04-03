@@ -203,7 +203,21 @@ export default compose(
 )(TimeEntryContainer);
 
 TimeEntryContainer.propTypes = {
-	addTimeEntryMutation: PropTypes.func.isRequired,
-	updateTimeEntryMutation: PropTypes.func.isRequired,
+	addTimeEntryMutation: PropTypes.func,
+	updateTimeEntryMutation: PropTypes.func,
 	allEntriesQuery: AllEntriesQuery.isRequired
+};
+
+TimeEntryContainer.defaultProps = {
+	addTimeEntryMutation: () => {},
+	updateTimeEntryMutation: () => {},
+	allEntriesQuery: {
+		allEntries: {
+			admission: '',
+			name: '',
+			entries: []
+		},
+		error: '',
+		loading: false
+	}
 };

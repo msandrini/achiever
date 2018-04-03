@@ -1,71 +1,68 @@
-// import React from 'react';
-// import { shallow, mount } from 'enzyme';
+import React from 'react';
+import { shallow } from 'enzyme';
 
-// import AuthRedirect from './AuthRedirect';
+import AuthRedirect from './AuthRedirect';
 
-// import * as token from './authentication/token';
+import * as token from './authentication/token';
 
-// const defaultUserDetailsQuery = {
-// 	loading: false,
-// 	userDetails: {
-// 		name: 'JOHN DOE',
-// 		dailyContractedHours: '8:00',
-// 		lastFridayBalance: ' 2:20',
-// 		__typename: 'UserDetails'
-// 	},
-// 	error: false
-// };
+const defaultUserDetailsQuery = {
+	loading: false,
+	userDetails: {
+		name: 'JOHN DOE',
+		dailyContractedHours: '8:00',
+		lastFridayBalance: ' 2:20',
+		__typename: 'UserDetails'
+	},
+	error: false
+};
 
-describe('Router', () => {
+function shallowComponent(userDetailsQuery) {
+	const wrapper = shallow(<AuthRedirect
+		userDetailsQuery={userDetailsQuery}
+		signIn={{}}
+		addTimeEntryMutation={() => {}}
+		updateTimeEntryMutation={() => {}}
+	/>);
+	return wrapper;
+};
+
+
+describe('AuthRedirect', () => {
 	describe('render', () => {
-		// it('should render page loagind if loading', () => {
-		// 	const loadingUserDetailsQuery = { ...defaultUserDetailsQuery, loading: true };
-		// 	const wrapper = mount(<Router
-		// 		path="/"
-		// 		userDetailsQuery={loadingUserDetailsQuery}
-		// 	/>);
-		// 	expect(wrapper).toMatchSnapshot();
-		// 	wrapper.unmount();
-		// });
-		// it('should load the componentToBeRendered if not loading', () => {
-		// 	// For this test, it will render PageNotFound
-		// 	const wrapper = mount(<Router
-		// 		path="/blabla"
-		// 		userDetailsQuery={defaultUserDetailsQuery}
-		// 	/>);
-		// 	wrapper.setState({ path: '/notfound-blablabla' });
-		// 	expect(wrapper).toMatchSnapshot();
-		// 	wrapper.unmount();
-		// });
-	});
-	describe('componentWillUpdate', () => {
-		// pages.routeDefinitions = mockRouteDefinitions;
-		// pages.defaultPages = mockRouteDefaultPages;
-		// describe(', if user is authenticated,', () => {
-		// 	let wrapper;
-		// 	beforeEach(() => {
-		// 		token.getAuthToken = jest.fn(() => ('loged-in!!'));
-		// 		wrapper = shallow(<Router path="/" userDetailsQuery={defaultUserDetailsQuery} />);
-		// 	});
-
-		// 	it('should render the private component if logged in', () => {
-		// 		wrapper.setState({ path: '/private' });
-		// 		expect(wrapper.instance().componentToBeRendered).toEqual(MockPrivateTestComponent);
-		// 	});
-		// });
-		// describe(', if user is not authenticated,', () => {
-		// 	let wrapper;
-		// 	beforeEach(() => {
-		// 		token.getAuthToken = jest.fn(() => (null));
-		// 		wrapper = shallow(<Router path="/" userDetailsQuery={defaultUserDetailsQuery} />);
-		// 	});
-		// 	it('should render the private component if logged in', () => {
-		// 		wrapper.setState({ path: '/public' });
-		// 		expect(wrapper.instance().componentToBeRendered).toEqual(MockPublicTestComponent);
-		// 	});
-		// });
+		it('should render page loading if loading', () => {
+			const loadingUserDetailsQuery = { ...defaultUserDetailsQuery, loading: true };
+			const wrapper = shallowComponent(loadingUserDetailsQuery);
+			expect(wrapper).toMatchSnapshot();
+		});
+		it('should load TimeEntry if not loading and if authenticated', () => {
+			const wrapper = shallowComponent(defaultUserDetailsQuery);
+			wrapper.setState({ authenticated: true });
+			expect(wrapper).toMatchSnapshot();
+		});
+		it('should load Login if not loading and not authenticated', () => {
+			const wrapper = shallowComponent(defaultUserDetailsQuery);
+			wrapper.setState({ authenticated: false });
+			expect(wrapper).toMatchSnapshot();
+		});
 	});
 	describe('componentWillReceiveProps', () => {
-		//
+		it('should authenticate when props are correct', () => {
+			const loadingQuery = { ...defaultUserDetailsQuery, loading: true };
+			const wrapper = shallowComponent(loadingQuery);
+
+			token.getAuthToken = jest.fn(() => ('loggedIn'));
+			wrapper.setProps({ userDetailsQuery: defaultUserDetailsQuery });
+
+			expect(wrapper.state('authenticated')).toEqual(true);
+		});
+		it('should authenticate when props are not correct', () => {
+			const loadingQuery = { ...defaultUserDetailsQuery, loading: true };
+			const wrapper = shallowComponent(loadingQuery);
+
+			const errorQuery = { ...defaultUserDetailsQuery, error: true };
+			wrapper.setProps({ userDetailsQuery: errorQuery });
+
+			expect(wrapper.state('authenticated')).toEqual(false);
+		});
 	});
 });
