@@ -1,22 +1,31 @@
 @import "../../styles/_colours.styl"
 
-.userDetails
-	display: table;
-	table-layout: fixed;
-	float: right;
+.user-details
+	position: absolute
+	top 0
+	right 20px
+	background transitionColour1
+	text-align:center
+	overflow: hidden
+	height 29px
+	transition: all ease-in .5s
 
-	.employeeName
-		display: table-cell;
-		float: left;
-		color: white;
-		font-size: 12px
-		margin-right: 20px
-		vertical-align: middle;
-		padding: 6px 10px 20px;
-	
-	a
-		vertical-align: middle;
+	&:hover
+		height 64px
 
-	&.unlogged
-		display: table-cell;
-		height: 1px;
+	.employee-name
+		padding: 10px
+		font-weight: bold;
+		color transitionColour3
+		font-size: 12px;
+
+	button
+		background-color: transitionColour2
+		text-transform: lowercase
+		padding 2px 6px
+		color white;
+		cursor pointer
+		&:hover
+			background-color: transitionColour3
+		&:focus
+			outline: 1px solid focusColour

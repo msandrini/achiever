@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ShowComponentOnRoute from './Router';
+import AuthRedirect from './AuthRedirect';
 import Header from './Header';
 
 import './Main.styl';
@@ -8,11 +8,7 @@ import './Main.styl';
 const Main = () => (
 	<div className="root-container">
 		<Header />
-		<div className="time-management-container">
-			<div>
-				<ShowComponentOnRoute path={window.location.pathname} />
-			</div>
-		</div>
+		<AuthRedirect />
 	</div>
 );
 

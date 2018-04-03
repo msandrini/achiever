@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 
 import MonthlyCalendar from '../ui/MonthlyCalendar';
 import LabourStatistics from '../ui/LabourStatistics';
+import FullScreenSpinner from '../ui/FullScreenSpinner';
+import AlertModal from '../ui/modals/AlertModal';
+
 import TimeEntryForm from './TimeEntryForm';
-import PageLoading from '../genericPages/PageLoading';
+import SpecialDayPanel from './SpecialDayPanel';
 
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
 
 const TimeEntry = ({
 	entries,
+	mode,
 	selectedDate,
 	selectedEntry,
 	statistics,
@@ -20,47 +24,72 @@ const TimeEntry = ({
 	isLoading,
 	onDateChange,
 	onChangeEntry,
+	onChangeMode,
+	onCloseAlert,
 	onSubmit
 }) => (
-	<div className="TimeEntry">
-		<PageLoading active={isLoading} />
+	<React.Fragment>
+		<FullScreenSpinner active={isLoading} />
 
-		<h2 className="current-date">
-			{strings.selectedDate}: <strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
-		</h2>
-
-		<div className="columns">
-			<div className="column column-half column-right-aligned">
-				<MonthlyCalendar
-					selectedDate={selectedDate}
-					timeEntries={entries}
-					onDateChange={onDateChange}
-				/>
-				<LabourStatistics
-					dayBalance={statistics.dayBalance}
-					weekBalance={statistics.weekBalance}
-					totalBalance={statistics.totalBalance}
-					contractedTime={statistics.contractedTime}
-					weekDay={statistics.weekDay}
-				/>
-			</div>
-			<div className="column column-half">
-				<TimeEntryForm
-					entry={selectedEntry}
-					isDisabled={false}
-					isPersisted={isPersisted}
-					successMessage={successMessage}
-					errorMessage={errorMessage}
-					onChangeEntry={onChangeEntry}
-					onSubmit={onSubmit}
-				/>
-			</div>
+		<div className="column column-nav">
+			<MonthlyCalendar
+				selectedDate={selectedDate}
+				timeEntries={entries}
+				onDateChange={onDateChange}
+			/>
+			<LabourStatistics
+				dayBalance={statistics.dayBalance}
+				weekBalance={statistics.weekBalance}
+				totalBalance={statistics.totalBalance}
+				contractedTime={statistics.contractedTime}
+				weekDay={statistics.weekDay}
+			/>
 		</div>
-	</div>
+		<div className="column column-actions">
+			<h2 className="current-date">
+				{strings.selectedDate}:{' '}
+				<strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
+			</h2>
+			<main>
+				{(selectedEntry.isHoliday || selectedEntry.isVacation) ?
+					<SpecialDayPanel
+						entry={selectedEntry}
+					/>
+					:
+					<TimeEntryForm
+						mode={mode}
+						entry={selectedEntry}
+						isDisabled={false}
+						isPersisted={isPersisted}
+						successMessage={successMessage}
+						errorMessage={errorMessage}
+						onChangeEntry={onChangeEntry}
+						onChangeMode={onChangeMode}
+						onSubmit={onSubmit}
+					/>
+				}
+			</main>
+		</div>
+		<AlertModal
+			title={strings.success}
+			active={Boolean(successMessage)}
+			content={successMessage}
+			onClose={onCloseAlert}
+			type="success"
+		/>
+		<AlertModal
+			title={strings.error}
+			active={Boolean(errorMessage)}
+			content={errorMessage}
+			onClose={onCloseAlert}
+			type="error"
+		/>
+	</React.Fragment>
 );
 
 TimeEntry.propTypes = {
 	entries: PropTypes.arrayOf(Entries),
+	mode: PropTypes.string,
 	selectedDate: PropTypes.object,
 	selectedEntry: Entries,
 	statistics: PropTypes.shape({
@@ -76,11 +105,14 @@ TimeEntry.propTypes = {
 	isLoading: PropTypes.bool,
 	onDateChange: PropTypes.func,
 	onChangeEntry: PropTypes.func,
+	onChangeMode: PropTypes.func,
+	onCloseAlert: PropTypes.func,
 	onSubmit: PropTypes.func
 };
 
 TimeEntry.defaultProps = {
 	entries: [{}],
+	mode: '',
 	selectedDate: {},
 	selectedEntry: {},
 	statistics: {},
@@ -90,6 +122,8 @@ TimeEntry.defaultProps = {
 	isLoading: false,
 	onDateChange: () => {},
 	onChangeEntry: () => {},
+	onChangeMode: () => {},
+	onCloseAlert: () => {},
 	onSubmit: () => {}
 };
 

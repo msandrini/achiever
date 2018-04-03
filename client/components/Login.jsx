@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import * as queries from '../queries.graphql';
-import Panel from './ui/Panel';
+import AlertModal from './ui/modals/AlertModal';
 import strings from '../../shared/strings';
 import { setAuthToken } from './authentication/token';
 
@@ -30,6 +30,12 @@ class Login extends React.Component {
 		};
 	}
 
+	onCloseAlert() {
+		return () => {
+			this.setState({ errorMessage: '' });
+		};
+	}
+
 	onSubmit(event) {
 		event.preventDefault();
 
@@ -43,37 +49,41 @@ class Login extends React.Component {
 	}
 
 	async _signIn(username, password) {
-		let response;
-		try {
-			response = await this.props.signIn({
-				variables: {
-					user: username,
-					password
-				}
-			});
-		} catch (error) {
-			this.setState({ errorMessage: strings.authenticationError });
-		}
+		const response = await this.props.signIn({
+			variables: {
+				user: username,
+				password
+			}
+		});
 
 		if (response) {
-			this.setState({ errorMessage: '' });
-			const { token } = response.data.signIn;
-			setAuthToken(token);
-			window.location.reload();
+			if (response.errors && response.errors.length) {
+				this.setState({ errorMessage: response.errors[0].message });
+			} else {
+				this.setState({ errorMessage: '' });
+				const { token } = response.data.signIn;
+				setAuthToken(token);
+				window.location.reload();
+			}
 		}
 	}
 
 	render() {
 		return (
-			<div className="page-wrapper">
-				<form onSubmit={this.onSubmit}>
+			<React.Fragment>
+				<div className="column column-nav" />
+				<div className="column column-actions">
 					<h2 className="current-date">
 						<strong>{strings.login}</strong>
 					</h2>
-					<div className="columns">
-						<div className="column column-half" />
-						<div className="column column-half">
-							<Panel type="error" message={this.state.errorMessage} />
+					<main>
+						<AlertModal
+							title={strings.error}
+							active={Boolean(this.state.errorMessage)}
+							content={this.state.errorMessage}
+							onClose={this.onCloseAlert}
+						/>
+						<form onSubmit={this.onSubmit} className="login-form">
 							<div className="login-field">
 								<input
 									type="text"
@@ -97,10 +107,10 @@ class Login extends React.Component {
 							>
 								{strings.send}
 							</button>
-						</div>
-					</div>
-				</form>
-			</div>
+						</form>
+					</main>
+				</div>
+			</React.Fragment>
 		);
 	}
 }
@@ -108,5 +118,9 @@ class Login extends React.Component {
 export default graphql(queries.signIn, { name: 'signIn' })(Login);
 
 Login.propTypes = {
-	signIn: PropTypes.func.isRequired
+	signIn: PropTypes.func
+};
+
+Login.defaultProps = {
+	signIn: () => {}
 };

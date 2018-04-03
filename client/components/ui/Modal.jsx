@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import Icon from './Icon';
 import strings from '../../../shared/strings';
 
 import './Modal.styl';

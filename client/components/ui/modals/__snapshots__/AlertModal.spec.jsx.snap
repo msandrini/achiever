@@ -8,7 +8,7 @@ ShallowWrapper {
     active={false}
     content=""
     onClose={[Function]}
-    title=""
+    title="Atenção"
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

@@ -26,6 +26,8 @@ const _handleDateChange = date => () => ({
 	errorMessage: null
 });
 
+const _handleModeChange = mode => () => ({ mode });
+
 const _recalculateBalance = (entry, persisted) => {
 	const DEFAULT_TIME = '0:00';
 
@@ -72,13 +74,16 @@ class TimeEntryContainer extends React.Component {
 
 		this.handleDateChange = this.handleDateChange.bind(this);
 		this.handleEntryChange = this.handleEntryChange.bind(this);
+		this.handleModeChange = this.handleModeChange.bind(this);
+		this.handleCloseAlert = this.handleCloseAlert.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 
 		this.state = {
 			selectedDate: null,
 			entry: {},
 			successMessage: null,
-			errorMessage: null
+			errorMessage: null,
+			mode: ''
 		};
 	}
 
@@ -106,6 +111,14 @@ class TimeEntryContainer extends React.Component {
 		return (entry) => {
 			this.setState(_handleEntryChange(entries, entry));
 		};
+	}
+
+	handleModeChange(modeSelected) {
+		this.setState(_handleModeChange(modeSelected));
+	}
+
+	handleCloseAlert() {
+		this.setState({ successMessage: '', errorMessage: '' });
 	}
 
 	handleSubmit(event) {
@@ -147,7 +160,8 @@ class TimeEntryContainer extends React.Component {
 			this.props.allEntriesQuery.refetch();
 			this.setState({ successMessage: strings.submitTimeSuccess });
 		}).catch((error) => {
-			this.setState({ errorMessage: error.graphQLErrors[0].message });
+			const errorMessage = error.message || error.graphQLErrors[0].message;
+			this.setState({ errorMessage });
 		});
 	}
 
@@ -155,6 +169,7 @@ class TimeEntryContainer extends React.Component {
 		const {
 			selectedDate,
 			entry,
+			mode,
 			successMessage,
 			errorMessage
 		} = this.state;
@@ -167,19 +182,24 @@ class TimeEntryContainer extends React.Component {
 		const isPersisted = Boolean(persisted && persisted.total !== '0:00');
 		const selectedEntry = { ...persisted, ...entry };
 
-		return (<TimeEntry
-			entries={entries}
-			selectedDate={selectedDate ? moment(selectedDate) : null}
-			selectedEntry={selectedEntry}
-			statistics={selectedEntry ? _getStatistics(selectedDate, selectedEntry) : {}}
-			successMessage={successMessage}
-			errorMessage={errorMessage}
-			isPersisted={isPersisted}
-			isLoading={this.props.allEntriesQuery.loading}
-			onDateChange={this.handleDateChange}
-			onChangeEntry={this.handleEntryChange(entries)}
-			onSubmit={this.handleSubmit}
-		/>);
+		return (
+			<TimeEntry
+				entries={entries}
+				mode={mode}
+				selectedDate={selectedDate ? moment(selectedDate) : null}
+				selectedEntry={selectedEntry}
+				statistics={selectedEntry ? _getStatistics(selectedDate, selectedEntry) : {}}
+				successMessage={successMessage}
+				errorMessage={errorMessage}
+				isPersisted={isPersisted}
+				isLoading={this.props.allEntriesQuery.loading}
+				onDateChange={this.handleDateChange}
+				onChangeMode={this.handleModeChange}
+				onChangeEntry={this.handleEntryChange(entries)}
+				onCloseAlert={this.handleCloseAlert}
+				onSubmit={this.handleSubmit}
+			/>
+		);
 	}
 }
 
@@ -190,7 +210,21 @@ export default compose(
 )(TimeEntryContainer);
 
 TimeEntryContainer.propTypes = {
-	addTimeEntryMutation: PropTypes.func.isRequired,
-	updateTimeEntryMutation: PropTypes.func.isRequired,
-	allEntriesQuery: AllEntriesQuery.isRequired
+	addTimeEntryMutation: PropTypes.func,
+	updateTimeEntryMutation: PropTypes.func,
+	allEntriesQuery: AllEntriesQuery
+};
+
+TimeEntryContainer.defaultProps = {
+	addTimeEntryMutation: () => {},
+	updateTimeEntryMutation: () => {},
+	allEntriesQuery: {
+		allEntries: {
+			admission: '',
+			name: '',
+			entries: []
+		},
+		error: '',
+		loading: false
+	}
 };

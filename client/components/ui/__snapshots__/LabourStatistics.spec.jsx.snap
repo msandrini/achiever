@@ -34,7 +34,7 @@ ShallowWrapper {
           expected={1440}
           value={960}
         />,
-        <GaugeDescription
+        <BalanceBox
           description="Balanço de horas atual:"
           value={0}
         />,
@@ -101,7 +101,7 @@ ShallowWrapper {
             expected={1440}
             value={960}
           />,
-          <GaugeDescription
+          <BalanceBox
             description="Balanço de horas atual:"
             value={0}
           />,
@@ -196,7 +196,7 @@ ShallowWrapper {
           expected={1440}
           value={1920}
         />,
-        <GaugeDescription
+        <BalanceBox
           description="Balanço de horas atual:"
           value={0}
         />,
@@ -263,7 +263,7 @@ ShallowWrapper {
             expected={1440}
             value={1920}
           />,
-          <GaugeDescription
+          <BalanceBox
             description="Balanço de horas atual:"
             value={0}
           />,

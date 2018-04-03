@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Gauge from './Gauge';
-import GaugeDescription from './GaugeDescription';
+import BalanceBox from './BalanceBox';
 
 import strings from '../../../shared/strings';
 import './LabourStatistics.styl';
@@ -25,7 +25,7 @@ const LabourStatistics = ({
 			value={weekBalance}
 			expected={contractedTime * weekDay}
 		/>
-		<GaugeDescription
+		<BalanceBox
 			description={strings.hoursBalanceForToday}
 			value={totalBalance}
 		/>

@@ -1,65 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Panel from '../ui/Panel';
 import Button from '../ui/Button';
-import InputTime from '../ui/InputTime';
+import InputTimeGroup from '../ui/InputTimeGroup';
+import ModeSelect from './ModeSelect';
 
 import strings from '../../../shared/strings';
 import { Entries } from '../../PropTypes';
 
-const headers = {
-	START_TIME: 0,
-	START_BREAK_TIME: 1,
-	END_BREAK_TIME: 2,
-	END_TIME: 3
+const HEADERS = {
+	startTime: { key: 0, referenceHour: 8 },
+	startBreakTime: { key: 1, referenceHour: 12 },
+	endBreakTime: { key: 2, referenceHour: 13 },
+	endTime: { key: 3, referenceHour: 17 }
 };
 
 const TimeEntryForm = ({
 	entry,
+	mode,
 	isDisabled,
-	successMessage,
-	errorMessage,
 	onChangeEntry,
+	onChangeMode,
 	isPersisted,
 	onSubmit
 }) => (
 	<form className="TimeEntryForm" onSubmit={onSubmit}>
-		<Panel message={successMessage} type="success" />
-		<Panel message={errorMessage} type="error" />
-		<p>{entry.isVacation ? strings.vacation : ''}</p>
-		<p>{entry.holiday ? entry.holiday : ''}</p>
-		<InputTime
-			label={strings.times[headers.START_TIME].label}
-			value={entry.startTime}
-			isDisabled={isDisabled}
-			isHidden={entry.isHoliday || entry.isVacation}
-			onChangeTime={startTime => onChangeEntry({ ...entry, startTime })}
+		<ModeSelect
+			mode={mode}
+			onSelect={onChangeMode}
 		/>
-		<InputTime
-			label={strings.times[headers.START_BREAK_TIME].label}
-			value={entry.startBreakTime}
-			isDisabled={isDisabled}
-			isHidden={entry.isHoliday || entry.isVacation}
-			onChangeTime={startBreakTime => onChangeEntry({ ...entry, startBreakTime })}
-		/>
-		<InputTime
-			label={strings.times[headers.END_BREAK_TIME].label}
-			value={entry.endBreakTime}
-			isDisabled={isDisabled}
-			isHidden={entry.isHoliday || entry.isVacation}
-			onChangeTime={endBreakTime => onChangeEntry({ ...entry, endBreakTime })}
-		/>
-		<InputTime
-			label={strings.times[headers.END_TIME].label}
-			value={entry.endTime}
-			isDisabled={isDisabled}
-			isHidden={entry.isHoliday || entry.isVacation}
-			onChangeTime={endTime => onChangeEntry({ ...entry, endTime })}
-		/>
+		{
+			Object.keys(HEADERS).map(phase => (
+				<InputTimeGroup
+					key={phase}
+					isHidden={Boolean(mode)}
+					label={strings.times[HEADERS[phase].key].label}
+					value={entry[phase]}
+					isDisabled={isDisabled}
+					onChangeTime={time => onChangeEntry({ ...entry, [phase]: time })}
+					referenceHour={HEADERS[phase].referenceHour}
+				/>
+			))
+		}
 		<Button
 			label={isPersisted ? strings.update : strings.send}
-			isHidden={entry.isHoliday || entry.isVacation}
 		/>
 	</form>
 );
@@ -68,20 +52,20 @@ export default TimeEntryForm;
 
 TimeEntryForm.propTypes = {
 	entry: Entries,
+	mode: PropTypes.string,
 	isDisabled: PropTypes.bool,
 	isPersisted: PropTypes.bool,
-	successMessage: PropTypes.string,
-	errorMessage: PropTypes.string,
 	onChangeEntry: PropTypes.func,
+	onChangeMode: PropTypes.func,
 	onSubmit: PropTypes.func
 };
 
 TimeEntryForm.defaultProps = {
 	entry: {},
+	mode: '',
 	isDisabled: false,
 	isPersisted: false,
-	successMessage: '',
-	errorMessage: '',
 	onChangeEntry: () => {},
+	onChangeMode: () => {},
 	onSubmit: () => {}
 };

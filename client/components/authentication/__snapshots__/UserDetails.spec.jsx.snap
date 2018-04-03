@@ -25,73 +25,9 @@ ShallowWrapper {
     "simulateEvent": [Function],
     "unmount": [Function],
   },
-  Symbol(enzyme.__node__): Object {
-    "instance": null,
-    "key": undefined,
-    "nodeType": "host",
-    "props": Object {
-      "children": <Link
-        activeClassName="is-active"
-        className=""
-        isActive={false}
-        to="/login"
-      >
-        Entrada
-      </Link>,
-      "className": "userDetails",
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "activeClassName": "is-active",
-        "children": "Entrada",
-        "className": "",
-        "isActive": false,
-        "to": "/login",
-      },
-      "ref": null,
-      "rendered": "Entrada",
-      "type": [Function],
-    },
-    "type": "div",
-  },
+  Symbol(enzyme.__node__): null,
   Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": <Link
-          activeClassName="is-active"
-          className=""
-          isActive={false}
-          to="/login"
-        >
-          Entrada
-        </Link>,
-        "className": "userDetails",
-      },
-      "ref": null,
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "activeClassName": "is-active",
-          "children": "Entrada",
-          "className": "",
-          "isActive": false,
-          "to": "/login",
-        },
-        "ref": null,
-        "rendered": "Entrada",
-        "type": [Function],
-      },
-      "type": "div",
-    },
+    null,
   ],
   Symbol(enzyme.__options__): Object {
     "adapter": ReactSixteenAdapter {
@@ -128,73 +64,9 @@ ShallowWrapper {
     "simulateEvent": [Function],
     "unmount": [Function],
   },
-  Symbol(enzyme.__node__): Object {
-    "instance": null,
-    "key": undefined,
-    "nodeType": "host",
-    "props": Object {
-      "children": <Link
-        activeClassName="is-active"
-        className=""
-        isActive={false}
-        to="/login"
-      >
-        Entrada
-      </Link>,
-      "className": "userDetails",
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "activeClassName": "is-active",
-        "children": "Entrada",
-        "className": "",
-        "isActive": false,
-        "to": "/login",
-      },
-      "ref": null,
-      "rendered": "Entrada",
-      "type": [Function],
-    },
-    "type": "div",
-  },
+  Symbol(enzyme.__node__): null,
   Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": <Link
-          activeClassName="is-active"
-          className=""
-          isActive={false}
-          to="/login"
-        >
-          Entrada
-        </Link>,
-        "className": "userDetails",
-      },
-      "ref": null,
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "activeClassName": "is-active",
-          "children": "Entrada",
-          "className": "",
-          "isActive": false,
-          "to": "/login",
-        },
-        "ref": null,
-        "rendered": "Entrada",
-        "type": [Function],
-      },
-      "type": "div",
-    },
+    null,
   ],
   Symbol(enzyme.__options__): Object {
     "adapter": ReactSixteenAdapter {
@@ -238,7 +110,7 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <div
-          className="employeeName"
+          className="employee-name"
         >
           Olá  JOHN
         </div>,
@@ -249,7 +121,7 @@ ShallowWrapper {
           Sair
         </button>,
       ],
-      "className": "userDetails",
+      "className": "user-details",
     },
     "ref": null,
     "rendered": Array [
@@ -259,7 +131,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": "Olá  JOHN",
-          "className": "employeeName",
+          "className": "employee-name",
         },
         "ref": null,
         "rendered": "Olá  JOHN",
@@ -289,7 +161,7 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <div
-            className="employeeName"
+            className="employee-name"
           >
             Olá  JOHN
           </div>,
@@ -300,7 +172,7 @@ ShallowWrapper {
             Sair
           </button>,
         ],
-        "className": "userDetails",
+        "className": "user-details",
       },
       "ref": null,
       "rendered": Array [
@@ -310,7 +182,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": "Olá  JOHN",
-            "className": "employeeName",
+            "className": "employee-name",
           },
           "ref": null,
           "rendered": "Olá  JOHN",

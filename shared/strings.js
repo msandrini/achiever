@@ -98,7 +98,16 @@ const strings = {
 	confirmation: 'Confirmação',
 	projectPhase: 'Projeto/fase',
 	activity: 'Atividade',
-	noLunchPause: 'Sem pausa para almoço'
+	noLunchPause: 'Sem pausa para almoço',
+	normalDay: 'Dia normal',
+	hourEntryMode: 'Entrada de horas',
+	specialDay: 'Dia especial',
+	specialDays: {
+		medical: 'Dispensa médica',
+		birthdayLeave: 'O-tanjoubi'
+	},
+	success: '👍',
+	error: 'Erro!'
 };
 
 module.exports = strings;

@@ -1,41 +1,24 @@
 @import "../styles/_colours.styl"
+@import "../styles/_standards.styl"
 
-h1
-	font-size 20px
-	text-align right
+headerWidth = 62px
 
-.header-container
+header
 	background darkBlueColour
-	width 100%
-	position relative
+	width headerWidth
+	align-self stretch
+	border-top topBarWidth solid superDarkBlueColour
 
-	nav
+	&:after
+		content ' '
 		display block
+		position absolute
+		width 15px
+		height 100%
+		top 0
+		left headerWidth
+		border-top topBarWidth solid darkBlueColour
 		background transitionColour1
-		padding 5px 8px
-		list-style none
-		padding 18px 0 0 45px
-		height 42px
-		border-bottom 6px solid transitionColour2
-		a, button
-			color darkBlueColour
-			background none
-			cursor pointer
-			letter-spacing 2px
-			font-size 12px
-			text-transform uppercase
-			text-decoration none
-			display block
-			float left
-			margin-right 20px
-			padding 6px 10px 22px
-			border-radius 5px 5px 0 0
-
-			&:hover
-				color white
-
-			&.is-active
-				background transitionColour2
 
 	h1
 		text-align left
@@ -43,15 +26,5 @@ h1
 		font-size 70px
 		letter-spacing -.05em
 		margin-left 50px
-		height 62px
-		overflow hidden
-
-.current-date
-	font-size 18px
-	background transitionColour2
-	color transitionColour1
-	margin-bottom 50px
-	padding 13px 50px 20px
-	strong
-		color white
-		font-size 24px
+		height headerWidth
+		transform: rotate(-90deg) translate(-270px, -24px)

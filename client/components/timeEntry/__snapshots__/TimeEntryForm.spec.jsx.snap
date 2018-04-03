@@ -1,0 +1,343 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimeEntryForm render should render InputTime 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TimeEntryForm
+    entry={
+      Object {
+        "activity": "",
+        "balance": "10:00",
+        "contractedTime": "8:00",
+        "date": "2018-02-11",
+        "endBreakTime": "12:30",
+        "endTime": "17:00",
+        "phase": "",
+        "startBreakTime": "11:30",
+        "startTime": "8:00",
+        "total": "8:00",
+        "weekBalance": "20:00",
+      }
+    }
+    errorMessage=""
+    isDisabled={false}
+    isPersisted={false}
+    mode=""
+    onChangeEntry={[MockFunction]}
+    onChangeMode={[Function]}
+    onSubmit={[Function]}
+    successMessage=""
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <ModeSelect
+          mode=""
+          onSelect={[Function]}
+        />,
+        Array [
+          <InputTimeGroup
+            isDisabled={false}
+            isHidden={false}
+            label="Entrada"
+            onChangeTime={[Function]}
+            referenceHour={8}
+            value="8:00"
+          />,
+          <InputTimeGroup
+            isDisabled={false}
+            isHidden={false}
+            label="Ida para almoço"
+            onChangeTime={[Function]}
+            referenceHour={12}
+            value="11:30"
+          />,
+          <InputTimeGroup
+            isDisabled={false}
+            isHidden={false}
+            label="Volta do almoço"
+            onChangeTime={[Function]}
+            referenceHour={13}
+            value="12:30"
+          />,
+          <InputTimeGroup
+            isDisabled={false}
+            isHidden={false}
+            label="Saída"
+            onChangeTime={[Function]}
+            referenceHour={17}
+            value="17:00"
+          />,
+        ],
+        <Button
+          isDisabled={false}
+          isHidden={false}
+          label="Enviar"
+        />,
+      ],
+      "className": "TimeEntryForm",
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "mode": "",
+          "onSelect": [Function],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": "startTime",
+        "nodeType": "function",
+        "props": Object {
+          "isDisabled": false,
+          "isHidden": false,
+          "label": "Entrada",
+          "onChangeTime": [Function],
+          "referenceHour": 8,
+          "value": "8:00",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": "startBreakTime",
+        "nodeType": "function",
+        "props": Object {
+          "isDisabled": false,
+          "isHidden": false,
+          "label": "Ida para almoço",
+          "onChangeTime": [Function],
+          "referenceHour": 12,
+          "value": "11:30",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": "endBreakTime",
+        "nodeType": "function",
+        "props": Object {
+          "isDisabled": false,
+          "isHidden": false,
+          "label": "Volta do almoço",
+          "onChangeTime": [Function],
+          "referenceHour": 13,
+          "value": "12:30",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": "endTime",
+        "nodeType": "function",
+        "props": Object {
+          "isDisabled": false,
+          "isHidden": false,
+          "label": "Saída",
+          "onChangeTime": [Function],
+          "referenceHour": 17,
+          "value": "17:00",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "isDisabled": false,
+          "isHidden": false,
+          "label": "Enviar",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "form",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <ModeSelect
+            mode=""
+            onSelect={[Function]}
+          />,
+          Array [
+            <InputTimeGroup
+              isDisabled={false}
+              isHidden={false}
+              label="Entrada"
+              onChangeTime={[Function]}
+              referenceHour={8}
+              value="8:00"
+            />,
+            <InputTimeGroup
+              isDisabled={false}
+              isHidden={false}
+              label="Ida para almoço"
+              onChangeTime={[Function]}
+              referenceHour={12}
+              value="11:30"
+            />,
+            <InputTimeGroup
+              isDisabled={false}
+              isHidden={false}
+              label="Volta do almoço"
+              onChangeTime={[Function]}
+              referenceHour={13}
+              value="12:30"
+            />,
+            <InputTimeGroup
+              isDisabled={false}
+              isHidden={false}
+              label="Saída"
+              onChangeTime={[Function]}
+              referenceHour={17}
+              value="17:00"
+            />,
+          ],
+          <Button
+            isDisabled={false}
+            isHidden={false}
+            label="Enviar"
+          />,
+        ],
+        "className": "TimeEntryForm",
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "mode": "",
+            "onSelect": [Function],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": "startTime",
+          "nodeType": "function",
+          "props": Object {
+            "isDisabled": false,
+            "isHidden": false,
+            "label": "Entrada",
+            "onChangeTime": [Function],
+            "referenceHour": 8,
+            "value": "8:00",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": "startBreakTime",
+          "nodeType": "function",
+          "props": Object {
+            "isDisabled": false,
+            "isHidden": false,
+            "label": "Ida para almoço",
+            "onChangeTime": [Function],
+            "referenceHour": 12,
+            "value": "11:30",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": "endBreakTime",
+          "nodeType": "function",
+          "props": Object {
+            "isDisabled": false,
+            "isHidden": false,
+            "label": "Volta do almoço",
+            "onChangeTime": [Function],
+            "referenceHour": 13,
+            "value": "12:30",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": "endTime",
+          "nodeType": "function",
+          "props": Object {
+            "isDisabled": false,
+            "isHidden": false,
+            "label": "Saída",
+            "onChangeTime": [Function],
+            "referenceHour": 17,
+            "value": "17:00",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "isDisabled": false,
+            "isHidden": false,
+            "label": "Enviar",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "form",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;

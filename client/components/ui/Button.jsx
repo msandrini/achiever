@@ -8,7 +8,7 @@ const Button = ({ label, isDisabled, isHidden }) => (
 		{ !isHidden ?
 			<button
 				type="submit"
-				className="Button"
+				className="button"
 				disabled={isDisabled}
 			>
 				{label}

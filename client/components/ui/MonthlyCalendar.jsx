@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 import DatePicker from 'react-datepicker';
 
-import {
-	isDayBlockedInPast,
-	isDayAfterToday
-} from '../../utils';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { isDayAfterToday } from '../../utils';
 
 import './MonthlyCalendar.styl';
 
@@ -23,10 +22,6 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 			checked.push(day);
 		} else {
 			unchecked.push(day);
-		}
-
-		if (isDayBlockedInPast(day)) {
-			locked.push(day);
 		}
 
 		if (isDayAfterToday(day)) {
