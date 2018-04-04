@@ -59,7 +59,7 @@
 		border-right-color: white
 
 
-.calendar-checked, .calendar-unchecked
+.calendar-checked, .calendar-unchecked, .calendar-vacation, .calendar-holiday
 	position: relative
 
 	&:after
@@ -68,18 +68,14 @@
 		top: 10px
 		color: successPanelColour
 
-.calendar-unchecked
-	&:after
-		content: '✗'
-		color: errorPanelColour
+.calendar-unchecked:after
+	content: '✗'
+	color: errorPanelColour
 
-.calendar-locked
-	position: relative
-	&:before
-		content: '🔒'
-		position: absolute
-		left: -2px
-		font-size: 9px
-		top: -9px
-		color: #000
+.calendar-vacation:after
+	content: '🌴'
+	color: #BF0
 		
+.calendar-holiday:after
+	content: '✪'
+	color: #FF0

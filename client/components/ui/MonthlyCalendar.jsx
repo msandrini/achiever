@@ -12,13 +12,19 @@ import './MonthlyCalendar.styl';
 const _getStyleClassForCalendarDays = (timeEntries) => {
 	const checked = [];
 	const unchecked = [];
-	const locked = [];
 	const futureDay = [];
+
+	const holidays = [];
+	const vacations = [];
 
 	timeEntries.forEach((dayEntry) => {
 		const day = moment(dayEntry.date);
 
-		if (dayEntry.total && dayEntry.total !== '0:00') {
+		if (dayEntry.isHoliday) {
+			holidays.push(day);
+		} else if (dayEntry.isVacation) {
+			vacations.push(day);
+		} else if (dayEntry.total && dayEntry.total !== '0:00') {
 			checked.push(day);
 		} else {
 			unchecked.push(day);
@@ -32,7 +38,8 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 	return [
 		{ 'calendar-checked': checked },
 		{ 'calendar-unchecked': unchecked },
-		{ 'calendar-locked': locked },
+		{ 'calendar-holiday': holidays },
+		{ 'calendar-vacation': vacations },
 		{ 'calendar-future-day': futureDay }
 	];
 };

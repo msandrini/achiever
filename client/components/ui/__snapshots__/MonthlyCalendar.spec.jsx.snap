@@ -125,7 +125,10 @@ ShallowWrapper {
           ],
         },
         Object {
-          "calendar-locked": Array [],
+          "calendar-holiday": Array [],
+        },
+        Object {
+          "calendar-vacation": Array [],
         },
         Object {
           "calendar-future-day": Array [
@@ -188,7 +191,10 @@ ShallowWrapper {
             ],
           },
           Object {
-            "calendar-locked": Array [],
+            "calendar-holiday": Array [],
+          },
+          Object {
+            "calendar-vacation": Array [],
           },
           Object {
             "calendar-future-day": Array [
@@ -268,7 +274,10 @@ ShallowWrapper {
           "calendar-unchecked": Array [],
         },
         Object {
-          "calendar-locked": Array [],
+          "calendar-holiday": Array [],
+        },
+        Object {
+          "calendar-vacation": Array [],
         },
         Object {
           "calendar-future-day": Array [],
@@ -318,7 +327,10 @@ ShallowWrapper {
             "calendar-unchecked": Array [],
           },
           Object {
-            "calendar-locked": Array [],
+            "calendar-holiday": Array [],
+          },
+          Object {
+            "calendar-vacation": Array [],
           },
           Object {
             "calendar-future-day": Array [],
@@ -483,7 +495,10 @@ ShallowWrapper {
           ],
         },
         Object {
-          "calendar-locked": Array [],
+          "calendar-holiday": Array [],
+        },
+        Object {
+          "calendar-vacation": Array [],
         },
         Object {
           "calendar-future-day": Array [],
@@ -542,7 +557,10 @@ ShallowWrapper {
             ],
           },
           Object {
-            "calendar-locked": Array [],
+            "calendar-holiday": Array [],
+          },
+          Object {
+            "calendar-vacation": Array [],
           },
           Object {
             "calendar-future-day": Array [],
