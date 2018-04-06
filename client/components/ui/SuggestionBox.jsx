@@ -38,7 +38,7 @@ class SuggestionBox extends React.Component {
 	_individualSuggestion(value) {
 		return (
 			<li key={value}>
-				<button type="button" onClick={this._actionCall(value)}>
+				<button type="button" onClick={this._actionCall(value)} tabIndex="-1">
 					{this.mode === 'hours' ? value : withLeadingZero(value)}
 				</button>
 			</li>
