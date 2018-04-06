@@ -5,16 +5,11 @@ import SuggestionBox from './SuggestionBox';
 const _getUnit = (mode, value) => value ? value.split(':')[mode === 'hours' ? 0 : 1] : '';
 
 const _merge = (mode, value, changedUnitValue) => {
-	if (mode === 'hours') return `${changedUnitValue}:${_getUnit('minutes', value)}`;
-	if (mode === 'minutes') return `${_getUnit('hours', value)}:${changedUnitValue}`;
+	const cutValue = (String(changedUnitValue).length > 2) ?
+		String(changedUnitValue).substr(0, 2) : changedUnitValue;
+	if (mode === 'hours') return `${cutValue}:${_getUnit('minutes', value)}`;
+	if (mode === 'minutes') return `${_getUnit('hours', value)}:${cutValue}`;
 	return '';
-};
-
-const preventFillOverMaxLength = (event) => {
-	const isNumberPressed = /[0-9]/.test(event.key);
-	if (event.target.value.length >= 2 && isNumberPressed) {
-		event.preventDefault();
-	}
 };
 
 class InputTimeGroup extends React.Component {
@@ -57,7 +52,6 @@ class InputTimeGroup extends React.Component {
 				onFocus={this.handleFocus}
 				onBlur={this.handleBlur}
 				disabled={disabled}
-				onKeyDown={preventFillOverMaxLength}
 				onChange={event => onChangeTime(_merge(mode, value, event.target.value))}
 			/>,
 			<SuggestionBox

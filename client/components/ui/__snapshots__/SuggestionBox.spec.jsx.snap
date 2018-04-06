@@ -57,6 +57,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             07
@@ -65,6 +66,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             08
@@ -73,6 +75,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             09
@@ -81,6 +84,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             10
@@ -89,6 +93,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             11
@@ -106,6 +111,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             07
@@ -119,6 +125,7 @@ ShallowWrapper {
           "props": Object {
             "children": "07",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -134,6 +141,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             08
@@ -147,6 +155,7 @@ ShallowWrapper {
           "props": Object {
             "children": "08",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -162,6 +171,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             09
@@ -175,6 +185,7 @@ ShallowWrapper {
           "props": Object {
             "children": "09",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -190,6 +201,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             10
@@ -203,6 +215,7 @@ ShallowWrapper {
           "props": Object {
             "children": "10",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -218,6 +231,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             11
@@ -231,6 +245,7 @@ ShallowWrapper {
           "props": Object {
             "children": "11",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -252,6 +267,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               07
@@ -260,6 +276,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               08
@@ -268,6 +285,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               09
@@ -276,6 +294,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               10
@@ -284,6 +303,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               11
@@ -301,6 +321,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               07
@@ -314,6 +335,7 @@ ShallowWrapper {
             "props": Object {
               "children": "07",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -329,6 +351,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               08
@@ -342,6 +365,7 @@ ShallowWrapper {
             "props": Object {
               "children": "08",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -357,6 +381,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               09
@@ -370,6 +395,7 @@ ShallowWrapper {
             "props": Object {
               "children": "09",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -385,6 +411,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               10
@@ -398,6 +425,7 @@ ShallowWrapper {
             "props": Object {
               "children": "10",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -413,6 +441,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               11
@@ -426,6 +455,7 @@ ShallowWrapper {
             "props": Object {
               "children": "11",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -474,6 +504,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             00
@@ -482,6 +513,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             15
@@ -490,6 +522,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             30
@@ -498,6 +531,7 @@ ShallowWrapper {
         <li>
           <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             45
@@ -515,6 +549,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             00
@@ -528,6 +563,7 @@ ShallowWrapper {
           "props": Object {
             "children": "00",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -543,6 +579,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             15
@@ -556,6 +593,7 @@ ShallowWrapper {
           "props": Object {
             "children": "15",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -571,6 +609,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             30
@@ -584,6 +623,7 @@ ShallowWrapper {
           "props": Object {
             "children": "30",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -599,6 +639,7 @@ ShallowWrapper {
         "props": Object {
           "children": <button
             onClick={[Function]}
+            tabIndex="-1"
             type="button"
           >
             45
@@ -612,6 +653,7 @@ ShallowWrapper {
           "props": Object {
             "children": "45",
             "onClick": [Function],
+            "tabIndex": "-1",
             "type": "button",
           },
           "ref": null,
@@ -633,6 +675,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               00
@@ -641,6 +684,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               15
@@ -649,6 +693,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               30
@@ -657,6 +702,7 @@ ShallowWrapper {
           <li>
             <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               45
@@ -674,6 +720,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               00
@@ -687,6 +734,7 @@ ShallowWrapper {
             "props": Object {
               "children": "00",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -702,6 +750,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               15
@@ -715,6 +764,7 @@ ShallowWrapper {
             "props": Object {
               "children": "15",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -730,6 +780,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               30
@@ -743,6 +794,7 @@ ShallowWrapper {
             "props": Object {
               "children": "30",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
@@ -758,6 +810,7 @@ ShallowWrapper {
           "props": Object {
             "children": <button
               onClick={[Function]}
+              tabIndex="-1"
               type="button"
             >
               45
@@ -771,6 +824,7 @@ ShallowWrapper {
             "props": Object {
               "children": "45",
               "onClick": [Function],
+              "tabIndex": "-1",
               "type": "button",
             },
             "ref": null,
