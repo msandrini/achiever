@@ -1,0 +1,48 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<form
+    name="entryform"
+    enctype="multipart/form-data"
+    action="/dispatch.php?"
+    method="post"
+    onsubmit="return globalSubmit(this)">
+
+    <input type="hidden" name="atkprevlevel" value="0">
+    <input type="hidden" name="atkstackid" value="1234567890123">
+    <input type="hidden" name="achievo" value="1e373a93f8901ae9c3971948c80b5fe7">
+    <input type="hidden" name="atkescape" value="">
+
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+	<tr>
+		<td valign="top" align="center">
+			<input type="hidden" name="atkaction" value="update">
+			<input type="hidden" name="atknodetype" value="employee.userprefs">
+			<input type="hidden" name="atkprimkey" value="person.id='123'">
+			<input type="hidden" name="id" value="123">
+			<input type="hidden" name="userid" value="johndoe">
+			<br>
+			<table id="editform" width="100%">
+				<tr id="ar_password" class="default">
+					<td valign="top" class="field">
+						<input type="hidden" name="password[hash]" value="12345678901234567890123456789012">
+						Current:<br>
+						<input type="password" id="password[current]" name="password[current]" maxlength="160" size="70"><br><br>
+						New:<br>
+						<input type="password" id="password[new]" name="password[new]" maxlength="160" size="70"><br><br>
+						Again:<br><input type="password" id="password[again]" name="password[again]" maxlength="160" size="70">
+					</td>
+				</tr>
+			</table>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center" valign="top">
+			&nbsp;<input type="submit" class="btn_save" name="atknoclose" value="Save">&nbsp;
+			&nbsp;<input type="submit" class="btn_cancel" name="atkcancel" value="Cancel">&nbsp;
+			<br><br>
+		</td>
+	</tr>
+</table>
+</form>
