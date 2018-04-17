@@ -14,6 +14,7 @@ class PasswordChangeModal extends React.Component {
 			confirmation: ''
 		};
 		this.handleFieldChange = this.handleFieldChange.bind(this);
+		this.validateAndConfirm = this.validateAndConfirm.bind(this);
 	}
 
 	handleFieldChange(field) {
@@ -39,6 +40,7 @@ class PasswordChangeModal extends React.Component {
 			this.props.onConfirm(passwords);
 		}
 		event.preventDefault();
+		return false;
 	}
 
 	renderForm() {
@@ -52,6 +54,7 @@ class PasswordChangeModal extends React.Component {
 						minLength={6}
 						name="old"
 						onChange={this.handleFieldChange('oldPassword')}
+						autoComplete="current-password"
 					/>
 				</div>
 				<div className="modal-field">
@@ -63,6 +66,7 @@ class PasswordChangeModal extends React.Component {
 						name="new"
 						onChange={this.handleFieldChange('newPassword')}
 						placeholder={strings.insertNewPassword}
+						autoComplete="new-password"
 					/>
 					<input
 						type="password"
@@ -71,6 +75,7 @@ class PasswordChangeModal extends React.Component {
 						name="confirmation"
 						onChange={this.handleFieldChange('confirmation')}
 						placeholder={strings.confirmNewPassword}
+						autoComplete="new-password"
 					/>
 				</div>
 				<div className="buttons">
