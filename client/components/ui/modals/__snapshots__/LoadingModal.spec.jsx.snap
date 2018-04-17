@@ -27,6 +27,7 @@ ShallowWrapper {
           "label": "OK",
         },
       ],
+      "cancel": null,
       "content": <Spinner
         class="loadingModal"
       />,
@@ -50,6 +51,7 @@ ShallowWrapper {
             "label": "OK",
           },
         ],
+        "cancel": null,
         "content": <Spinner
           class="loadingModal"
         />,
@@ -98,6 +100,7 @@ ShallowWrapper {
           "label": "OK",
         },
       ],
+      "cancel": null,
       "content": <Spinner
         class="loadingModal"
       />,
@@ -121,6 +124,7 @@ ShallowWrapper {
             "label": "OK",
           },
         ],
+        "cancel": null,
         "content": <Spinner
           class="loadingModal"
         />,

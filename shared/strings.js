@@ -107,7 +107,16 @@ const strings = {
 		birthdayLeave: 'O-tanjoubi'
 	},
 	success: '👍',
-	error: 'Erro!'
+	error: 'Erro!',
+	passwordChange: 'Mudar senha',
+	reportDownload: 'Relatório mensal',
+	oldPassword: 'Senha antiga',
+	newPassword: 'Nova senha',
+	reportMonth: 'Mês do relatório',
+	selectMonth: 'selecione o mês...',
+	insertNewPassword: 'insira a nova senha',
+	confirmNewPassword: 'confirme a nova senha',
+	passwordChangeSuccessful: 'A senha foi alterada com sucesso!'
 };
 
 module.exports = strings;

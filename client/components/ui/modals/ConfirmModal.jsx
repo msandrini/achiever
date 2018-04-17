@@ -21,7 +21,7 @@ ConfirmModal.propTypes = {
 	title: PropTypes.string,
 	content: PropTypes.oneOfType([
 		PropTypes.string,
-		PropTypes.element
+		PropTypes.node
 	]).isRequired,
 	onCancel: PropTypes.func,
 	onConfirm: PropTypes.func.isRequired

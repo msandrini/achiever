@@ -5,7 +5,6 @@ import strings from '../../../shared/strings';
 
 import './Modal.styl';
 
-
 const showButtons = buttons => (
 	<div className="buttons">
 		{buttons.map(button => (
@@ -20,9 +19,26 @@ const showButtons = buttons => (
 	</div>
 );
 
+const handleLayerClick = cancel => (event) => {
+	event.stopPropagation();
+	if (cancel && event.target.className.includes('modal-layer')) {
+		cancel();
+	}
+};
+
+/* ESLint directives below commented out to allow for the Modal layer to be clickable */
+/* eslint-disable jsx-a11y/no-static-element-interactions,
+	jsx-a11y/click-events-have-key-events */
+
 const Modal = props => (
-	<div className={`modal-layer ${props.active ? 'active' : ''}`}>
+	<div
+		className={`modal-layer ${props.active ? 'active' : ''}`}
+		onClick={handleLayerClick(props.cancel)}
+	>
 		<div className="modal">
+			{props.cancel ?
+				<button className="close" onClick={props.cancel}>&times;</button> : ''
+			}
 			<div className="title">
 				{props.title}
 			</div>
@@ -30,8 +46,7 @@ const Modal = props => (
 				{props.content}
 			</div>
 			{props.hasButtons ?
-				showButtons(props.buttons) :
-				''
+				showButtons(props.buttons) : ''
 			}
 		</div>
 	</div>
@@ -42,6 +57,7 @@ export default Modal;
 Modal.propTypes = {
 	active: PropTypes.bool,
 	title: PropTypes.string,
+	cancel: PropTypes.func,
 	content: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.element
@@ -55,6 +71,7 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
 	active: false,
+	cancel: null,
 	title: '',
 	content: '',
 	hasButtons: true,
