@@ -22,6 +22,7 @@ ShallowWrapper {
           Achiever
         </h1>,
         <UserDetails
+          changePassword={[Function]}
           userDetailsQuery={Object {}}
         />,
       ],
@@ -44,6 +45,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
+          "changePassword": [Function],
           "userDetailsQuery": Object {},
         },
         "ref": null,
@@ -64,6 +66,7 @@ ShallowWrapper {
             Achiever
           </h1>,
           <UserDetails
+            changePassword={[Function]}
             userDetailsQuery={Object {}}
           />,
         ],
@@ -86,6 +89,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
+            "changePassword": [Function],
             "userDetailsQuery": Object {},
           },
           "ref": null,
