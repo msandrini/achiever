@@ -66,6 +66,8 @@ query allEntries {
 			isHoliday
 			holiday
 			isVacation
+			isOtanjoubi
+			isJustifiedAbsence
         }
     }
 }

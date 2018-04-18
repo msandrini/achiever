@@ -213,24 +213,11 @@ const dailyEntries = date => async (token) => {
 
 	let endTime = '';
 
-	let isValid = Boolean(startTime);
-	const isDebug = Boolean(process.env.DEBUG);
-	const randomTotalWorked = () => `${parseInt(Math.random() * 5, 10) + 7}:00`;
-	let newTotal = total;
-
-	if (isDebug) {
-		const isBeforeThanToday = !moment(date).isSameOrAfter(moment().startOf('day'));
-		const dayName = moment(date).format('dddd');
-		const isWeekDay = !(dayName === 'Sunday' || dayName === 'Saturday');
-		const isSameWeek = moment(date).isBetween(moment().startOf('week'), moment().subtract(1, 'day'), null, '[)');
-		const randomness = isSameWeek ? parseInt(Math.random() * 10, 10) % 2 === 0 : true;
-		isValid = isBeforeThanToday && isWeekDay && randomness;
-		newTotal = randomTotalWorked();
-	}
+	const isValid = Boolean(startTime);
 
 	if (isValid) {
 		endTime = moment(startTime, 'hh:mm');
-		const totalWorked = moment(newTotal, 'hh:mm');
+		const totalWorked = moment(total, 'hh:mm');
 		const durantion = moment(breakTimeDuration, 'hh:mm');
 		endTime.add({ hours: totalWorked.hours(), minutes: totalWorked.minutes() });
 		endTime.add({ hours: durantion.hours(), minutes: durantion.minutes() });
@@ -246,7 +233,7 @@ const dailyEntries = date => async (token) => {
 		endTime: (isValid && endTime) || '',
 		startBreakTime: (isValid && startBreakTime) || '',
 		endBreakTime: (isValid && endBreakTime) || '',
-		total: (isValid && newTotal) || ''
+		total: (isValid && total) || ''
 	};
 
 	return timeEntry;
@@ -274,6 +261,12 @@ const headers = {
 	REMARKS: 9
 };
 
+const specialCases = {
+	VACATION: 'Vacation',
+	O_TANJOUBI: 'O-Tanjoubi',
+	JUSTIFIED_ABSENCE: 'Justified Absence'
+};
+
 const allTimesTableToData = ($) => {
 	const data = [];
 	const trimmedText = element => $(element).text().trim();
@@ -282,8 +275,11 @@ const allTimesTableToData = ($) => {
 		if (tds.length) {
 			const [date,,, holiday] = trimmedText(tds[headers.DATE]).split(' ');
 			const breakTime = trimmedText($(tds[headers.BREAK_TIME]));
-			const isVacation = breakTime === 'Vacation';
-			const isHoliday = Boolean(holiday && !isVacation);
+			const remarks = trimmedText(tds[headers.REMARKS]);
+			const isVacation = breakTime === specialCases.VACATION;
+			const isOtanjoubi = remarks === specialCases.O_TANJOUBI;
+			const isJustifiedAbsence = remarks === specialCases.JUSTIFIED_ABSENCE;
+			const isHoliday = Boolean(holiday && !isVacation && !isOtanjoubi && !isJustifiedAbsence);
 
 			data.push({
 				date,
@@ -294,8 +290,10 @@ const allTimesTableToData = ($) => {
 				total: trimmedText(tds[headers.WORKED_TIME]),
 				balance: trimmedText(tds[headers.BALANCE]),
 				isVacation,
+				isOtanjoubi,
+				isJustifiedAbsence,
 				isHoliday,
-				holiday: isHoliday ? trimmedText(tds[headers.REMARKS]) : null
+				holiday: isHoliday ? remarks : null
 			});
 		}
 	});
