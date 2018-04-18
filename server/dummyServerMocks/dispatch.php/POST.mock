@@ -1,0 +1,26 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<!--
+atkprevlevel="0"
+atkstackid="1234567890123"
+achievo="1e373a93f8901ae9c3971948c80b5fe7"
+atkescape=""
+atkaction="update"
+atknodetype="employee.userprefs"
+atkprimkey="person.id='123'"
+id="123"
+userid="johndoe"
+password[hash]="12345678901234567890123456789012"
+password[current]="current"
+password[new]="new"
+password[again]="confirmation"
+atknoclose=Save
+-->
+
+<td colspan="2" class="error">
+  <b>Save failed due to the following reason: </b>
+            <br>Password: The password you entered is incorrect!           
+</td>
+
+<!-- <br>Password: The supplied passwords do not match.           -->

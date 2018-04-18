@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
 import * as queries from '../../queries.graphql';
 import strings from '../../../shared/strings';
@@ -48,8 +48,25 @@ class UserDetails extends Component {
 		console.log({ monthData });
 	}
 
-	changePassword(passwordData) {
-		console.log({ passwordData });
+	async changePassword(passwordData) {
+		const currentPassword = passwordData.old;
+		const newPassword = passwordData.new;
+
+		const response = await this.props.changePassword({
+			variables: {
+				currentPassword,
+				newPassword
+			}
+		});
+
+		if (response) {
+			if (response.errors && response.errors.length) {
+				// TODO: shows error message
+			} else {
+				removeAuthToken();
+				window.location.reload();
+			}
+		}
 	}
 
 	/* eslint-enable class-methods-use-this */
@@ -89,12 +106,17 @@ class UserDetails extends Component {
 	}
 }
 
-export default graphql(queries.userDetails, { name: 'userDetailsQuery' })(UserDetails);
+export default compose(
+	graphql(queries.userDetails, { name: 'userDetailsQuery' }),
+	graphql(queries.changePassword, { name: 'changePassword' })
+)(UserDetails);
 
 UserDetails.propTypes = {
-	userDetailsQuery: PropTypes.object
+	userDetailsQuery: PropTypes.object,
+	changePassword: PropTypes.func
 };
 
 UserDetails.defaultProps = {
-	userDetailsQuery: {}
+	userDetailsQuery: {},
+	changePassword: () => {}
 };

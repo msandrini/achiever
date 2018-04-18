@@ -5,6 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <UserDetails
+    changePassword={[Function]}
     userDetailsQuery={
       Object {
         "error": true,
@@ -44,6 +45,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <UserDetails
+    changePassword={[Function]}
     userDetailsQuery={
       Object {
         "error": false,
@@ -83,6 +85,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <UserDetails
+    changePassword={[Function]}
     userDetailsQuery={
       Object {
         "error": false,
@@ -340,6 +343,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <UserDetails
+    changePassword={[Function]}
     userDetailsQuery={
       Object {
         "error": false,

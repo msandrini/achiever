@@ -98,6 +98,20 @@ const typeDefs = `
 		activity: String
 	}
 
+	type ChangePasswordData {
+		id: String
+		atkprevlevel: String
+		atkstackid: String
+		achievo: String
+		atkescape: String
+		atkaction: String
+		atknodetype: String
+		atkprimkey: String
+		userid: String
+		passwordHash: String
+		atknoclose: String
+	}
+
 	type Query {
 		userDetails: UserDetails
 		weekEntries(date: String!): WeekEntries
@@ -105,6 +119,7 @@ const typeDefs = `
 		dayEntry(date: String!): DayEntry
 		dayDetails(date: String!): DayDetails
 		phases: PhaseList
+		changePasswordData: ChangePasswordData
 	}
 
 	type Mutation {
@@ -112,6 +127,7 @@ const typeDefs = `
 		addTimeEntry(timeEntry: TimeEntryInput!): TimeEntry
 		delTimeEntry(date: String!): Boolean
 		updateTimeEntry(timeEntry: TimeEntryInput!): TimeEntry
+		changePassword(currentPassword: String!, newPassword: String!): String!
 	}
 `;
 

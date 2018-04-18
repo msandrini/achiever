@@ -12,6 +12,10 @@ const {
 	userDetails,
 	dayDetails
 } = require('../api/middleware');
+const {
+	changePassword
+} = require('../api/changePassword');
+
 const { tokenFactory } = require('../api/utils');
 
 const notAuthorizedMessage = 'Not authorized!!!';
@@ -26,8 +30,10 @@ const callWithAuth = async (callback, token) => {
 	try {
 		await login(token);
 		result = await callback(token);
-	} finally {
 		await logout(token);
+	} catch (error) {
+		await logout(token);
+		throw error;
 	}
 
 	return result;
@@ -36,40 +42,34 @@ const callWithAuth = async (callback, token) => {
 const resolvers = {
 	Query: {
 		weekEntries: async (_, { date }, { token }) => (
-			callWithAuth(weekEntriesByDate(date), token)
+			callWithAuth(weekEntriesByDate(date), token).catch(error => error)
 		),
 		allEntries: async (_, __, { token }) => (
-			callWithAuth(allEntries(), token)
+			callWithAuth(allEntries(), token).catch(error => error)
 		),
 		dayDetails: async (_, { date }, { token }) => (
-			callWithAuth(dayDetails(date), token)
+			callWithAuth(dayDetails(date), token).catch(error => error)
 		),
 		dayEntry: async (_, { date }, { token }) => (
 			{ timeEntry: callWithAuth(dailyEntries(date), token) }
 		),
 		phases: async (_, __, { token }) => (
-			callWithAuth(phases(), token)
+			callWithAuth(phases(), token).catch(error => error)
 		),
 		userDetails: async (_, __, { token }) => (
-			callWithAuth(userDetails(), token)
+			callWithAuth(userDetails(), token).catch(error => error)
 		)
 	},
 	Mutation: {
 		signIn: async (_, { user, password }) => {
 			const token = tokenFactory(user, password);
 
-			try {
-				await login(token);
-			} catch (error) {
-				console.error('Login: ', error);
-			} finally {
-				await logout(token);
-			}
+			await login(token);
 
 			return { token };
 		},
 		addTimeEntry: async (_, { timeEntry }, { token }) => (
-			callWithAuth(addTimeEntry(timeEntry), token)
+			callWithAuth(addTimeEntry(timeEntry), token).catch(error => error)
 		),
 		delTimeEntry: async (_, { date }, { token }) => (
 			callWithAuth(async () => {
@@ -90,7 +90,7 @@ const resolvers = {
 				}
 
 				return true;
-			}, token)
+			}, token).catch(error => error)
 		),
 		updateTimeEntry: async (_, { timeEntry }, { token }) => (
 			callWithAuth(async () => {
@@ -107,7 +107,11 @@ const resolvers = {
 				}
 
 				return addTimeEntry(timeEntry)(token);
-			}, token)
+			}, token).catch(error => error)
+		),
+		changePassword: async (_, { currentPassword, newPassword }, { token }) => (
+			callWithAuth(changePassword({ currentPassword, newPassword }), token)
+				.catch(error => error)
 		)
 	},
 	Phase: {

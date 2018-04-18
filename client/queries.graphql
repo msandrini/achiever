@@ -34,6 +34,10 @@ mutation updateTimeEntry($timeEntry: TimeEntryInput!) {
     }
 }
 
+mutation changePassword($currentPassword: String!, $newPassword: String!) {
+    changePassword(currentPassword: $currentPassword, newPassword: $newPassword)
+}
+
 query dayEntry($date: String!) {
     dayEntry(date: $date) {
         timeEntry {
