@@ -39,9 +39,11 @@ const typeDefs = `
 		total: String
 		weekBalance: String
 		balance: String
+		isVacation: Boolean
+		isOtanjoubi: Boolean
+		isJustifiedAbsence: Boolean
 		isHoliday: Boolean
 		holiday: String
-		isVacation: Boolean
 	}
 
 	type AllEntries {
