@@ -14,6 +14,7 @@ ShallowWrapper {
         },
       ]
     }
+    cancel={null}
     content=""
     hasButtons={false}
     title=""
@@ -33,6 +34,7 @@ ShallowWrapper {
       "children": <div
         className="modal"
       >
+        
         <div
           className="title"
         >
@@ -46,6 +48,7 @@ ShallowWrapper {
         
       </div>,
       "className": "modal-layer ",
+      "onClick": [Function],
     },
     "ref": null,
     "rendered": Object {
@@ -54,6 +57,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
+          "",
           <div
             className="title"
           >
@@ -70,6 +74,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
+        "",
         Object {
           "instance": null,
           "key": undefined,
@@ -109,6 +114,7 @@ ShallowWrapper {
         "children": <div
           className="modal"
         >
+          
           <div
             className="title"
           >
@@ -122,6 +128,7 @@ ShallowWrapper {
           
         </div>,
         "className": "modal-layer ",
+        "onClick": [Function],
       },
       "ref": null,
       "rendered": Object {
@@ -130,6 +137,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": Array [
+            "",
             <div
               className="title"
             >
@@ -146,6 +154,7 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": Array [
+          "",
           Object {
             "instance": null,
             "key": undefined,
@@ -201,6 +210,7 @@ ShallowWrapper {
         },
       ]
     }
+    cancel={null}
     content=""
     hasButtons={true}
     title=""
@@ -220,6 +230,7 @@ ShallowWrapper {
       "children": <div
         className="modal"
       >
+        
         <div
           className="title"
         >
@@ -242,6 +253,7 @@ ShallowWrapper {
         </div>
       </div>,
       "className": "modal-layer ",
+      "onClick": [Function],
     },
     "ref": null,
     "rendered": Object {
@@ -250,6 +262,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
+          "",
           <div
             className="title"
           >
@@ -275,6 +288,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
+        "",
         Object {
           "instance": null,
           "key": undefined,
@@ -346,6 +360,7 @@ ShallowWrapper {
         "children": <div
           className="modal"
         >
+          
           <div
             className="title"
           >
@@ -368,6 +383,7 @@ ShallowWrapper {
           </div>
         </div>,
         "className": "modal-layer ",
+        "onClick": [Function],
       },
       "ref": null,
       "rendered": Object {
@@ -376,6 +392,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": Array [
+            "",
             <div
               className="title"
             >
@@ -401,6 +418,7 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": Array [
+          "",
           Object {
             "instance": null,
             "key": undefined,
@@ -488,6 +506,7 @@ ShallowWrapper {
         },
       ]
     }
+    cancel={null}
     content=""
     hasButtons={true}
     title=""
@@ -507,6 +526,7 @@ ShallowWrapper {
       "children": <div
         className="modal"
       >
+        
         <div
           className="title"
         >
@@ -529,6 +549,7 @@ ShallowWrapper {
         </div>
       </div>,
       "className": "modal-layer active",
+      "onClick": [Function],
     },
     "ref": null,
     "rendered": Object {
@@ -537,6 +558,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
+          "",
           <div
             className="title"
           >
@@ -562,6 +584,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
+        "",
         Object {
           "instance": null,
           "key": undefined,
@@ -633,6 +656,7 @@ ShallowWrapper {
         "children": <div
           className="modal"
         >
+          
           <div
             className="title"
           >
@@ -655,6 +679,7 @@ ShallowWrapper {
           </div>
         </div>,
         "className": "modal-layer active",
+        "onClick": [Function],
       },
       "ref": null,
       "rendered": Object {
@@ -663,6 +688,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": Array [
+            "",
             <div
               className="title"
             >
@@ -688,6 +714,7 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": Array [
+          "",
           Object {
             "instance": null,
             "key": undefined,

@@ -6,6 +6,7 @@ import * as queries from '../../queries.graphql';
 import strings from '../../../shared/strings';
 import { getAuthToken, removeAuthToken } from './token';
 import { clearTodayStorage } from '../../utils';
+import UserOptions from '../userOptions/UserOptions';
 
 import './UserDetails.styl';
 
@@ -23,6 +24,9 @@ class UserDetails extends Component {
 		this.state = {
 			authenticated: false
 		};
+
+		this.openMonthlyReport = this.openMonthlyReport.bind(this);
+		this.changePassword = this.changePassword.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -37,6 +41,18 @@ class UserDetails extends Component {
 			this.setState({ authenticated });
 		}
 	}
+
+	/* eslint-disable class-methods-use-this */
+
+	openMonthlyReport(monthData) {
+		console.log({ monthData });
+	}
+
+	changePassword(passwordData) {
+		console.log({ passwordData });
+	}
+
+	/* eslint-enable class-methods-use-this */
 
 	render() {
 		const { userDetails, loading, error } = this.props.userDetailsQuery;
@@ -55,9 +71,17 @@ class UserDetails extends Component {
 					<div className="employee-name">
 						{`${strings.helloName} ${firstName}`}
 					</div>
-					<button className="logout" onClick={_logout}>
-						{strings.logout}
-					</button>
+					<nav>
+						<UserOptions
+							reportCall={this.openMonthlyReport}
+							passwordCall={this.changePassword}
+						/>
+						<li>
+							<button className="logout" onClick={_logout}>
+								{strings.logout}
+							</button>
+						</li>
+					</nav>
 				</div>
 			);
 		}

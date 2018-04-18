@@ -16,6 +16,8 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 
 	const holidays = [];
 	const vacations = [];
+	const otanjoubis = [];
+	const absences = [];
 
 	timeEntries.forEach((dayEntry) => {
 		const day = moment(dayEntry.date);
@@ -24,6 +26,10 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 			holidays.push(day);
 		} else if (dayEntry.isVacation) {
 			vacations.push(day);
+		} else if (dayEntry.isOtanjoubi) {
+			otanjoubis.push(day);
+		} else if (dayEntry.isJustifiedAbsence) {
+			absences.push(day);
 		} else if (dayEntry.total && dayEntry.total !== '0:00') {
 			checked.push(day);
 		} else {
@@ -40,6 +46,8 @@ const _getStyleClassForCalendarDays = (timeEntries) => {
 		{ 'calendar-unchecked': unchecked },
 		{ 'calendar-holiday': holidays },
 		{ 'calendar-vacation': vacations },
+		{ 'calendar-otanjoubi': otanjoubis },
+		{ 'calendar-absence': absences },
 		{ 'calendar-future-day': futureDay }
 	];
 };

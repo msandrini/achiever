@@ -11,21 +11,34 @@
 	transition: all ease-in .5s
 
 	&:hover
-		height 64px
+		height 102px
 
 	.employee-name
 		padding: 10px
 		font-weight: bold;
 		color transitionColour3
 		font-size: 12px;
+		min-width 130px;
 
 	button
+		background: transparent
+		color: white
+		cursor pointer
+		opacity: .7
+		&:hover
+			opacity 1
+
+	button.logout
 		background-color: transitionColour2
 		text-transform: lowercase
 		padding 2px 6px
 		color white;
 		cursor pointer
+		margin-top: 4px
 		&:hover
 			background-color: transitionColour3
 		&:focus
 			outline: 1px solid focusColour
+
+	nav li
+		list-style none

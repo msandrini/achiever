@@ -8,6 +8,7 @@ import AlertModal from '../ui/modals/AlertModal';
 
 import TimeEntryForm from './TimeEntryForm';
 import SpecialDayPanel from './SpecialDayPanel';
+import CurrentDate from './CurrentDate';
 
 import { Entries } from '../../PropTypes';
 import strings from '../../../shared/strings';
@@ -46,10 +47,7 @@ const TimeEntry = ({
 			/>
 		</div>
 		<div className="column column-actions">
-			<h2 className="current-date">
-				{strings.selectedDate}:{' '}
-				<strong>{selectedDate ? selectedDate.format('L') : ''}</strong>
-			</h2>
+			<CurrentDate selectedDate={selectedDate} />
 			<main>
 				{(selectedEntry.isHoliday || selectedEntry.isVacation) ?
 					<SpecialDayPanel
