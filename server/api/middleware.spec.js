@@ -121,7 +121,9 @@ describe('middleware', () => {
 				balance: '34:56',
 				holiday: null,
 				isHoliday: false,
-				isVacation: false
+				isVacation: false,
+				isJustifiedAbsence: false,
+				isOtanjoubi: false
 			};
 			const baseHtml = `
 <table>
@@ -143,7 +145,7 @@ describe('middleware', () => {
 			expect(result).toEqual([expected]);
 		});
 
-		it('should return have the flag isHoliday', () => {
+		it('should return the flag isHoliday as TRUE', () => {
 			const expected = {
 				date: '2017-12-25',
 				contractedTime: '8:00',
@@ -155,7 +157,9 @@ describe('middleware', () => {
 				balance: '34:56',
 				holiday: 'Xmas',
 				isHoliday: true,
-				isVacation: false
+				isVacation: false,
+				isJustifiedAbsence: false,
+				isOtanjoubi: false
 			};
 			const baseHtml = `
 <table>
@@ -169,6 +173,80 @@ describe('middleware', () => {
 		expected.endBreakTime,
 		expected.total,
 		expected.holiday
+	)}
+</table>
+			`;
+
+			const $ = cheerio.load(baseHtml);
+			const result = allTimesTableToData($);
+			expect(result).toEqual([expected]);
+		});
+
+		it('should return the flag isJustifiedAbsence as TRUE', () => {
+			const expected = {
+				date: '2017-12-25',
+				contractedTime: '8:00',
+				startTime: '8:00',
+				endTime: '17:00',
+				startBreakTime: '',
+				endBreakTime: '',
+				total: '8:00',
+				balance: '34:56',
+				holiday: null,
+				isHoliday: false,
+				isVacation: false,
+				isJustifiedAbsence: true,
+				isOtanjoubi: false
+			};
+			const baseHtml = `
+<table>
+	${generateTableLine(
+		`${expected.date} Tue  Holiday`,
+		expected.balance,
+		expected.contractedTime,
+		expected.startTime,
+		expected.endTime,
+		expected.startBreakTime,
+		expected.endBreakTime,
+		expected.total,
+		'Justified Absence'
+	)}
+</table>
+			`;
+
+			const $ = cheerio.load(baseHtml);
+			const result = allTimesTableToData($);
+			expect(result).toEqual([expected]);
+		});
+
+		it('should return the flag isOtanjoubi as TRUE', () => {
+			const expected = {
+				date: '2017-12-25',
+				contractedTime: '8:00',
+				startTime: '8:00',
+				endTime: '17:00',
+				startBreakTime: '',
+				endBreakTime: '',
+				total: '8:00',
+				balance: '34:56',
+				holiday: null,
+				isHoliday: false,
+				isVacation: false,
+				isJustifiedAbsence: false,
+				isOtanjoubi: true
+			};
+			const baseHtml = `
+<table>
+	${generateTableLine(
+		`${expected.date} Tue  Holiday`,
+		expected.balance,
+		expected.contractedTime,
+		expected.startTime,
+		expected.endTime,
+		expected.startBreakTime,
+		expected.endBreakTime,
+		expected.total,
+		'O-Tanjoubi'
 	)}
 </table>
 			`;
