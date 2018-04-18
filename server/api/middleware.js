@@ -500,5 +500,6 @@ module.exports = {
 	getBalance,
 	extractBreakTime,
 	allTimesTableToData,
-	dayDetails
+	dayDetails,
+	getUserDetails
 };
