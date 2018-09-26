@@ -98,7 +98,7 @@
     "graphql": "^0.13.0",
     "graphql-tag": "^2.6.1",
     "graphql-tools": "^2.20.0",
-    "jwt-simple": "^0.5.1",
+    "jwt-simple": "^0.5.5",
     "md5": "^2.2.1",
     "mockserver": "^1.6.2",
     "moment": "^2.19.4",
