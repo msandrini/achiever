@@ -111,7 +111,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.1.0",
     "react-apollo": "^2.0.4",
-    "react-datepicker": "^1.1.0",
+    "react-datepicker": "^2.0.0",
     "react-dom": "^16.1.0",
     "react-router-dom": "^4.2.2",
     "request": "^2.83.0",
