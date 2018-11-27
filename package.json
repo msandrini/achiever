@@ -117,7 +117,7 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "time-duration": "^1.1.4",
-    "tough-cookie": "^2.3.3",
+    "tough-cookie": "^2.5.0",
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
