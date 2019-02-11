@@ -108,7 +108,7 @@
     "node-storage": "0.0.7",
     "pm2": "^2.9.3",
     "prompt": "^1.0.0",
-    "prop-types": "^15.6.0",
+    "prop-types": "^15.7.1",
     "react": "^16.1.0",
     "react-apollo": "^2.0.4",
     "react-datepicker": "^1.1.0",
