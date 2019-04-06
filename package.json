@@ -89,7 +89,7 @@
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
-    "cheerio": "^1.0.0-rc.2",
+    "cheerio": "1.0.0-rc.2",
     "co": "^4.6.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
