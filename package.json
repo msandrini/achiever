@@ -113,7 +113,7 @@
     "react-apollo": "^2.0.4",
     "react-datepicker": "^1.1.0",
     "react-dom": "^16.1.0",
-    "react-router-dom": "^4.2.2",
+    "react-router-dom": "^5.0.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "time-duration": "^1.1.4",
