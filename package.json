@@ -105,7 +105,7 @@
     "moment-timezone": "^0.5.14",
     "morgan": "^1.9.0",
     "node-persist": "^2.1.0",
-    "node-storage": "0.0.7",
+    "node-storage": "0.0.8",
     "pm2": "^2.9.3",
     "prompt": "^1.0.0",
     "prop-types": "^15.6.0",
