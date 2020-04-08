@@ -68,7 +68,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^22.1.4",
     "jest-transform-graphql": "^2.1.0",
-    "nodemon": "^1.14.12",
+    "nodemon": "^2.0.3",
     "pre-commit": "^1.2.2",
     "react-test-renderer": "^16.2.0",
     "style-loader": "^0.20.1",
